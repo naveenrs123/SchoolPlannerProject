@@ -5,4 +5,7 @@
 
 I am creating a Timetable app that I can use to keep track of my classes and homework assignments. 
 
-Week 1: I have created a basic skeleton for the main screen of the app that will greet the user and inform them of upcoming classes and homework assignments that are due.
+Week 1:
+-> I have created a basic skeleton for the main screen of the app that will greet the user and inform them of upcoming classes
+   and homework assignments that are due.
+-> I have also added classes that represent some of the other screens that the application will have.
