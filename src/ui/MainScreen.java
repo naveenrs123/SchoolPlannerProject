@@ -1,15 +1,15 @@
 package ui;
 
-public class MainScreen {
+import main.SchoolPlanner;
 
-    private String userName = "Naveen";
+import javax.swing.*;
 
-    private MainScreen() {
-        System.out.println("Timetable\n");
-    }
+public class MainScreen extends JPanel {
 
-    public void getUserName() {
-        System.out.println("Welcome back " + userName + "!");
+
+    public MainScreen(String name)
+    {
+
     }
 
     public void myClasses() {
@@ -20,15 +20,46 @@ public class MainScreen {
         System.out.println("You have no tasks due.");
     }
 
-    public static void main(String args[]) {
 
-        MainScreen screenMain = new MainScreen();
-        screenMain.getUserName();
-        screenMain.myClasses();
-        screenMain.myTasks();
+        /*
 
-    }
+
+        Scanner user_input = new Scanner(System.in);
+
+        System.out.println("What would you like to do?");
+        System.out.println("1: Tasks   2: Timetable   3: Settings ");
+        String makeNewTask = user_input.next();
+
+
+        while (!(makeNewTask.matches("^[0-9]*$") || makeNewTask.length() != 1))
+        {
+            System.out.println("Your input is invalid, please enter a valid option.");
+            makeNewTask = user_input.next();
+        }
+
+
+
+        if (Integer.parseInt(makeNewTask) == 1)
+        {
+            screenMain.frame.setVisible(false);
+            screenTasks.frame.setVisible(true);
+        }
+        else if (Integer.parseInt(makeNewTask) == 2)
+        {
+            TimetableScreen timetable = new TimetableScreen();
+        }
+        else if (Integer.parseInt(makeNewTask) == 3)
+        {
+            SettingsScreen settings = new SettingsScreen();
+        }
+        else
+        {
+            System.out.println("You did not enter a valid option.");
+        }
+
+        */
 
 }
+
 
 

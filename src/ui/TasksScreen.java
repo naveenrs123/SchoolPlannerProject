@@ -1,6 +1,8 @@
 package ui;
 
-public class TasksScreen {
+import javax.swing.*;
+
+public class TasksScreen extends JPanel {
 
     public TasksScreen() {
 
