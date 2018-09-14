@@ -2,7 +2,7 @@ package ui;
 
 import javax.swing.*;
 
-public class AddClassScreen extends JPanel {
+public class AddClassScreen {
 
     public AddClassScreen() {
 
