@@ -46,13 +46,13 @@ public class Task {
                 System.out.println("Importance: LOW");
                 break;
             case MEDIUM:
-                System.out.println("Importance: LOW");
+                System.out.println("Importance: MEDIUM");
                 break;
             case HIGH:
-                System.out.println("Importance: LOW");
+                System.out.println("Importance: HIGH");
                 break;
             case EXTREME:
-                System.out.println("Importance: LOW");
+                System.out.println("Importance: EXTREME");
                 break;
         }
 
