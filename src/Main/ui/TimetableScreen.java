@@ -1,5 +1,6 @@
 package ui;
 
+import exceptions.choices.InvalidChoiceException;
 import exceptions.input.BadClassTypeException;
 import exceptions.input.BadTimeException;
 import inputs.UniClass;
@@ -19,12 +20,6 @@ public class TimetableScreen implements InputScreen, Loadable {
     // EFFECTS: creates a new TimetableScreen object.
     public TimetableScreen() {
 
-    }
-
-    // EFFECTS: outputs a welcome message.
-    public void welcomeMessage() {
-        System.out.println("You have not added any classes.");
-        System.out.println("Let's add one!");
     }
 
     // EFFECTS: gets input from the user to decide whether they want to add classes or view classes.
@@ -160,10 +155,12 @@ public class TimetableScreen implements InputScreen, Loadable {
             String endTime = userEndTime(user_input);
             ArrayList<Integer> days = userDays(user_input);
             if (days.size() == 0) {
-                System.out.println("No days entered. Your task was not created.");
+                System.out.println("No days entered. Your class was not created.");
                 return;
             }
+
             createClass(classType, name, prof, location, startTime, endTime, days);
+
         } catch (BadClassTypeException bctex) {
             System.out.println(bctex.getMessage());
         } catch (BadTimeException btex) {

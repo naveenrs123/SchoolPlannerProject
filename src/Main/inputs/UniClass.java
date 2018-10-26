@@ -41,7 +41,6 @@ public class UniClass implements StoredObject {
         for (i = 0; i < days.size() - 1; i++) {
             System.out.print(daysOfWeek.get(days.get(i) - 1 ) + ", ");
         }
-
         System.out.println("and " +  daysOfWeek.get(days.get(i) - 1) + ".");
     }
 
