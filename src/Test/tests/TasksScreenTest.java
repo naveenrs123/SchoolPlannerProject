@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-
+/*
 class TasksScreenTest {
 
     private TasksScreen screenTasks;
@@ -189,7 +189,7 @@ class TasksScreenTest {
     @Test
     void testAddTaskValidInput() {
         Scanner user_input = new Scanner("1\nA General Task Description\n10\n10\n18\nLOW");
-        screenTasks.addItem(user_input);
+        screenTasks.addUniClass(user_input);
 
         assertEquals(screenTasks.getGeneralTaskList().get(0).getType(), "TASK");
         assertEquals(screenTasks.getGeneralTaskList().get(0).getDescription(), "A General Task Description");
@@ -199,7 +199,7 @@ class TasksScreenTest {
         assertEquals(screenTasks.getGeneralTaskList().get(0).getImportance(), "LOW");
 
         Scanner user_input2 = new Scanner("2\nAn Event Description\n10\n11\n18\n12\n11\n18\nLOW\nNONE");
-        screenTasks.addItem(user_input2);
+        screenTasks.addUniClass(user_input2);
         assertEquals("EVENT", screenTasks.getEventTaskList().get(0).getType());
         assertEquals("An Event Description", screenTasks.getEventTaskList().get(0).getDescription());
         assertEquals(10, screenTasks.getEventTaskList().get(0).getStartDay());
@@ -217,10 +217,10 @@ class TasksScreenTest {
     void testAddTaskAndView() {
         // adding was already tested.
         Scanner user_input = new Scanner("1\nA General Task Description\n10\n10\n18\nLOW");
-        screenTasks.addItem(user_input);
+        screenTasks.addUniClass(user_input);
 
         Scanner user_input2 = new Scanner("2\nAn Event Description\n10\n11\n18\n12\n11\n18\nLOW\nNONE");
-        screenTasks.addItem(user_input2);
+        screenTasks.addUniClass(user_input2);
 
         screenTasks.printItems();
     }
@@ -228,13 +228,13 @@ class TasksScreenTest {
     @Test
     void testAddMultipleTasksValidInput() {
         Scanner user_input1 = new Scanner("1\nA Task Description\n10\n11\n18\nLOW");
-        screenTasks.addItem(user_input1);
+        screenTasks.addUniClass(user_input1);
         Scanner user_input2 = new Scanner("1\nAnother Task Description\n10\n10\n18\nMEDIUM");
-        screenTasks.addItem(user_input2);
+        screenTasks.addUniClass(user_input2);
         Scanner user_input3 = new Scanner("2\nAn Event Description\n10\n11\n18\n11\n11\n18\nHIGH\nNONE");
-        screenTasks.addItem(user_input3);
+        screenTasks.addUniClass(user_input3);
         Scanner user_input4 = new Scanner("2\nAnother Event Description\n29\n11\n18\n30\n11\n18\nEXTREME\nNONE");
-        screenTasks.addItem(user_input4);
+        screenTasks.addUniClass(user_input4);
 
         assertEquals( "TASK", screenTasks.getGeneralTaskList().get(0).getType());
         assertEquals("A Task Description", screenTasks.getGeneralTaskList().get(0).getDescription());
@@ -277,13 +277,13 @@ class TasksScreenTest {
     void testAddMultipleTasksAndView() {
         // Adding multiple was already tested.
         Scanner user_input1 = new Scanner("1\nA Task Description\n10\n11\n18\nLOW");
-        screenTasks.addItem(user_input1);
+        screenTasks.addUniClass(user_input1);
         Scanner user_input2 = new Scanner("1\nAnother Task Description\n10\n10\n18\nMEDIUM");
-        screenTasks.addItem(user_input2);
+        screenTasks.addUniClass(user_input2);
         Scanner user_input3 = new Scanner("2\nAn Event Description\n10\n11\n18\n11\n11\n18\nHIGH\nNONE");
-        screenTasks.addItem(user_input3);
+        screenTasks.addUniClass(user_input3);
         Scanner user_input4 = new Scanner("2\nAnother Event Description\n29\n11\n18\n30\n11\n18\nEXTREME\nNONE");
-        screenTasks.addItem(user_input4);
+        screenTasks.addUniClass(user_input4);
 
         screenTasks.printItems();
     }
@@ -294,19 +294,19 @@ class TasksScreenTest {
 
         //invalid day (lower boundary)
         Scanner user_input1 = new Scanner("1\nA Task Description\n0\n11\n18\nLOW");
-        screenTasks.addItem(user_input1);
+        screenTasks.addUniClass(user_input1);
 
         //invalid month (lower boundary)
         Scanner user_input2 = new Scanner("1\nAnother Task Description\n10\n0\n18\nMEDIUM");
-        screenTasks.addItem(user_input2);
+        screenTasks.addUniClass(user_input2);
 
         //invalid year (lower boundary)
         Scanner user_input3 = new Scanner("2\nAn Event Description\n10\n11\n0\n11\n11\n18\nHIGH\nNONE");
-        screenTasks.addItem(user_input3);
+        screenTasks.addUniClass(user_input3);
 
         //invalid importanceLevel
         Scanner user_input4 = new Scanner("2\nAnother Event Description\n29\n11\n18\n30\n11\n18\nHello\nNONE");
-        screenTasks.addItem(user_input4);
+        screenTasks.addUniClass(user_input4);
 
         assertEquals(0, screenTasks.getGeneralTaskList().size());
         assertEquals(0, screenTasks.getEventTaskList().size());
@@ -318,15 +318,15 @@ class TasksScreenTest {
 
         //valid day (lower boundary)
         Scanner user_input1 = new Scanner("1\nA Task Description\n1\n10\n19\nLOW");
-        screenTasks.addItem(user_input1);
+        screenTasks.addUniClass(user_input1);
 
         //valid month (lower boundary)
         Scanner user_input2 = new Scanner("1\nAnother Task Description\n10\n1\n40\nMEDIUM");
-        screenTasks.addItem(user_input2);
+        screenTasks.addUniClass(user_input2);
 
         //valid year (lower boundary)
         Scanner user_input3 = new Scanner("1\nYet Another Task Description\n10\n10\n18\nHIGH");
-        screenTasks.addItem(user_input3);
+        screenTasks.addUniClass(user_input3);
 
         assertEquals( "TASK", screenTasks.getGeneralTaskList().get(0).getType());
         assertEquals("A Task Description", screenTasks.getGeneralTaskList().get(0).getDescription());
@@ -355,27 +355,27 @@ class TasksScreenTest {
 
         //invalid day (upper boundary)
         Scanner user_input1 = new Scanner("1\nA Task Description\n32\n10\n18\nLOW");
-        screenTasks.addItem(user_input1);
+        screenTasks.addUniClass(user_input1);
 
         //invalid month (upper boundary)
         Scanner user_input2 = new Scanner("1\nAnother Task Description\n10\n13\n18\nMEDIUM");
-        screenTasks.addItem(user_input2);
+        screenTasks.addUniClass(user_input2);
 
         //invalid year (upper boundary)
         Scanner user_input3 = new Scanner("1\nYet Another Task Description\n10\n10\n100\nHIGH");
-        screenTasks.addItem(user_input3);
+        screenTasks.addUniClass(user_input3);
 
         //invalid day (upper boundary) but valid month
         Scanner user_input4 = new Scanner("1\nA Task Description\n31\n9\n18\nLOW");
-        screenTasks.addItem(user_input4);
+        screenTasks.addUniClass(user_input4);
 
         //invalid day (upper boundary) but valid month
         Scanner user_input5 = new Scanner("1\nA Task Description\n29\n2\n19\nLOW");
-        screenTasks.addItem(user_input5);
+        screenTasks.addUniClass(user_input5);
 
         //invalid day (upper boundary) but valid month and leap year.
         Scanner user_input6 = new Scanner("1\nA Task Description\n30\n2\n20\nLOW");
-        screenTasks.addItem(user_input6);
+        screenTasks.addUniClass(user_input6);
 
         assertEquals(0, screenTasks.getGeneralTaskList().size());
 
@@ -386,23 +386,23 @@ class TasksScreenTest {
 
         //valid day (upper boundary)
         Scanner user_input1 = new Scanner("1\nA Task Description\n31\n10\n18\nLOW");
-        screenTasks.addItem(user_input1);
+        screenTasks.addUniClass(user_input1);
 
         //valid month (upper boundary)
         Scanner user_input2 = new Scanner("1\nAnother Task Description\n10\n12\n18\nMEDIUM");
-        screenTasks.addItem(user_input2);
+        screenTasks.addUniClass(user_input2);
 
         //valid year (upper boundary)
         Scanner user_input3 = new Scanner("1\nYet Another Task Description\n10\n10\n99\nHIGH");
-        screenTasks.addItem(user_input3);
+        screenTasks.addUniClass(user_input3);
 
         //valid day (upper boundary) + February (non-leap year)
         Scanner user_input4 = new Scanner("1\nTask 1\n28\n2\n19\nLOW");
-        screenTasks.addItem(user_input4);
+        screenTasks.addUniClass(user_input4);
 
         //valid day (upper boundary) + February (non-leap year)
         Scanner user_input5 = new Scanner("1\nTask 2\n29\n2\n20\nLOW");
-        screenTasks.addItem(user_input5);
+        screenTasks.addUniClass(user_input5);
 
         screenTasks.printItems();
 
@@ -441,6 +441,6 @@ class TasksScreenTest {
         assertEquals(20, screenTasks.getGeneralTaskList().get(4).getYear());
         assertEquals("LOW", screenTasks.getGeneralTaskList().get(4).getImportance());
     }
-
-
 }
+
+*/

@@ -5,7 +5,7 @@ import inputs.UniClass;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
-
+/*
 // Testing of valid/invalid input handled in TimetableScreenTest
 class UniClassTest {
 
@@ -40,3 +40,4 @@ class UniClassTest {
     }
 
 }
+*/

@@ -1,8 +1,5 @@
 package inputs;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 abstract public class Task implements StoredObject {
 
     protected enum Importance {

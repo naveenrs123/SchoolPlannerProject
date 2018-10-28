@@ -7,9 +7,9 @@ public interface InputScreen {
 
     int addOrView(Scanner user_input);
 
-    void addItem(Scanner user_input);
+    void addingItemDetails();
 
-    void printItems();
+    void addToListObject(Scanner user_input);
 
-    void itemDetails();
+    int loadItemsIntoListObject();
 }

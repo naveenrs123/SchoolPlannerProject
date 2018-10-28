@@ -92,12 +92,12 @@ public class SchoolPlanner {
         boolean addingTasks = true;
         int addOrViewTask = screenTasks.addOrView(user_input);
         if (addOrViewTask == 1) {
-            screenTasks.printItems();
+            screenTasks.printStoredItems();
         }
         else if (addOrViewTask == 2) {
             while (addingTasks) {
-                screenTasks.addItem(user_input);
-                screenTasks.printItems();
+                screenTasks.addToListObject(user_input);
+                screenTasks.printStoredItems();
                 addingTasks = backToMenu(user_input);
             }
         }
@@ -108,12 +108,12 @@ public class SchoolPlanner {
         boolean addingClasses = true;
         int addOrViewClasses = screenTimetable.addOrView(user_input);
         if (addOrViewClasses == 1) {
-            screenTimetable.printItems();
+            screenTimetable.printStoredItems();
         }
         else if (addOrViewClasses == 2) {
             while (addingClasses) {
-                screenTimetable.addItem(user_input);
-                screenTimetable.printItems();
+                screenTimetable.addToListObject(user_input);
+                screenTimetable.printStoredItems();
                 addingClasses = backToMenu(user_input);
             }
         }

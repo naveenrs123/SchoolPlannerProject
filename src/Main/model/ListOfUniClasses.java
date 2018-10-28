@@ -2,21 +2,26 @@ package model;
 
 import exceptions.input.BadClassTypeException;
 import exceptions.input.BadTimeException;
+import inputs.Textbook;
 import inputs.UniClass;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class ListOfUniClasses {
+public class ListOfUniClasses implements ListOfItems {
 
-    private ArrayList<UniClass> classList = new ArrayList<>();
+    private ArrayList<UniClass> classList;
 
     public  ListOfUniClasses() {
-
+        classList = new ArrayList<>();
     }
 
-    // USER INPUT FUNCTIONS FOR DETAILS OF A UNICLASS (BEGIN)
+    // USER INPUT METHODS FOR DETAILS OF A UNICLASS (BEGIN)
 
     public String userClassName(Scanner user_input) {
         System.out.print("Class Name: ");
@@ -98,5 +103,140 @@ public class ListOfUniClasses {
         return days;
     }
 
-    // USER INPUT FUNCTIONS FOR DETAILS OF A UNICLASS (END)
+    // USER INPUT METHODS FOR DETAILS OF A UNICLASS (END)
+
+    public boolean wantToAddTextbook(Scanner user_input) {
+        String choice;
+        do {
+            System.out.println("Do you want to add a textbook to this class? (Y/N):");
+            choice = user_input.nextLine().toUpperCase();
+            if (choice.equals("Y")) {
+                return true;
+            }
+            else if (choice.equals("N")) {
+                return false;
+            }
+            else {
+                System.out.println("Enter Y or N.");
+            }
+        } while (true);
+    }
+
+    // ADDING METHODS (START)
+
+    // MODIFIES: this
+    // EFFECTS: allows user to create a new UniClass and then saves the created UniClass.
+    public void addUniClass(Scanner user_input) {
+
+        try {
+            String classType = userClassType(user_input);
+            String name = userClassName(user_input);
+            String prof = userProf(user_input);
+            String location = userLocation(user_input);
+            String startTime = userStartTime(user_input);
+            String endTime = userEndTime(user_input);
+            ArrayList<Integer> days = userDays(user_input);
+            if (days.size() == 0) {
+                System.out.println("No days entered. Your class was not created.");
+                return;
+            }
+
+            if (wantToAddTextbook(user_input)) {
+                Textbook textbook = new Textbook();
+                textbook.setDetails(user_input);
+                createUniClass(classType, name, prof, location, startTime, endTime, days, textbook);
+            } else {
+                Textbook textbook = new Textbook();
+                createUniClass(classType, name, prof, location, startTime, endTime, days, textbook);
+            }
+        } catch (BadClassTypeException bctex) {
+            System.out.println(bctex.getMessage());
+        } catch (BadTimeException btex) {
+            System.out.println(btex.getMessage());
+        }
+    }
+
+    public void createUniClass(String name, String classType, String prof, String location, String startTime, String endTime,
+                               ArrayList<Integer> days, Textbook textbook) {
+        UniClass newClass = new UniClass(name, classType, prof, location, Integer.parseInt(startTime), Integer.parseInt(endTime), days,
+                textbook);
+        classList.add(newClass);
+        saveUniClass(newClass);
+        System.out.println("A new class has been created.");
+    }
+
+    // EFFECTS: saves uc to a file.
+    public void saveUniClass(UniClass uc) {
+        String filename = "listofclasses.csv";
+        try {
+            FileWriter fileWriter = new FileWriter(filename, true);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(uc.getClassType() + "," + uc.getName() + "," + uc.getProf() + "," + uc.getLocation() + ",");
+            bufferedWriter.write(uc.getStartTime() + "," + uc.getEndTime() + ",");
+            Textbook t = uc.getTextbook();
+            bufferedWriter.write(t.getTitle() + "," + t.getAuthor() + "," + t.getPages());
+            ArrayList<Integer> days = uc.getDays();
+            for (int day : days) {
+                bufferedWriter.write("," + day);
+            }
+            bufferedWriter.newLine();
+            bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ADDING METHODS (END)
+
+    // MODIFIES: this
+    // EFFECTS: extracts details of uniClass from currentItem and adds the class to the classList.
+    public void loadSingleItem(String currentItem) {
+        ArrayList<String> tempClassDetails;
+
+        tempClassDetails = new ArrayList<>(Arrays.asList(currentItem.split(",")));
+        String classType = tempClassDetails.get(0);
+        String className = tempClassDetails.get(1);
+        String prof = tempClassDetails.get(2);
+        String room = tempClassDetails.get(3);
+        String start = tempClassDetails.get(4);
+        String end = tempClassDetails.get(5);
+        String textbookTitle = tempClassDetails.get(6);
+        String textbookAuthor = tempClassDetails.get(7);
+        int textbookPages = Integer.parseInt(tempClassDetails.get(8));
+
+        ArrayList<Integer> days = new ArrayList<>();
+        for (int i = 9; i < tempClassDetails.size(); i++) {
+            String day = tempClassDetails.get(i);
+            days.add(Integer.parseInt(day));
+        }
+
+        Textbook tempTextbook;
+        if (textbookTitle.equals("null") && textbookAuthor.equals("null")) {
+            tempTextbook = new Textbook();
+        } else {
+            tempTextbook = new Textbook(textbookTitle, textbookAuthor, textbookPages);
+        }
+        UniClass tempUniClass = new UniClass(classType, className, prof, room, Integer.parseInt(start), Integer.parseInt(end), days,
+                tempTextbook);
+        classList.add(tempUniClass);
+    }
+
+    // EFFECTS: outputs stored UniClasses
+    public void printItems() {
+        if (classList.size() > 0) {
+            System.out.println("**CLASSES**\n");
+            for (UniClass uniClass : classList) {
+                uniClass.printItem();
+                System.out.println();
+            }
+        } else {
+            System.out.println("You have no classes.");
+            System.out.println();
+        }
+    }
+
+    // EFFECTS: gets the classList
+    public ArrayList<UniClass> getClassList() {
+        return classList;
+    }
 }

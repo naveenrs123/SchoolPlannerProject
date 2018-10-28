@@ -2,6 +2,7 @@ package inputs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 // name given to avoid causing conflict and confusion with built-in 'class' keyword.
 public class UniClass implements StoredObject {
@@ -14,10 +15,16 @@ public class UniClass implements StoredObject {
     private ArrayList<Integer> days;
     private static ArrayList<String> daysOfWeek = new ArrayList<>
             (Arrays.asList("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"));
+    private Textbook textbook;
+
+    public UniClass() {
+
+    }
 
     // REQUIRES: valid ClassType, valid 24 hour time as an Integer, Days list containing integers between 1 and 7
     // EFFECTS: creates a new UniClass object and sets its fields.
-    public UniClass(String cClassType, String cName, String cProf, String cLocation, int cStartTime, int cEndTime, ArrayList<Integer> cDays) {
+    public UniClass(String cClassType, String cName, String cProf, String cLocation, int cStartTime, int cEndTime, ArrayList<Integer> cDays,
+                    Textbook courseTextbook) {
         classType = cClassType;
         name = cName;
         prof = cProf;
@@ -26,6 +33,19 @@ public class UniClass implements StoredObject {
         endTime = cEndTime;
         days = new ArrayList<>();
         days.addAll(cDays);
+        if (courseTextbook == null) {
+            textbook = new Textbook();
+        } else {
+            textbook = new Textbook();
+            addTextbook(courseTextbook);
+        }
+    }
+
+    public void addTextbook(Textbook t) {
+        if (!textbook.equals(t)) {
+            textbook = t;
+            textbook.addUniClass(this);
+        }
     }
 
     // EFFECTS: prints the details of a UniClass to the console.
@@ -42,6 +62,13 @@ public class UniClass implements StoredObject {
             System.out.print(daysOfWeek.get(days.get(i) - 1 ) + ", ");
         }
         System.out.println("and " +  daysOfWeek.get(days.get(i) - 1) + ".");
+
+        if (textbook.getTitle() != null && textbook.getAuthor() != null) {
+            textbook.printTextbook();
+        } else {
+            System.out.println("No textbook.");
+        }
+
     }
 
     // EFFECTS: gets the name.
@@ -64,4 +91,21 @@ public class UniClass implements StoredObject {
 
     // EFFECTS: gets the list of days
     public ArrayList<Integer> getDays() { return days; }
+
+    public Textbook getTextbook() {
+        return textbook;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UniClass uniClass = (UniClass) o;
+        return Objects.equals(name, uniClass.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
 }

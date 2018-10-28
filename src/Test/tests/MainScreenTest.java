@@ -42,9 +42,9 @@ class MainScreenTest {
         try {
             FileWriter fileWriter = new FileWriter(filename, true);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write("CPSC 210,Elisa Baniassad,SWNG 122,1200,1300,1,3,5");
+            bufferedWriter.write("LECTURE,CPSC 210,Elisa Baniassad,SWNG 122,1200,1300,textbook,author,300,1,3,5");
             bufferedWriter.newLine();
-            bufferedWriter.write("MATH 221,Gyo-Taek Jin,LSK 201,1000,1000,1,3,5");
+            bufferedWriter.write("LECTURE,MATH 221,Gyo-Taek Jin,LSK 201,1000,1100,null,null,0,1,3,5");
             bufferedWriter.newLine();
             bufferedWriter.close();
         } catch (IOException ioex) {
