@@ -90,7 +90,7 @@ public class SchoolPlanner {
     // EFFECTS: handles choices for adding or viewing tasks (HELPER).
     public void handleAddOrViewTask(Scanner user_input) {
         boolean addingTasks = true;
-        int addOrViewTask = screenTasks.addOrView(user_input);
+        int addOrViewTask = screenTasks.handleOptions(user_input);
         if (addOrViewTask == 1) {
             screenTasks.printStoredItems();
         }
@@ -101,21 +101,53 @@ public class SchoolPlanner {
                 addingTasks = backToMenu(user_input);
             }
         }
+        else if (addOrViewTask == 3) {
+            while (addingTasks) {
+                screenTasks.removeItem(user_input);
+                screenTasks.printStoredItems();
+                addingTasks = backToMenu(user_input);
+            }
+        }
+
     }
 
     // EFFECTS: handles choices for adding or viewing classes (HELPER).
     public void handleAddOrViewClasses(Scanner user_input) {
-        boolean addingClasses = true;
-        int addOrViewClasses = screenTimetable.addOrView(user_input);
+        boolean managingClasses = true;
+        int addOrViewClasses = screenTimetable.handleOptions(user_input);
         if (addOrViewClasses == 1) {
             screenTimetable.printStoredItems();
         }
         else if (addOrViewClasses == 2) {
-            while (addingClasses) {
+            while (managingClasses) {
                 screenTimetable.addToListObject(user_input);
                 screenTimetable.printStoredItems();
-                addingClasses = backToMenu(user_input);
+                managingClasses = backToMenu(user_input);
             }
+        }
+        else if (addOrViewClasses == 3) {
+            while(managingClasses) {
+                screenTimetable.removeItem(user_input);
+                screenTimetable.printStoredItems();
+                managingClasses = backToMenu(user_input);
+            }
+        }
+        else if (addOrViewClasses == 4) {
+            while (managingClasses) {
+                screenTimetable.removeTextbook(user_input);
+                screenTimetable.printStoredItems();
+                managingClasses = backToMenu(user_input);
+            }
+        }
+        else if (addOrViewClasses == 5) {
+            while (managingClasses) {
+                screenTimetable.addTextbook(user_input);
+                screenTimetable.printStoredItems();
+                managingClasses = backToMenu(user_input);
+            }
+        }
+        else if (addOrViewClasses == 6) {
+                screenTimetable.printTextbooks();
         }
     }
 
@@ -125,6 +157,7 @@ public class SchoolPlanner {
         Scanner user_input = new Scanner(System.in);
         screenMain.myClasses(screenTimetable);
         screenMain.myTasks(screenTasks);
+        screenMain.myTextbooks(screenTimetable);
 
         while (true) {
             int choice = navigationInput(user_input);
@@ -136,6 +169,8 @@ public class SchoolPlanner {
                     screenSettings.welcomeMessage();
                 } else if (choice == 4) {
                     System.out.println("Goodbye " + userName + ", come back soon!");
+                    screenTimetable.saveList();
+                    screenTasks.saveList();
                     System.exit(0);
                 } else {
                     System.out.println("You did not enter a valid option.");

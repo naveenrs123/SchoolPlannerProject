@@ -130,6 +130,41 @@ public class ListOfEventTasks extends ListOfTasks {
         }
     }
 
+    public void removeItem(Scanner user_input) {
+        if (eventTaskList.isEmpty()) {
+            System.out.println("You have no general tasks to remove.");
+            return;
+        }
+        String description = userDescription(user_input);
+        String startDay; String startMonth; String startYear; String endDay; String endMonth; String endYear;
+        try {
+            System.out.println("START DATE:");
+            startDay = userDay(user_input);
+            startMonth = userMonth(user_input);
+            startYear = userYear(user_input);
+            System.out.println("END DATE:");
+            endDay = userDay(user_input);
+            endMonth = userMonth(user_input);
+            endYear = userYear(user_input);
+            for (EventTask task : eventTaskList) {
+                if (description.equals(task.getDescription()) && Integer.parseInt(startDay) == task.getStartDay()
+                        && Integer.parseInt(startMonth) == task.getStartMonth() && Integer.parseInt(startYear) == task.getStartYear()
+                        && Integer.parseInt(endDay) == task.getEndDay() && Integer.parseInt(endMonth) == task.getEndMonth() &&
+                        Integer.parseInt(endYear) == task.getEndYear()) {
+                    eventTaskList.remove(task);
+                    System.out.println("The task was removed successfully.");
+                    break;
+                } else {
+                    System.out.println("The task you tried to remove was not found.");
+                }
+            }
+
+        } catch (BadDateInputException bdiex) {
+            System.out.println(bdiex.getMessage());
+            System.out.println("Try removing the task again.");
+        }
+    }
+
     // loads a single item.
     public void loadSingleItem(String currentItem) {
         ArrayList<String> tempTaskDetails;
@@ -137,8 +172,22 @@ public class ListOfEventTasks extends ListOfTasks {
         loadTask(tempTaskDetails);
     }
 
+    // EFFECTS: saves all the generalTasks to a file.
+    public void saveList() {
+        String filename = "listofeventtasks.csv";
+        try {
+            FileWriter fileWriter = new FileWriter(filename);
+            fileWriter.close();
+            for (EventTask et : eventTaskList) {
+                saveTask(et);
+            }
+        } catch (IOException e) {
+            System.out.println("Error while saving to file.");
+        }
+    }
+
     // EFFECTS: gets the eventTaskList
-    public ArrayList<EventTask> getEventTaskList() {
+    public ArrayList<EventTask> getTaskList() {
         return eventTaskList;
     }
 }

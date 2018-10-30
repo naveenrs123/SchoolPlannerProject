@@ -5,7 +5,7 @@ import java.util.Scanner;
 // interface for screens that deal with input classes
 public interface InputScreen {
 
-    int addOrView(Scanner user_input);
+    int handleOptions(Scanner user_input);
 
     void addingItemDetails();
 

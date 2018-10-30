@@ -8,17 +8,16 @@ import inputs.UniClass;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 
 public class ListOfUniClasses implements ListOfItems {
 
-    private ArrayList<UniClass> classList;
+    private HashMap<ArrayList<String>, UniClass> classList;
+    private ListOfTextbooks listOfTextbooks;
 
-    public  ListOfUniClasses() {
-        classList = new ArrayList<>();
+    public ListOfUniClasses() {
+        classList = new HashMap<>();
+        listOfTextbooks = new ListOfTextbooks();
     }
 
     // USER INPUT METHODS FOR DETAILS OF A UNICLASS (BEGIN)
@@ -45,6 +44,27 @@ public class ListOfUniClasses implements ListOfItems {
             default:
                 throw new BadClassTypeException("You didn't enter a valid class type. Your task was not created.");
         }
+    }
+
+    public String userClassTypeForSearching(Scanner user_input) {
+        System.out.print("Class Type: ");
+        String classType;
+
+        do {
+            classType = user_input.nextLine().toUpperCase();
+            switch (classType) {
+                case "LECTURE":
+                    return "LECTURE";
+                case "LAB":
+                    return "LAB";
+                case "DISCUSSION":
+                    return "DISCUSSION";
+                case "TUTORIAL":
+                    return "TUTORIAL";
+                default:
+                    System.out.println("You didn't enter a valid class type.");
+            }
+        } while (true);
     }
 
     public String userProf(Scanner user_input) {
@@ -81,7 +101,7 @@ public class ListOfUniClasses implements ListOfItems {
         }
     }
 
-    public ArrayList<Integer> userDays (Scanner user_input) {
+    public ArrayList<Integer> userDays(Scanner user_input) {
         ArrayList<Integer> days = new ArrayList<>();
         System.out.println("Days (type 0 when done):");
         while (true) {
@@ -112,11 +132,9 @@ public class ListOfUniClasses implements ListOfItems {
             choice = user_input.nextLine().toUpperCase();
             if (choice.equals("Y")) {
                 return true;
-            }
-            else if (choice.equals("N")) {
+            } else if (choice.equals("N")) {
                 return false;
-            }
-            else {
+            } else {
                 System.out.println("Enter Y or N.");
             }
         } while (true);
@@ -140,7 +158,6 @@ public class ListOfUniClasses implements ListOfItems {
                 System.out.println("No days entered. Your class was not created.");
                 return;
             }
-
             if (wantToAddTextbook(user_input)) {
                 Textbook textbook = new Textbook();
                 textbook.setDetails(user_input);
@@ -149,6 +166,7 @@ public class ListOfUniClasses implements ListOfItems {
                 Textbook textbook = new Textbook();
                 createUniClass(classType, name, prof, location, startTime, endTime, days, textbook);
             }
+
         } catch (BadClassTypeException bctex) {
             System.out.println(bctex.getMessage());
         } catch (BadTimeException btex) {
@@ -156,11 +174,15 @@ public class ListOfUniClasses implements ListOfItems {
         }
     }
 
-    public void createUniClass(String name, String classType, String prof, String location, String startTime, String endTime,
+    public void createUniClass(String classType, String name, String prof, String location, String startTime, String endTime,
                                ArrayList<Integer> days, Textbook textbook) {
-        UniClass newClass = new UniClass(name, classType, prof, location, Integer.parseInt(startTime), Integer.parseInt(endTime), days,
+        UniClass newClass = new UniClass(classType, name, prof, location, Integer.parseInt(startTime), Integer.parseInt(endTime), days,
                 textbook);
-        classList.add(newClass);
+        if (!textbook.equals(new Textbook())) {
+            listOfTextbooks.addTextbook(newClass);
+        }
+        ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, name));
+        classList.put(key, newClass);
         saveUniClass(newClass);
         System.out.println("A new class has been created.");
     }
@@ -192,7 +214,6 @@ public class ListOfUniClasses implements ListOfItems {
     // EFFECTS: extracts details of uniClass from currentItem and adds the class to the classList.
     public void loadSingleItem(String currentItem) {
         ArrayList<String> tempClassDetails;
-
         tempClassDetails = new ArrayList<>(Arrays.asList(currentItem.split(",")));
         String classType = tempClassDetails.get(0);
         String className = tempClassDetails.get(1);
@@ -218,14 +239,18 @@ public class ListOfUniClasses implements ListOfItems {
         }
         UniClass tempUniClass = new UniClass(classType, className, prof, room, Integer.parseInt(start), Integer.parseInt(end), days,
                 tempTextbook);
-        classList.add(tempUniClass);
+        if (!tempTextbook.equals(new Textbook())) {
+            listOfTextbooks.addTextbook(tempUniClass);
+        }
+        ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, className));
+        classList.put(key, tempUniClass);
     }
 
     // EFFECTS: outputs stored UniClasses
     public void printItems() {
         if (classList.size() > 0) {
             System.out.println("**CLASSES**\n");
-            for (UniClass uniClass : classList) {
+            for (UniClass uniClass : classList.values()) {
                 uniClass.printItem();
                 System.out.println();
             }
@@ -235,8 +260,99 @@ public class ListOfUniClasses implements ListOfItems {
         }
     }
 
+    public void printTextbooks() {
+        listOfTextbooks.printTextbooks();
+    }
+
+    public void removeItem(Scanner user_input) {
+        if (classList.isEmpty()) {
+            return;
+        }
+        printItems();
+        System.out.println("To remove a class, provide the name and class type.");
+        String classType = userClassTypeForSearching(user_input);
+        String name = userClassName(user_input);
+
+        ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, name));
+        if (classList.containsKey(key)) {
+            classList.remove(key);
+            System.out.println("The class was removed successfully");
+            return;
+        } else {
+            System.out.println("The class you tried to remove was not found.");
+        }
+    }
+
+    public void removeTextbook(Scanner user_input) {
+        if (classList.isEmpty()) {
+            return;
+        }
+        printItems();
+        System.out.println("To remove a textbook from a class, provide the name and class type of the class.");
+        String classType = userClassTypeForSearching(user_input);
+        String name = userClassName(user_input);
+        ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, name));
+        if (classList.containsKey(key)) {
+            UniClass uc = classList.get(key);
+            if (uc.getTextbook().equals(new Textbook())) {
+                System.out.println("The class you searched for has no associated textbook.");
+                return;
+            } else {
+                listOfTextbooks.removeTextbook(uc);
+                uc.removeTextbook(uc.getTextbook());
+                System.out.println("The textbook was removed successfully");
+                return;
+            }
+        } else {
+            System.out.println("The class you searched for does not exist.");
+        }
+
+    }
+
+    public void addTextbook(Scanner user_input) {
+        if (classList.isEmpty()) {
+            return;
+        }
+        printItems();
+        System.out.println("To add a textbook to a class, provide the name and class type of the class.");
+        System.out.println("If the class already has a textbook, it will be replaced with the new textbook.");
+        String classType = userClassTypeForSearching(user_input);
+        String name = userClassName(user_input);
+        ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, name));
+        if (classList.containsKey(key)) {
+            UniClass uc = classList.get(key);
+            Textbook tempTextbook = new Textbook();
+            tempTextbook.setDetails(user_input);
+            uc.addTextbook(tempTextbook);
+            listOfTextbooks.addTextbook(uc);
+            System.out.println("Textbook added successfully.");
+            return;
+        } else {
+            System.out.println("The class you were searching for does not exist.");
+        }
+    }
+
     // EFFECTS: gets the classList
-    public ArrayList<UniClass> getClassList() {
+    public HashMap<ArrayList<String>, UniClass> getClassList() {
         return classList;
     }
+
+    // EFFECTS: saves all UniClasses to a file.
+    public void saveList() {
+        String filename = "listofclasses.csv";
+        try {
+            FileWriter fileWriter = new FileWriter(filename);
+            fileWriter.close();
+            for (UniClass uc : classList.values()) {
+                saveUniClass(uc);
+            }
+        } catch (IOException e) {
+            System.out.println("Error while saving to file.");
+        }
+    }
+
+    public ListOfTextbooks getListOfTextbooks() {
+        return listOfTextbooks;
+    }
 }
+

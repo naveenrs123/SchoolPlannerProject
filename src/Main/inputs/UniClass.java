@@ -48,6 +48,13 @@ public class UniClass implements StoredObject {
         }
     }
 
+    public void removeTextbook(Textbook t) {
+        if (textbook.equals(t)) {
+            textbook = new Textbook();
+            textbook.removeUniClass(this);
+        }
+    }
+
     // EFFECTS: prints the details of a UniClass to the console.
     public void printItem() {
         System.out.println(classType + ": " + name + " at " + location + " taught by " + prof + ".");
@@ -55,14 +62,13 @@ public class UniClass implements StoredObject {
 
         if (days.size() == 1) {
             System.out.println(daysOfWeek.get(days.get(0) - 1));
-            return;
+        } else {
+            int i;
+            for (i = 0; i < days.size() - 1; i++) {
+                System.out.print(daysOfWeek.get(days.get(i) - 1) + ", ");
+            }
+            System.out.println("and " + daysOfWeek.get(days.get(i) - 1) + ".");
         }
-        int i;
-        for (i = 0; i < days.size() - 1; i++) {
-            System.out.print(daysOfWeek.get(days.get(i) - 1 ) + ", ");
-        }
-        System.out.println("and " +  daysOfWeek.get(days.get(i) - 1) + ".");
-
         if (textbook.getTitle() != null && textbook.getAuthor() != null) {
             textbook.printTextbook();
         } else {

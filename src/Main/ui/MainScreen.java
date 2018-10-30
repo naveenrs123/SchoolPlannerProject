@@ -1,5 +1,7 @@
 package ui;
 
+import model.ListOfTextbooks;
+
 public class MainScreen {
 
 
@@ -36,6 +38,12 @@ public class MainScreen {
         } else if (isTasksLoaded == 2) {
             System.out.println("Unable to load tasks. Oops!");
         }
+    }
+
+    // EFFECTS: outputs details about user's tasks.
+    public void myTextbooks(TimetableScreen screenTimetable) {
+        ListOfTextbooks textbooks = screenTimetable.getListOfUniClasses().getListOfTextbooks();
+        textbooks.printTextbooks();
     }
 }
 

@@ -25,18 +25,17 @@ public class Textbook {
         associatedClass = new UniClass();
     }
 
-    public Textbook(String title, String author, int pages, UniClass associatedClass) {
-        this.title = title;
-        this.author = author;
-        this.pages = pages;
-        associatedClass = new UniClass();
-        addUniClass(associatedClass);
-    }
-
     public void addUniClass(UniClass uc) {
         if (!associatedClass.equals(uc)) {
             associatedClass = uc;
             associatedClass.addTextbook(this);
+        }
+    }
+
+    public void removeUniClass(UniClass uc) {
+        if (associatedClass.equals(uc)) {
+            associatedClass.removeTextbook(this);
+            associatedClass = new UniClass();
         }
     }
 

@@ -18,18 +18,20 @@ public class TasksScreen implements InputScreen {
     }
 
     // EFFECTS: gets input from the user to decide whether they want to add tasks or view tasks.
-    public int addOrView(Scanner user_input) {
+    public int handleOptions(Scanner user_input) {
         int addOrView;
         while (true) {
             try {
                 System.out.println("What do you want to do?");
-                System.out.println("1. View Tasks\n2. Add Tasks");
+                System.out.println("1. View Tasks\n2. Add Tasks\n3. Remove Tasks");
                 addOrView = user_input.nextInt();
                 user_input.nextLine();
                 if (addOrView == 1) {
                     return 1;
                 } else if (addOrView == 2) {
                     return 2;
+                } else if (addOrView == 3) {
+                    return 3;
                 } else {
                     System.out.println("Enter a valid choice.");
                 }
@@ -64,6 +66,17 @@ public class TasksScreen implements InputScreen {
         } else {
             return "";
         }
+    }
+
+    // EFFECTS: gets the user's choice of task to add.
+    public String chooseTaskTypeForRemoval(Scanner user_input) {
+        System.out.print("Task Type: ");
+        String choice = user_input.nextLine().toUpperCase();
+        while (!(choice.equals("TASK") || choice.equals("EVENT"))) {
+            System.out.println("You didn't choose a valid Task Type, try again.");
+            choice = user_input.nextLine();
+        }
+        return choice;
     }
 
     // MODIFIES: this
@@ -122,11 +135,35 @@ public class TasksScreen implements InputScreen {
 
     }
 
+    public void removeItem(Scanner user_input) {
+        loet.printItems();
+        logt.printItems();
+        System.out.println("To remove a task, you must select a task type, its description and its date.");
+        String taskType = chooseTaskTypeForRemoval(user_input);
+        if (taskType.equals("TASK")) {
+            logt.removeItem(user_input);
+        } if (taskType.equals("EVENT")) {
+            loet.removeItem(user_input);
+        }
+
+    }
+
     public void printStoredItems() {
         System.out.println("**TASKS**\n");
         loet.printItems();
         logt.printItems();
     }
 
+    public void saveList() {
+        logt.saveList();
+        loet.saveList();
+    }
 
+    public ListOfEventTasks getLoet() {
+        return loet;
+    }
+
+    public ListOfGeneralTasks getLogt() {
+        return logt;
+    }
 }

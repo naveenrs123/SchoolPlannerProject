@@ -17,18 +17,27 @@ public class TimetableScreen implements InputScreen {
     }
 
     // EFFECTS: gets input from the user to decide whether they want to add classes or view classes.
-    public int addOrView(Scanner user_input) {
+    public int handleOptions(Scanner user_input) {
         int addOrView;
         while (true) {
             try {
                 System.out.println("What do you want to do?");
-                System.out.println("1. View Classes\n2. Add Classes");
+                System.out.println("1. View Classes\n2. Add Classes\n3. Remove Classes\n4. Remove Textbook from Class\n" +
+                        "5. Add Textbooks\n6. View Textbooks");
                 addOrView = user_input.nextInt();
                 user_input.nextLine();
                 if (addOrView == 1) {
                     return 1;
                 } else if (addOrView == 2) {
                     return 2;
+                } else if (addOrView == 3) {
+                    return 3;
+                } else if (addOrView == 4) {
+                    return 4;
+                } else if (addOrView == 5) {
+                    return 5;
+                } else if (addOrView == 6) {
+                    return 6;
                 } else {
                     System.out.println("Enter a valid choice.");
                 }
@@ -74,8 +83,32 @@ public class TimetableScreen implements InputScreen {
         return 0;
     }
 
+    public void removeItem(Scanner user_input) {
+        louc.removeItem(user_input);
+    }
+
+    public void removeTextbook(Scanner user_input) {
+        louc.removeTextbook(user_input);
+    }
+
+    public void saveList() {
+        louc.saveList();
+    }
+
     public void printStoredItems() {
         louc.printItems();
+    }
+
+    public void printTextbooks() {
+        louc.printTextbooks();
+    }
+
+    public void addTextbook(Scanner user_input) {
+        louc.addTextbook(user_input);
+    }
+
+    public ListOfUniClasses getListOfUniClasses() {
+        return louc;
     }
 
 }

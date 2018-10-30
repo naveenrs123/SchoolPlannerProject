@@ -45,4 +45,6 @@ public class GeneralTask extends Task {
 
     // EFFECTS: gets the year.
     public int getYear() { return date.get(Calendar.YEAR); }
+
+
 }

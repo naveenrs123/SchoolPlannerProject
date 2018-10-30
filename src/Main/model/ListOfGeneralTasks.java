@@ -36,8 +36,10 @@ public class ListOfGeneralTasks extends ListOfTasks {
             createTask(taskType, description, day, month, year, importanceLevel);
         } catch (BadDateInputException bdiex) {
             System.out.println(bdiex.getMessage());
+            System.out.println("Your task was not created.");
         } catch (InvalidImportanceException iiex) {
             System.out.println(iiex.getMessage());
+            System.out.println("Your task was not created.");
         } finally {
             System.out.println("Adding Process finished.");
         }
@@ -88,6 +90,34 @@ public class ListOfGeneralTasks extends ListOfTasks {
         generalTaskList.add(tempGTask);
     }
 
+    public void removeItem(Scanner user_input) {
+        if (generalTaskList.isEmpty()) {
+            System.out.println("You have no general tasks to remove.");
+            return;
+        }
+        String description = userDescription(user_input);
+        String day; String month; String year;
+        try {
+            day = userDay(user_input);
+            month = userMonth(user_input);
+            year = userYear(user_input);
+            for (GeneralTask task : generalTaskList) {
+                if (description.equals(task.getDescription()) && Integer.parseInt(day) == task.getDay()
+                        && Integer.parseInt(month) == task.getMonth() && Integer.parseInt(year) == task.getYear()) {
+                    generalTaskList.remove(task);
+                    System.out.println("The task was removed successfully.");
+                    break;
+                } else {
+                    System.out.println("The task you tried to remove was not found.");
+                }
+            }
+
+        } catch (BadDateInputException bdiex) {
+            System.out.println(bdiex.getMessage());
+            System.out.println("Try removing the task again.");
+        }
+    }
+
     // EFFECTS: gets all stored tasks.
     public void printItems() {
 
@@ -109,8 +139,22 @@ public class ListOfGeneralTasks extends ListOfTasks {
         loadTask(tempTaskDetails);
     }
 
+    // EFFECTS: saves all the generalTasks to a file.
+    public void saveList() {
+        String filename = "listofgeneraltasks.csv";
+        try {
+            FileWriter fileWriter = new FileWriter(filename);
+            fileWriter.close();
+            for (GeneralTask gt : generalTaskList) {
+                saveTask(gt);
+            }
+        } catch (IOException e) {
+            System.out.println("Error while saving to file.");
+        }
+    }
+
     // EFFECTS: gets the generalTaskList
-    public ArrayList<GeneralTask> getGeneralTaskList() {
+    public ArrayList<GeneralTask> getTaskList() {
         return generalTaskList;
     }
 }
