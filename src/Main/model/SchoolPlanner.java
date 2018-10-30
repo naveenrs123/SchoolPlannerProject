@@ -88,7 +88,7 @@ public class SchoolPlanner {
     }
 
     // EFFECTS: handles choices for adding or viewing tasks (HELPER).
-    public void handleAddOrViewTask(Scanner user_input) {
+    public void handleTasksScreen(Scanner user_input) {
         boolean addingTasks = true;
         int addOrViewTask = screenTasks.handleOptions(user_input);
         if (addOrViewTask == 1) {
@@ -112,7 +112,7 @@ public class SchoolPlanner {
     }
 
     // EFFECTS: handles choices for adding or viewing classes (HELPER).
-    public void handleAddOrViewClasses(Scanner user_input) {
+    public void handleTimetableScreen(Scanner user_input) {
         boolean managingClasses = true;
         int addOrViewClasses = screenTimetable.handleOptions(user_input);
         if (addOrViewClasses == 1) {
@@ -162,9 +162,9 @@ public class SchoolPlanner {
         while (true) {
             int choice = navigationInput(user_input);
                 if (choice == 1) {
-                    handleAddOrViewTask(user_input);
+                    handleTasksScreen(user_input);
                 } else if (choice == 2) {
-                    handleAddOrViewClasses(user_input);
+                    handleTimetableScreen(user_input);
                 } else if (choice == 3) {
                     screenSettings.welcomeMessage();
                 } else if (choice == 4) {

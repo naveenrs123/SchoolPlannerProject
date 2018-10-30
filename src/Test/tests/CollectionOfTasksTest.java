@@ -5,8 +5,8 @@ import exceptions.date.BadMonthException;
 import exceptions.date.BadYearException;
 import exceptions.date.InvalidDateException;
 import exceptions.input.InvalidImportanceException;
-import model.ListOfEventTasks;
-import model.ListOfGeneralTasks;
+import model.CollectionOfEventTasks;
+import model.CollectionOfGeneralTasks;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,17 +16,17 @@ import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ListOfTasksTest {
+public class CollectionOfTasksTest {
 
-    private ListOfGeneralTasks generalTasks;
-    private ListOfEventTasks eventTasks;
+    private CollectionOfGeneralTasks generalTasks;
+    private CollectionOfEventTasks eventTasks;
     private String filename1 = "listofgeneraltasks.csv";
     private String filename2 = "listofeventtasks.csv";
 
     @BeforeEach
     void setup() {
-        generalTasks = new ListOfGeneralTasks();
-        eventTasks = new ListOfEventTasks();
+        generalTasks = new CollectionOfGeneralTasks();
+        eventTasks = new CollectionOfEventTasks();
     }
 
     @AfterEach

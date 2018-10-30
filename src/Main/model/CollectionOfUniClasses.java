@@ -10,14 +10,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class ListOfUniClasses implements ListOfItems {
+public class CollectionOfUniClasses implements CollectionOfItems {
 
-    private HashMap<ArrayList<String>, UniClass> classList;
-    private ListOfTextbooks listOfTextbooks;
+    private HashMap<ArrayList<String>, UniClass> classMap;
+    private CollectionOfTextbooks collectionOfTextbooks;
 
-    public ListOfUniClasses() {
-        classList = new HashMap<>();
-        listOfTextbooks = new ListOfTextbooks();
+    public CollectionOfUniClasses() {
+        classMap = new HashMap<>();
+        collectionOfTextbooks = new CollectionOfTextbooks();
     }
 
     // USER INPUT METHODS FOR DETAILS OF A UNICLASS (BEGIN)
@@ -179,10 +179,10 @@ public class ListOfUniClasses implements ListOfItems {
         UniClass newClass = new UniClass(classType, name, prof, location, Integer.parseInt(startTime), Integer.parseInt(endTime), days,
                 textbook);
         if (!textbook.equals(new Textbook())) {
-            listOfTextbooks.addTextbook(newClass);
+            collectionOfTextbooks.addTextbook(newClass);
         }
         ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, name));
-        classList.put(key, newClass);
+        classMap.put(key, newClass);
         saveUniClass(newClass);
         System.out.println("A new class has been created.");
     }
@@ -211,7 +211,7 @@ public class ListOfUniClasses implements ListOfItems {
     // ADDING METHODS (END)
 
     // MODIFIES: this
-    // EFFECTS: extracts details of uniClass from currentItem and adds the class to the classList.
+    // EFFECTS: extracts details of uniClass from currentItem and adds the class to the classMap.
     public void loadSingleItem(String currentItem) {
         ArrayList<String> tempClassDetails;
         tempClassDetails = new ArrayList<>(Arrays.asList(currentItem.split(",")));
@@ -240,17 +240,17 @@ public class ListOfUniClasses implements ListOfItems {
         UniClass tempUniClass = new UniClass(classType, className, prof, room, Integer.parseInt(start), Integer.parseInt(end), days,
                 tempTextbook);
         if (!tempTextbook.equals(new Textbook())) {
-            listOfTextbooks.addTextbook(tempUniClass);
+            collectionOfTextbooks.addTextbook(tempUniClass);
         }
         ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, className));
-        classList.put(key, tempUniClass);
+        classMap.put(key, tempUniClass);
     }
 
     // EFFECTS: outputs stored UniClasses
     public void printItems() {
-        if (classList.size() > 0) {
+        if (classMap.size() > 0) {
             System.out.println("**CLASSES**\n");
-            for (UniClass uniClass : classList.values()) {
+            for (UniClass uniClass : classMap.values()) {
                 uniClass.printItem();
                 System.out.println();
             }
@@ -261,11 +261,11 @@ public class ListOfUniClasses implements ListOfItems {
     }
 
     public void printTextbooks() {
-        listOfTextbooks.printTextbooks();
+        collectionOfTextbooks.printTextbooks();
     }
 
     public void removeItem(Scanner user_input) {
-        if (classList.isEmpty()) {
+        if (classMap.isEmpty()) {
             return;
         }
         printItems();
@@ -274,8 +274,8 @@ public class ListOfUniClasses implements ListOfItems {
         String name = userClassName(user_input);
 
         ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, name));
-        if (classList.containsKey(key)) {
-            classList.remove(key);
+        if (classMap.containsKey(key)) {
+            classMap.remove(key);
             System.out.println("The class was removed successfully");
             return;
         } else {
@@ -284,7 +284,7 @@ public class ListOfUniClasses implements ListOfItems {
     }
 
     public void removeTextbook(Scanner user_input) {
-        if (classList.isEmpty()) {
+        if (classMap.isEmpty()) {
             return;
         }
         printItems();
@@ -292,13 +292,13 @@ public class ListOfUniClasses implements ListOfItems {
         String classType = userClassTypeForSearching(user_input);
         String name = userClassName(user_input);
         ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, name));
-        if (classList.containsKey(key)) {
-            UniClass uc = classList.get(key);
+        if (classMap.containsKey(key)) {
+            UniClass uc = classMap.get(key);
             if (uc.getTextbook().equals(new Textbook())) {
                 System.out.println("The class you searched for has no associated textbook.");
                 return;
             } else {
-                listOfTextbooks.removeTextbook(uc);
+                collectionOfTextbooks.removeTextbook(uc);
                 uc.removeTextbook(uc.getTextbook());
                 System.out.println("The textbook was removed successfully");
                 return;
@@ -310,7 +310,7 @@ public class ListOfUniClasses implements ListOfItems {
     }
 
     public void addTextbook(Scanner user_input) {
-        if (classList.isEmpty()) {
+        if (classMap.isEmpty()) {
             return;
         }
         printItems();
@@ -319,12 +319,12 @@ public class ListOfUniClasses implements ListOfItems {
         String classType = userClassTypeForSearching(user_input);
         String name = userClassName(user_input);
         ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, name));
-        if (classList.containsKey(key)) {
-            UniClass uc = classList.get(key);
+        if (classMap.containsKey(key)) {
+            UniClass uc = classMap.get(key);
             Textbook tempTextbook = new Textbook();
             tempTextbook.setDetails(user_input);
             uc.addTextbook(tempTextbook);
-            listOfTextbooks.addTextbook(uc);
+            collectionOfTextbooks.addTextbook(uc);
             System.out.println("Textbook added successfully.");
             return;
         } else {
@@ -332,18 +332,18 @@ public class ListOfUniClasses implements ListOfItems {
         }
     }
 
-    // EFFECTS: gets the classList
-    public HashMap<ArrayList<String>, UniClass> getClassList() {
-        return classList;
+    // EFFECTS: gets the classMap
+    public HashMap<ArrayList<String>, UniClass> getClassMap() {
+        return classMap;
     }
 
     // EFFECTS: saves all UniClasses to a file.
-    public void saveList() {
+    public void saveCollection() {
         String filename = "listofclasses.csv";
         try {
             FileWriter fileWriter = new FileWriter(filename);
             fileWriter.close();
-            for (UniClass uc : classList.values()) {
+            for (UniClass uc : classMap.values()) {
                 saveUniClass(uc);
             }
         } catch (IOException e) {
@@ -351,8 +351,8 @@ public class ListOfUniClasses implements ListOfItems {
         }
     }
 
-    public ListOfTextbooks getListOfTextbooks() {
-        return listOfTextbooks;
+    public CollectionOfTextbooks getCollectionOfTextbooks() {
+        return collectionOfTextbooks;
     }
 }
 

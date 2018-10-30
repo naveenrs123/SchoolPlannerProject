@@ -5,11 +5,11 @@ import inputs.UniClass;
 
 import java.util.ArrayList;
 
-public class ListOfTextbooks {
+public class CollectionOfTextbooks {
 
     ArrayList<Textbook> textbooksList;
 
-    public ListOfTextbooks() {
+    public CollectionOfTextbooks() {
         textbooksList = new ArrayList<>();
     }
 

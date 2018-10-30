@@ -1,16 +1,16 @@
 package ui;
 
 import model.InputScreen;
-import model.ListOfGeneralTasks;
-import model.ListOfEventTasks;
+import model.CollectionOfGeneralTasks;
+import model.CollectionOfEventTasks;
 
 import java.io.*;
 import java.util.*;
 
 public class TasksScreen implements InputScreen {
 
-    private ListOfGeneralTasks logt = new ListOfGeneralTasks();
-    private ListOfEventTasks loet = new ListOfEventTasks();
+    private CollectionOfGeneralTasks logt = new CollectionOfGeneralTasks();
+    private CollectionOfEventTasks loet = new CollectionOfEventTasks();
 
     // Creates a new TasksScreen object.
     public TasksScreen() {
@@ -155,15 +155,15 @@ public class TasksScreen implements InputScreen {
     }
 
     public void saveList() {
-        logt.saveList();
-        loet.saveList();
+        logt.saveCollection();
+        loet.saveCollection();
     }
 
-    public ListOfEventTasks getLoet() {
+    public CollectionOfEventTasks getLoet() {
         return loet;
     }
 
-    public ListOfGeneralTasks getLogt() {
+    public CollectionOfGeneralTasks getLogt() {
         return logt;
     }
 }

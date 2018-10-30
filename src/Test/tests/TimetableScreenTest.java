@@ -27,7 +27,7 @@ class TimetableScreenTest {
     @Test
     void testPrintEmptyUniClassList() {
         screenTimetable.printStoredItems();
-        assertEquals(0, screenTimetable.getListOfUniClasses().getClassList().size());
+        assertEquals(0, screenTimetable.getListOfUniClasses().getClassMap().size());
     }
 
     @Test
@@ -91,6 +91,6 @@ class TimetableScreenTest {
 
         screenTimetable.loadItemsIntoListObject();
 
-        assertEquals(2, screenTimetable.getListOfUniClasses().getClassList().size());
+        assertEquals(2, screenTimetable.getListOfUniClasses().getClassMap().size());
     }
 }

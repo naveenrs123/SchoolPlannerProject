@@ -1,6 +1,6 @@
 package ui;
 
-import model.ListOfTextbooks;
+import model.CollectionOfTextbooks;
 
 public class MainScreen {
 
@@ -42,7 +42,7 @@ public class MainScreen {
 
     // EFFECTS: outputs details about user's tasks.
     public void myTextbooks(TimetableScreen screenTimetable) {
-        ListOfTextbooks textbooks = screenTimetable.getListOfUniClasses().getListOfTextbooks();
+        CollectionOfTextbooks textbooks = screenTimetable.getListOfUniClasses().getCollectionOfTextbooks();
         textbooks.printTextbooks();
     }
 }

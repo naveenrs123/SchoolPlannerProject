@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class ListOfGeneralTasks extends ListOfTasks {
+public class CollectionOfGeneralTasks extends CollectionOfTasks {
 
     private ArrayList<GeneralTask> generalTaskList;
 
-    public ListOfGeneralTasks() {
+    public CollectionOfGeneralTasks() {
         generalTaskList = new ArrayList<>();
     }
 
@@ -140,7 +140,7 @@ public class ListOfGeneralTasks extends ListOfTasks {
     }
 
     // EFFECTS: saves all the generalTasks to a file.
-    public void saveList() {
+    public void saveCollection() {
         String filename = "listofgeneraltasks.csv";
         try {
             FileWriter fileWriter = new FileWriter(filename);

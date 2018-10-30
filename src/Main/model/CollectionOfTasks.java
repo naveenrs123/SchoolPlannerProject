@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public abstract class ListOfTasks implements ListOfItems {
+public abstract class CollectionOfTasks implements CollectionOfItems {
 
-    public ListOfTasks() {
+    public CollectionOfTasks() {
 
     }
 

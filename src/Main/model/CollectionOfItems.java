@@ -2,11 +2,11 @@ package model;
 
 import java.util.Scanner;
 
-public interface ListOfItems {
+public interface CollectionOfItems {
 
     void loadSingleItem(String currentItem);
 
-    void saveList();
+    void saveCollection();
 
     void removeItem(Scanner user_input);
 

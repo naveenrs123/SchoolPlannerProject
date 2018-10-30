@@ -2,7 +2,7 @@ package tests;
 
 import inputs.Textbook;
 import inputs.UniClass;
-import model.ListOfTextbooks;
+import model.CollectionOfTextbooks;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,13 +11,13 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ListOfTextbooksTest {
+public class CollectionOfTextbooksTest {
 
-    ListOfTextbooks lot;
+    CollectionOfTextbooks lot;
 
     @BeforeEach
     void setup() {
-        lot = new ListOfTextbooks();
+        lot = new CollectionOfTextbooks();
     }
 
     @Test

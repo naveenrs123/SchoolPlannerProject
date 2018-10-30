@@ -1,7 +1,7 @@
 package ui;
 
 import model.InputScreen;
-import model.ListOfUniClasses;
+import model.CollectionOfUniClasses;
 
 import java.io.*;
 import java.util.InputMismatchException;
@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class TimetableScreen implements InputScreen {
 
-    private ListOfUniClasses louc = new ListOfUniClasses();
+    private CollectionOfUniClasses louc = new CollectionOfUniClasses();
 
     // EFFECTS: creates a new TimetableScreen object.
     public TimetableScreen() {
@@ -92,7 +92,7 @@ public class TimetableScreen implements InputScreen {
     }
 
     public void saveList() {
-        louc.saveList();
+        louc.saveCollection();
     }
 
     public void printStoredItems() {
@@ -107,7 +107,7 @@ public class TimetableScreen implements InputScreen {
         louc.addTextbook(user_input);
     }
 
-    public ListOfUniClasses getListOfUniClasses() {
+    public CollectionOfUniClasses getListOfUniClasses() {
         return louc;
     }
 

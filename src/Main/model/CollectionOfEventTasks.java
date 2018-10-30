@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class ListOfEventTasks extends ListOfTasks {
+public class CollectionOfEventTasks extends CollectionOfTasks {
 
     private ArrayList<EventTask> eventTaskList;
 
-    public ListOfEventTasks() {
+    public CollectionOfEventTasks() {
         eventTaskList = new ArrayList<>();
     }
 
@@ -173,7 +173,7 @@ public class ListOfEventTasks extends ListOfTasks {
     }
 
     // EFFECTS: saves all the generalTasks to a file.
-    public void saveList() {
+    public void saveCollection() {
         String filename = "listofeventtasks.csv";
         try {
             FileWriter fileWriter = new FileWriter(filename);

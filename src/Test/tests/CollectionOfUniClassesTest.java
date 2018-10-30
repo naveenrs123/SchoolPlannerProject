@@ -3,7 +3,7 @@ package tests;
 import exceptions.input.BadClassTypeException;
 import exceptions.input.BadTimeException;
 import inputs.Textbook;
-import model.ListOfUniClasses;
+import model.CollectionOfUniClasses;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,14 +16,14 @@ import java.util.Scanner;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ListOfUniClassesTest {
+public class CollectionOfUniClassesTest {
 
     private String filename = "listofclasses.csv";
-    ListOfUniClasses louc;
+    CollectionOfUniClasses louc;
 
     @BeforeEach
     void setup() {
-        louc = new ListOfUniClasses();
+        louc = new CollectionOfUniClasses();
     }
 
     @AfterEach
@@ -111,17 +111,17 @@ public class ListOfUniClassesTest {
         louc.addUniClass(user_input);
 
         ArrayList<String> key = new ArrayList<>(Arrays.asList("TUTORIAL", "CPSC 210"));
-        assertEquals("TUTORIAL", louc.getClassList().get(key).getClassType());
-        assertEquals("CPSC 210", louc.getClassList().get(key).getName());
-        assertEquals("Elisa Baniassad", louc.getClassList().get(key).getProf());
-        assertEquals("SWNG 122", louc.getClassList().get(key).getLocation());
-        assertEquals(1200, louc.getClassList().get(key).getStartTime());
-        assertEquals(1300, louc.getClassList().get(key).getEndTime());
+        assertEquals("TUTORIAL", louc.getClassMap().get(key).getClassType());
+        assertEquals("CPSC 210", louc.getClassMap().get(key).getName());
+        assertEquals("Elisa Baniassad", louc.getClassMap().get(key).getProf());
+        assertEquals("SWNG 122", louc.getClassMap().get(key).getLocation());
+        assertEquals(1200, louc.getClassMap().get(key).getStartTime());
+        assertEquals(1300, louc.getClassMap().get(key).getEndTime());
 
         ArrayList<Integer> days = new ArrayList<>(Arrays.asList(1, 3, 5));
-        assertEquals(days, louc.getClassList().get(key).getDays());
+        assertEquals(days, louc.getClassMap().get(key).getDays());
 
-        Textbook t = louc.getClassList().get(key).getTextbook();
+        Textbook t = louc.getClassMap().get(key).getTextbook();
         assertEquals(null, t.getTitle());
         assertEquals(null, t.getAuthor());
         assertEquals(0, t.getPages());
@@ -149,47 +149,47 @@ public class ListOfUniClassesTest {
         louc.addUniClass(user_input3);
         ArrayList<String> key2 = new ArrayList<>(Arrays.asList("DISCUSSION", "MATH 221"));
 
-        assertEquals("LECTURE", louc.getClassList().get(key0).getClassType());
-        assertEquals("CPSC 210", louc.getClassList().get(key0).getName());
-        assertEquals("Elisa Baniassad", louc.getClassList().get(key0).getProf());
-        assertEquals("SWNG 122", louc.getClassList().get(key0).getLocation());
-        assertEquals(1200, louc.getClassList().get(key0).getStartTime());
-        assertEquals(1300, louc.getClassList().get(key0).getEndTime());
+        assertEquals("LECTURE", louc.getClassMap().get(key0).getClassType());
+        assertEquals("CPSC 210", louc.getClassMap().get(key0).getName());
+        assertEquals("Elisa Baniassad", louc.getClassMap().get(key0).getProf());
+        assertEquals("SWNG 122", louc.getClassMap().get(key0).getLocation());
+        assertEquals(1200, louc.getClassMap().get(key0).getStartTime());
+        assertEquals(1300, louc.getClassMap().get(key0).getEndTime());
 
         ArrayList<Integer> days0 = new ArrayList<>(Arrays.asList(1, 3, 5));
-        assertEquals(days0, louc.getClassList().get(key0).getDays());
+        assertEquals(days0, louc.getClassMap().get(key0).getDays());
 
-        Textbook t0 = louc.getClassList().get(key0).getTextbook();
+        Textbook t0 = louc.getClassMap().get(key0).getTextbook();
         assertEquals(null, t0.getTitle());
         assertEquals(null, t0.getAuthor());
         assertEquals(0, t0.getPages());
 
-        assertEquals("TUTORIAL", louc.getClassList().get(key1).getClassType());
-        assertEquals("CPSC 310", louc.getClassList().get(key1).getName());
-        assertEquals("Elisa Baniassad", louc.getClassList().get(key1).getProf());
-        assertEquals("WESB 100", louc.getClassList().get(key1).getLocation());
-        assertEquals(800, louc.getClassList().get(key1).getStartTime());
-        assertEquals(900, louc.getClassList().get(key1).getEndTime());
+        assertEquals("TUTORIAL", louc.getClassMap().get(key1).getClassType());
+        assertEquals("CPSC 310", louc.getClassMap().get(key1).getName());
+        assertEquals("Elisa Baniassad", louc.getClassMap().get(key1).getProf());
+        assertEquals("WESB 100", louc.getClassMap().get(key1).getLocation());
+        assertEquals(800, louc.getClassMap().get(key1).getStartTime());
+        assertEquals(900, louc.getClassMap().get(key1).getEndTime());
 
         ArrayList<Integer> days1 = new ArrayList<>(Arrays.asList(2, 4));
-        assertEquals(days1, louc.getClassList().get(key1).getDays());
+        assertEquals(days1, louc.getClassMap().get(key1).getDays());
 
-        Textbook t1 = louc.getClassList().get(key1).getTextbook();
+        Textbook t1 = louc.getClassMap().get(key1).getTextbook();
         assertEquals(null, t1.getTitle());
         assertEquals(null, t1.getAuthor());
         assertEquals(0, t1.getPages());
 
-        assertEquals("DISCUSSION", louc.getClassList().get(key2).getClassType());
-        assertEquals("MATH 221", louc.getClassList().get(key2).getName());
-        assertEquals("Some Dude", louc.getClassList().get(key2).getProf());
-        assertEquals("LSK 201", louc.getClassList().get(key2).getLocation());
-        assertEquals(1700, louc.getClassList().get(key2).getStartTime());
-        assertEquals(1800, louc.getClassList().get(key2).getEndTime());
+        assertEquals("DISCUSSION", louc.getClassMap().get(key2).getClassType());
+        assertEquals("MATH 221", louc.getClassMap().get(key2).getName());
+        assertEquals("Some Dude", louc.getClassMap().get(key2).getProf());
+        assertEquals("LSK 201", louc.getClassMap().get(key2).getLocation());
+        assertEquals(1700, louc.getClassMap().get(key2).getStartTime());
+        assertEquals(1800, louc.getClassMap().get(key2).getEndTime());
 
         ArrayList<Integer> days2 = new ArrayList<>(Arrays.asList(1, 3, 5));
-        assertEquals(days2, louc.getClassList().get(key2).getDays());
+        assertEquals(days2, louc.getClassMap().get(key2).getDays());
 
-        Textbook t2 = louc.getClassList().get(key2).getTextbook();
+        Textbook t2 = louc.getClassMap().get(key2).getTextbook();
         assertEquals(null, t2.getTitle());
         assertEquals(null, t2.getAuthor());
         assertEquals(0, t1.getPages());
@@ -222,7 +222,7 @@ public class ListOfUniClassesTest {
         Scanner user_input3 = new Scanner("TUTORIAL\nMATH 221\nSome Dude\nLSK 201\n2401\n1800\n1\n3\n5\n0");
         louc.addUniClass(user_input3);
 
-        assertEquals(0, louc.getClassList().size());
+        assertEquals(0, louc.getClassMap().size());
     }
 
     @Test
@@ -230,7 +230,7 @@ public class ListOfUniClassesTest {
         // If task was not created, test succeeded.
         Scanner user_input1 = new Scanner("LECTURE\nCPSC 210\nElisa Baniassad\nSWNG 122\n1200\n1300\nsdfg\n9\n-1\n0");
         louc.addUniClass(user_input1);
-        assertEquals(0, louc.getClassList().size());
+        assertEquals(0, louc.getClassMap().size());
     }
 
     @Test
@@ -239,7 +239,7 @@ public class ListOfUniClassesTest {
         louc.addUniClass(user_input);
 
         louc.removeItem(user_input);
-        assertEquals(0, louc.getClassList().size());
+        assertEquals(0, louc.getClassMap().size());
 
     }
 
@@ -253,7 +253,7 @@ public class ListOfUniClassesTest {
 
         louc.removeItem(user_input1);
         louc.removeItem(user_input2);
-        assertEquals(0, louc.getClassList().size());
+        assertEquals(0, louc.getClassMap().size());
     }
 
     @Test
@@ -265,7 +265,7 @@ public class ListOfUniClassesTest {
         louc.addTextbook(user_input1);
 
         ArrayList<String> key = new ArrayList<>(Arrays.asList("LECTURE", "CPSC 210"));
-        Textbook t = louc.getClassList().get(key).getTextbook();
+        Textbook t = louc.getClassMap().get(key).getTextbook();
         assertEquals("Textbook", t.getTitle());
         assertEquals("Author", t.getAuthor());
         assertEquals(300, t.getPages());
@@ -284,7 +284,7 @@ public class ListOfUniClassesTest {
         Scanner user_input2 = new Scanner("LECTURE\nCPSC 210");
         louc.removeTextbook(user_input2);
 
-        Textbook t = louc.getClassList().get(key).getTextbook();
+        Textbook t = louc.getClassMap().get(key).getTextbook();
         assertEquals(null, t.getTitle());
         assertEquals(null, t.getAuthor());
         assertEquals(0, t.getPages());
