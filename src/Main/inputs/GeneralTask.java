@@ -15,12 +15,10 @@ public class GeneralTask extends Task {
     }
 
     // EFFECTS: prints the details of a GeneralTask to the console.
-    public void printItem()
-    {
+    public void printItem() {
         System.out.println("Task Type: " + taskType);
         System.out.println("Description: " + description);
         System.out.println("date Due: " + date.get(Calendar.DATE) + "/" + (date.get(Calendar.MONTH) + 1) + "/" + date.get(Calendar.YEAR));
-
         switch (importance) {
             case LOW:
                 System.out.println("Importance: LOW");

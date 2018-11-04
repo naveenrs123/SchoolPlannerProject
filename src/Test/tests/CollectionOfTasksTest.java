@@ -178,7 +178,7 @@ public class CollectionOfTasksTest {
     @Test
     void testAddTaskValidInput() {
         Scanner user_input = new Scanner("A General Task Description\n10\n10\n18\nLOW");
-        generalTasks.addTask(user_input, "TASK");
+        generalTasks.addItem(user_input);
 
         assertEquals(generalTasks.getTaskList().get(0).getType(), "TASK");
         assertEquals(generalTasks.getTaskList().get(0).getDescription(), "A General Task Description");
@@ -189,7 +189,7 @@ public class CollectionOfTasksTest {
 
         Scanner user_input2 = new Scanner("An Event Description\n10\n11\n18\n12\n11\n18\nLOW\nNONE");
 
-        eventTasks.addTask(user_input2, "EVENT");
+        eventTasks.addItem(user_input2);
         assertEquals("EVENT", eventTasks.getTaskList().get(0).getType());
         assertEquals("An Event Description", eventTasks.getTaskList().get(0).getDescription());
         assertEquals(10, eventTasks.getTaskList().get(0).getStartDay());
@@ -207,10 +207,10 @@ public class CollectionOfTasksTest {
     void testAddTaskAndView() {
         // adding was already tested.
         Scanner user_input = new Scanner("A General Task Description\n10\n10\n18\nLOW");
-        generalTasks.addTask(user_input, "TASK");
+        generalTasks.addItem(user_input);
 
         Scanner user_input2 = new Scanner("An Event Description\n10\n11\n18\n12\n11\n18\nLOW\nNONE");
-        eventTasks.addTask(user_input2, "EVENT");
+        eventTasks.addItem(user_input2);
 
         generalTasks.printItems();
         eventTasks.printItems();
@@ -219,13 +219,13 @@ public class CollectionOfTasksTest {
     @Test
     void testAddMultipleTasksValidInput() {
         Scanner user_input1 = new Scanner("A Task Description\n10\n11\n18\nLOW");
-        generalTasks.addTask(user_input1, "TASK");
+        generalTasks.addItem(user_input1);
         Scanner user_input2 = new Scanner("Another Task Description\n10\n10\n18\nMEDIUM");
-        generalTasks.addTask(user_input2, "TASK");
+        generalTasks.addItem(user_input2);
         Scanner user_input3 = new Scanner("An Event Description\n10\n11\n18\n11\n11\n18\nHIGH\nNONE");
-        eventTasks.addTask(user_input3, "EVENT");
+        eventTasks.addItem(user_input3);
         Scanner user_input4 = new Scanner("Another Event Description\n29\n11\n18\n30\n11\n18\nEXTREME\nNONE");
-        eventTasks.addTask(user_input4, "EVENT");
+        eventTasks.addItem(user_input4);
 
         assertEquals( "TASK", generalTasks.getTaskList().get(0).getType());
         assertEquals("A Task Description", generalTasks.getTaskList().get(0).getDescription());
@@ -268,13 +268,13 @@ public class CollectionOfTasksTest {
     void testAddMultipleTasksAndView() {
         // Adding multiple was already tested.
         Scanner user_input1 = new Scanner("A Task Description\n10\n11\n18\nLOW");
-        generalTasks.addTask(user_input1, "TASK");
+        generalTasks.addItem(user_input1);
         Scanner user_input2 = new Scanner("Another Task Description\n10\n10\n18\nMEDIUM");
-        generalTasks.addTask(user_input2, "TASK");
+        generalTasks.addItem(user_input2);
         Scanner user_input3 = new Scanner("An Event Description\n10\n11\n18\n11\n11\n18\nHIGH\nNONE");
-        eventTasks.addTask(user_input3, "EVENT");
+        eventTasks.addItem(user_input3);
         Scanner user_input4 = new Scanner("Another Event Description\n29\n11\n18\n30\n11\n18\nEXTREME\nNONE");
-        eventTasks.addTask(user_input4, "EVENT");
+        eventTasks.addItem(user_input4);
 
         eventTasks.printItems();
         generalTasks.printItems();
@@ -286,19 +286,19 @@ public class CollectionOfTasksTest {
 
         //invalid day (lower boundary)
         Scanner user_input1 = new Scanner("A Task Description\n0\n11\n18\nLOW");
-        generalTasks.addTask(user_input1, "TASK");
+        generalTasks.addItem(user_input1);
 
         //invalid month (lower boundary)
         Scanner user_input2 = new Scanner("Another Task Description\n10\n0\n18\nMEDIUM");
-        generalTasks.addTask(user_input2, "TASK");
+        generalTasks.addItem(user_input2);
 
         //invalid year (lower boundary)
         Scanner user_input3 = new Scanner("An Event Description\n10\n11\n0\n11\n11\n18\nHIGH\nNONE");
-        eventTasks.addTask(user_input3, "EVENT");
+        eventTasks.addItem(user_input3);
 
         //invalid importanceLevel
         Scanner user_input4 = new Scanner("Another Event Description\n29\n11\n18\n30\n11\n18\nHello\nNONE");
-        eventTasks.addTask(user_input4, "EVENT");
+        eventTasks.addItem(user_input4);
 
         assertEquals(0, generalTasks.getTaskList().size());
         assertEquals(0, eventTasks.getTaskList().size());
@@ -310,15 +310,15 @@ public class CollectionOfTasksTest {
 
         //valid day (lower boundary)
         Scanner user_input1 = new Scanner("A Task Description\n1\n10\n19\nLOW");
-        generalTasks.addTask(user_input1, "TASK");
+        generalTasks.addItem(user_input1);
 
         //valid month (lower boundary)
         Scanner user_input2 = new Scanner("Another Task Description\n10\n1\n40\nMEDIUM");
-        generalTasks.addTask(user_input2, "TASK");
+        generalTasks.addItem(user_input2);
 
         //valid year (lower boundary)
         Scanner user_input3 = new Scanner("Yet Another Task Description\n10\n10\n18\nHIGH");
-        generalTasks.addTask(user_input3, "TASK");
+        generalTasks.addItem(user_input3);
 
         assertEquals( "TASK", generalTasks.getTaskList().get(0).getType());
         assertEquals("A Task Description", generalTasks.getTaskList().get(0).getDescription());
@@ -347,27 +347,27 @@ public class CollectionOfTasksTest {
 
         //invalid day (upper boundary)
         Scanner user_input1 = new Scanner("A Task Description\n32\n10\n18\nLOW");
-        generalTasks.addTask(user_input1, "TASK");
+        generalTasks.addItem(user_input1);
 
         //invalid month (upper boundary)
         Scanner user_input2 = new Scanner("Another Task Description\n10\n13\n18\nMEDIUM");
-        generalTasks.addTask(user_input2, "TASK");
+        generalTasks.addItem(user_input2);
 
         //invalid year (upper boundary)
         Scanner user_input3 = new Scanner("Yet Another Task Description\n10\n10\n100\nHIGH");
-        generalTasks.addTask(user_input3, "TASK");
+        generalTasks.addItem(user_input3);
 
         //invalid day (upper boundary) but valid month
         Scanner user_input4 = new Scanner("A Task Description\n31\n9\n18\nLOW");
-        generalTasks.addTask(user_input4, "TASK");
+        generalTasks.addItem(user_input4);
 
         //invalid day (upper boundary) but valid month
         Scanner user_input5 = new Scanner("A Task Description\n29\n2\n19\nLOW");
-        generalTasks.addTask(user_input5, "TASK");
+        generalTasks.addItem(user_input5);
 
         //invalid day (upper boundary) but valid month and leap year.
         Scanner user_input6 = new Scanner("A Task Description\n30\n2\n20\nLOW");
-        generalTasks.addTask(user_input6, "TASK");
+        generalTasks.addItem(user_input6);
 
         assertEquals(0, generalTasks.getTaskList().size());
 
@@ -378,23 +378,23 @@ public class CollectionOfTasksTest {
 
         //valid day (upper boundary)
         Scanner user_input1 = new Scanner("A Task Description\n31\n10\n18\nLOW");
-        generalTasks.addTask(user_input1, "TASK");
+        generalTasks.addItem(user_input1);
 
         //valid month (upper boundary)
         Scanner user_input2 = new Scanner("Another Task Description\n10\n12\n18\nMEDIUM");
-        generalTasks.addTask(user_input2, "TASK");
+        generalTasks.addItem(user_input2);
 
         //valid year (upper boundary)
         Scanner user_input3 = new Scanner("Yet Another Task Description\n10\n10\n99\nHIGH");
-        generalTasks.addTask(user_input3, "TASK");
+        generalTasks.addItem(user_input3);
 
         //valid day (upper boundary) + February (non-leap year)
         Scanner user_input4 = new Scanner("Task 1\n28\n2\n19\nLOW");
-        generalTasks.addTask(user_input4, "TASK");
+        generalTasks.addItem(user_input4);
 
         //valid day (upper boundary) + February (non-leap year)
         Scanner user_input5 = new Scanner("Task 2\n29\n2\n20\nLOW");
-        generalTasks.addTask(user_input5, "TASK");
+        generalTasks.addItem(user_input5);
 
         generalTasks.printItems();
 
@@ -437,7 +437,7 @@ public class CollectionOfTasksTest {
     @Test
     void testRemoveItem() {
         Scanner user_input1 = new Scanner("A Task Description\n10\n11\n18\nLOW");
-        generalTasks.addTask(user_input1, "TASK");
+        generalTasks.addItem(user_input1);
 
         Scanner user_input2 = new Scanner("A Task Description\n10\n11\n18");
         generalTasks.removeItem(user_input2);
@@ -445,7 +445,7 @@ public class CollectionOfTasksTest {
         assertEquals(0, generalTasks.getTaskList().size());
 
         Scanner user_input3 = new Scanner("An Event Description\n10\n11\n18\n11\n11\n18\nHIGH\nNONE");
-        eventTasks.addTask(user_input3, "EVENT");
+        eventTasks.addItem(user_input3);
 
         Scanner user_input4 = new Scanner("An Event Description\n10\n11\n18\n11\n11\n18");
         eventTasks.removeItem(user_input4);
@@ -456,9 +456,9 @@ public class CollectionOfTasksTest {
     @Test
     void testRemoveItemMultiple() {
         Scanner user_input1 = new Scanner("A Task Description\n10\n11\n18\nLOW");
-        generalTasks.addTask(user_input1, "TASK");
+        generalTasks.addItem(user_input1);
         Scanner user_input2 = new Scanner("Another Task Description\n10\n10\n18\nMEDIUM");
-        generalTasks.addTask(user_input2, "TASK");
+        generalTasks.addItem(user_input2);
 
         Scanner user_input3a = new Scanner("A Task Description\n10\n11\n18");
         Scanner user_input3b = new Scanner("Another Task Description\n10\n10\n18");
@@ -467,9 +467,9 @@ public class CollectionOfTasksTest {
         assertEquals(0, generalTasks.getTaskList().size());
 
         Scanner user_input4 = new Scanner("An Event Description\n10\n11\n18\n11\n11\n18\nHIGH\nNONE");
-        eventTasks.addTask(user_input4, "EVENT");
+        eventTasks.addItem(user_input4);
         Scanner user_input5 = new Scanner("Another Event Description\n29\n11\n18\n30\n11\n18\nEXTREME\nNONE");
-        eventTasks.addTask(user_input5, "EVENT");
+        eventTasks.addItem(user_input5);
 
         Scanner user_input6a = new Scanner("An Event Description\n10\n11\n18\n11\n11\n18");
         Scanner user_input6b = new Scanner("Another Event Description\n29\n11\n18\n30\n11\n18");

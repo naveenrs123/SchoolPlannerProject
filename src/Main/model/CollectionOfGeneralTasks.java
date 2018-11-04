@@ -22,24 +22,21 @@ public class CollectionOfGeneralTasks extends CollectionOfTasks {
     // REQUIRES: taskType == "TASK"
     // MODIFIES: this
     // EFFECTS: gets input from the user used to create a GeneralTask
-    public void addTask(Scanner user_input, String taskType) {
+    public void addItem(Scanner user_input) {
+        String taskType = "TASK";
         System.out.println("General tasks need no extra details.");
         String description = userDescription(user_input);
-
         try {
             String day = userDay(user_input);
             String month = userMonth(user_input);
             String year = userYear(user_input);
             validateDate(day, month, year);
             String importanceLevel = getImportanceLevel(user_input);
-
             createTask(taskType, description, day, month, year, importanceLevel);
         } catch (BadDateInputException bdiex) {
-            System.out.println(bdiex.getMessage());
-            System.out.println("Your task was not created.");
+            System.out.println(bdiex.getMessage()); System.out.println("Your task was not created.");
         } catch (InvalidImportanceException iiex) {
-            System.out.println(iiex.getMessage());
-            System.out.println("Your task was not created.");
+            System.out.println(iiex.getMessage()); System.out.println("Your task was not created.");
         } finally {
             System.out.println("Adding Process finished.");
         }
@@ -69,7 +66,6 @@ public class CollectionOfGeneralTasks extends CollectionOfTasks {
             bufferedWriter.write(newGTask.getImportance());
             bufferedWriter.newLine();
             bufferedWriter.close();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,6 +86,8 @@ public class CollectionOfGeneralTasks extends CollectionOfTasks {
         generalTaskList.add(tempGTask);
     }
 
+    // MODIFIES: this
+    // EFFECTS: removes a GeneralTask from the list.
     public void removeItem(Scanner user_input) {
         if (generalTaskList.isEmpty()) {
             System.out.println("You have no general tasks to remove.");
@@ -101,20 +99,25 @@ public class CollectionOfGeneralTasks extends CollectionOfTasks {
             day = userDay(user_input);
             month = userMonth(user_input);
             year = userYear(user_input);
-            for (GeneralTask task : generalTaskList) {
-                if (description.equals(task.getDescription()) && Integer.parseInt(day) == task.getDay()
-                        && Integer.parseInt(month) == task.getMonth() && Integer.parseInt(year) == task.getYear()) {
-                    generalTaskList.remove(task);
-                    System.out.println("The task was removed successfully.");
-                    break;
-                } else {
-                    System.out.println("The task you tried to remove was not found.");
-                }
-            }
-
+            checkAndRemove(description, day, month, year);
         } catch (BadDateInputException bdiex) {
             System.out.println(bdiex.getMessage());
             System.out.println("Try removing the task again.");
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: removes a GeneralTask from the list.
+    private void checkAndRemove(String description, String day, String month, String year) {
+        for (GeneralTask task : generalTaskList) {
+            if (description.equals(task.getDescription()) && Integer.parseInt(day) == task.getDay()
+                    && Integer.parseInt(month) == task.getMonth() && Integer.parseInt(year) == task.getYear()) {
+                generalTaskList.remove(task);
+                System.out.println("The task was removed successfully.");
+                break;
+            } else {
+                System.out.println("The task you tried to remove was not found.");
+            }
         }
     }
 

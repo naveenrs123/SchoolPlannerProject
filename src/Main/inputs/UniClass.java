@@ -17,9 +17,7 @@ public class UniClass implements StoredObject {
             (Arrays.asList("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"));
     private Textbook textbook;
 
-    public UniClass() {
-
-    }
+    public UniClass() { }
 
     // REQUIRES: valid ClassType, valid 24 hour time as an Integer, Days list containing integers between 1 and 7
     // EFFECTS: creates a new UniClass object and sets its fields.
@@ -59,7 +57,6 @@ public class UniClass implements StoredObject {
     public void printItem() {
         System.out.println(classType + ": " + name + " at " + location + " taught by " + prof + ".");
         System.out.print(String.format("%04d", startTime) + " to " + String.format("%04d", endTime) + " on ");
-
         if (days.size() == 1) {
             System.out.println(daysOfWeek.get(days.get(0) - 1));
         } else {
@@ -70,11 +67,10 @@ public class UniClass implements StoredObject {
             System.out.println("and " + daysOfWeek.get(days.get(i) - 1) + ".");
         }
         if (textbook.getTitle() != null && textbook.getAuthor() != null) {
-            textbook.printTextbook();
+            textbook.printItem();
         } else {
             System.out.println("No textbook.");
         }
-
     }
 
     // EFFECTS: gets the name.

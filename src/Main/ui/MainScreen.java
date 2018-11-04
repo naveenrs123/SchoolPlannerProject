@@ -13,9 +13,7 @@ public class MainScreen {
 
     // EFFECTS: outputs details about user's classes.
     public void myClasses(TimetableScreen screenTimetable) {
-
         int isClassesLoaded = screenTimetable.loadItemsIntoListObject();
-
         if (isClassesLoaded == 0) {
             System.out.println();
             screenTimetable.printStoredItems();
@@ -28,9 +26,7 @@ public class MainScreen {
 
     // EFFECTS: outputs details about user's tasks.
     public void myTasks(TasksScreen screenTasks) {
-
         int isTasksLoaded = screenTasks.loadItemsIntoListObject();
-
         if (isTasksLoaded == 0) {
             screenTasks.printStoredItems();
         } else if (isTasksLoaded == 1) {

@@ -4,7 +4,7 @@ import java.util.InputMismatchException;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class Textbook {
+public class Textbook implements StoredObject {
 
     private String title;
     private String author;
@@ -77,7 +77,7 @@ public class Textbook {
         pages = userPages(user_input);
     }
 
-    public void printTextbook() {
+    public void printItem() {
         System.out.println("Textbook: " + title + " by " + author + ", " + pages + " pages long.");
     }
 

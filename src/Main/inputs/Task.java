@@ -30,7 +30,6 @@ abstract public class Task implements StoredObject {
             default:
                 this.importance = Importance.LOW;
         }
-
     }
 
     // EFFECTS: prints the details of a Task to the console.

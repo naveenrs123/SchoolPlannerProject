@@ -108,7 +108,7 @@ public class CollectionOfUniClassesTest {
     @Test
     void testAddUniClassValidInput() {
         Scanner user_input = new Scanner("Tutorial\nCPSC 210\nElisa Baniassad\nSWNG 122\n1200\n1300\n1\n3\n5\n0\nN");
-        louc.addUniClass(user_input);
+        louc.addItem(user_input);
 
         ArrayList<String> key = new ArrayList<>(Arrays.asList("TUTORIAL", "CPSC 210"));
         assertEquals("TUTORIAL", louc.getClassMap().get(key).getClassType());
@@ -131,22 +131,22 @@ public class CollectionOfUniClassesTest {
     void testAddUniClassAndView() {
         // adding one class already tested.
         Scanner user_input = new Scanner("Tutorial\nCPSC 210\nElisa Baniassad\nSWNG 122\n1200\n1300\n1\n3\n5\n0\nN");
-        louc.addUniClass(user_input);
+        louc.addItem(user_input);
         louc.printItems();
     }
 
     @Test
     void testAddMultipleUniClassesValidInput() {
         Scanner user_input1 = new Scanner("LECTURE\nCPSC 210\nElisa Baniassad\nSWNG 122\n1200\n1300\n1\n3\n5\n0\nN");
-        louc.addUniClass(user_input1);
+        louc.addItem(user_input1);
         ArrayList<String> key0 = new ArrayList<>(Arrays.asList("LECTURE", "CPSC 210"));
 
         Scanner user_input2 = new Scanner("TUTORIAL\nCPSC 310\nElisa Baniassad\nWESB 100\n0800\n0900\n2\n4\n0\nN");
-        louc.addUniClass(user_input2);
+        louc.addItem(user_input2);
         ArrayList<String> key1 = new ArrayList<>(Arrays.asList("TUTORIAL", "CPSC 310"));
 
         Scanner user_input3 = new Scanner("DISCUSSION\nMATH 221\nSome Dude\nLSK 201\n1700\n1800\n1\n3\n5\n0\nN");
-        louc.addUniClass(user_input3);
+        louc.addItem(user_input3);
         ArrayList<String> key2 = new ArrayList<>(Arrays.asList("DISCUSSION", "MATH 221"));
 
         assertEquals("LECTURE", louc.getClassMap().get(key0).getClassType());
@@ -199,13 +199,13 @@ public class CollectionOfUniClassesTest {
     void testAddMultipleUniClassesAndView() {
         // adding multiple classes already tested.
         Scanner user_input1 = new Scanner("LECTURE\nCPSC 210\nElisa Baniassad\nSWNG 122\n1200\n1300\n1\n3\n5\n0\nN");
-        louc.addUniClass(user_input1);
+        louc.addItem(user_input1);
 
         Scanner user_input2 = new Scanner("TUTORIAL\nCPSC 310\nElisa Baniassad\nWESB 100\n0800\n0900\n2\n4\n0\nN");
-        louc.addUniClass(user_input2);
+        louc.addItem(user_input2);
 
         Scanner user_input3 = new Scanner("DISCUSSION\nMATH 221\nSome Dude\nLSK 201\n1700\n1800\n1\n3\n5\n0\nN");
-        louc.addUniClass(user_input3);
+        louc.addItem(user_input3);
 
         louc.printItems();
     }
@@ -214,13 +214,13 @@ public class CollectionOfUniClassesTest {
     void testAddMultipleUniClassesInvalidTimes() {
         // If all tasks were not created, test succeeded.
         Scanner user_input1 = new Scanner("LECTURE\nCPSC 210\nElisa Baniassad\nSWNG 122\n-1\n1300\n1\n3\n5\n0");
-        louc.addUniClass(user_input1);
+        louc.addItem(user_input1);
 
         Scanner user_input2 = new Scanner("LAB\nCPSC 310\nElisa Baniassad\nWESB 100\n0800\n2400\n2\n4\n0");
-        louc.addUniClass(user_input2);
+        louc.addItem(user_input2);
 
         Scanner user_input3 = new Scanner("TUTORIAL\nMATH 221\nSome Dude\nLSK 201\n2401\n1800\n1\n3\n5\n0");
-        louc.addUniClass(user_input3);
+        louc.addItem(user_input3);
 
         assertEquals(0, louc.getClassMap().size());
     }
@@ -229,14 +229,14 @@ public class CollectionOfUniClassesTest {
     void testAddUniClassesInvalidDays() {
         // If task was not created, test succeeded.
         Scanner user_input1 = new Scanner("LECTURE\nCPSC 210\nElisa Baniassad\nSWNG 122\n1200\n1300\nsdfg\n9\n-1\n0");
-        louc.addUniClass(user_input1);
+        louc.addItem(user_input1);
         assertEquals(0, louc.getClassMap().size());
     }
 
     @Test
     void testRemoveItem() {
         Scanner user_input = new Scanner("LECTURE\nCPSC 210\nElisa Baniassad\nSWNG 122\n1200\n1300\n1\n3\n5\n0\nN\nLECTURE\nCPSC 210");
-        louc.addUniClass(user_input);
+        louc.addItem(user_input);
 
         louc.removeItem(user_input);
         assertEquals(0, louc.getClassMap().size());
@@ -246,10 +246,10 @@ public class CollectionOfUniClassesTest {
     @Test
     void testRemoveItemMultiple() {
         Scanner user_input1 = new Scanner("LECTURE\nCPSC 210\nElisa Baniassad\nSWNG 122\n1200\n1300\n1\n3\n5\n0\nN\nLECTURE\nCPSC 210");
-        louc.addUniClass(user_input1);
+        louc.addItem(user_input1);
 
         Scanner user_input2 = new Scanner("LAB\nCPSC 310\nElisa Baniassad\nWESB 100\n0800\n2400\n2\n4\n0\nLAB\nCPSC 310");
-        louc.addUniClass(user_input2);
+        louc.addItem(user_input2);
 
         louc.removeItem(user_input1);
         louc.removeItem(user_input2);
@@ -259,7 +259,7 @@ public class CollectionOfUniClassesTest {
     @Test
     void testAddTextbook() {
         Scanner user_input = new Scanner("LECTURE\nCPSC 210\nElisa Baniassad\nSWNG 122\n1200\n1300\n1\n3\n5\n0\nN\nLECTURE\nCPSC 210");
-        louc.addUniClass(user_input);
+        louc.addItem(user_input);
 
         Scanner user_input1 = new Scanner("LECTURE\nCPSC 210\nTextbook\nAuthor\n300");
         louc.addTextbook(user_input1);
@@ -274,7 +274,7 @@ public class CollectionOfUniClassesTest {
     @Test
     void testRemoveTextbook() {
         Scanner user_input = new Scanner("LECTURE\nCPSC 210\nElisa Baniassad\nSWNG 122\n1200\n1300\n1\n3\n5\n0\nN\nLECTURE\nCPSC 210");
-        louc.addUniClass(user_input);
+        louc.addItem(user_input);
 
         Scanner user_input1 = new Scanner("LECTURE\nCPSC 210\nTextbook\nAuthor\n300");
         louc.addTextbook(user_input1);

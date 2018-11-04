@@ -8,6 +8,8 @@ public interface CollectionOfItems {
 
     void saveCollection();
 
+    void addItem(Scanner user_input);
+
     void removeItem(Scanner user_input);
 
     void printItems();

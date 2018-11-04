@@ -18,29 +18,16 @@ public class TimetableScreen implements InputScreen {
 
     // EFFECTS: gets input from the user to decide whether they want to add classes or view classes.
     public int handleOptions(Scanner user_input) {
-        int addOrView;
+        int handleOptions;
         while (true) {
             try {
                 System.out.println("What do you want to do?");
                 System.out.println("1. View Classes\n2. Add Classes\n3. Remove Classes\n4. Remove Textbook from Class\n" +
                         "5. Add Textbooks\n6. View Textbooks");
-                addOrView = user_input.nextInt();
+                handleOptions = user_input.nextInt();
                 user_input.nextLine();
-                if (addOrView == 1) {
-                    return 1;
-                } else if (addOrView == 2) {
-                    return 2;
-                } else if (addOrView == 3) {
-                    return 3;
-                } else if (addOrView == 4) {
-                    return 4;
-                } else if (addOrView == 5) {
-                    return 5;
-                } else if (addOrView == 6) {
-                    return 6;
-                } else {
-                    System.out.println("Enter a valid choice.");
-                }
+                Integer x = verifyInput(handleOptions);
+                if (x != null) return x;
             }
             catch (InputMismatchException n) {
                 System.out.println("You must enter an integer.");
@@ -49,6 +36,27 @@ public class TimetableScreen implements InputScreen {
         }
     }
 
+    // EFFECTS: verifies input provided in handleOptions() method.
+    private Integer verifyInput(int handleOptions) {
+        if (handleOptions == 1) {
+            return 1;
+        } else if (handleOptions == 2) {
+            return 2;
+        } else if (handleOptions == 3) {
+            return 3;
+        } else if (handleOptions == 4) {
+            return 4;
+        } else if (handleOptions == 5) {
+            return 5;
+        } else if (handleOptions == 6) {
+            return 6;
+        } else {
+            System.out.println("Enter a valid choice.");
+            return null;
+        }
+    }
+
+    // EFFECTS: prints out details when adding an item.
     public void addingItemDetails() {
         System.out.println("All classes must have the following fields:");
         System.out.println("-> A class Type (LECTURE/LAB/DISCUSSION/TUTORIAL)\n-> A name\n" +
@@ -61,7 +69,7 @@ public class TimetableScreen implements InputScreen {
     // EFFECTS: allows user to create a new UniClass and then saves the created UniClass.
     public void addToListObject(Scanner user_input) {
         addingItemDetails();
-        louc.addUniClass(user_input);
+        louc.addItem(user_input);
     }
 
     // MODIFIES: this

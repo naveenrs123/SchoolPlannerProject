@@ -46,7 +46,6 @@ public class EventTask extends Task {
         System.out.println("Description: " + description);
         System.out.println("Start date: " + startDate.get(Calendar.DATE) + "/" + (startDate.get(Calendar.MONTH) + 1) + "/" + startDate.get(Calendar.YEAR));
         System.out.println("End date: " + endDate.get(Calendar.DATE) + "/" + (endDate.get(Calendar.MONTH) + 1) + "/" + endDate.get(Calendar.YEAR));
-
         switch (importance) {
             case LOW:
                 System.out.println("Importance: LOW");

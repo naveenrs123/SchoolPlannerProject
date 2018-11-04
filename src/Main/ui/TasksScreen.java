@@ -26,21 +26,27 @@ public class TasksScreen implements InputScreen {
                 System.out.println("1. View Tasks\n2. Add Tasks\n3. Remove Tasks");
                 addOrView = user_input.nextInt();
                 user_input.nextLine();
-                if (addOrView == 1) {
-                    return 1;
-                } else if (addOrView == 2) {
-                    return 2;
-                } else if (addOrView == 3) {
-                    return 3;
-                } else {
-                    System.out.println("Enter a valid choice.");
-                }
-            }
-            catch (InputMismatchException n) {
+                Integer x = verifyInput(addOrView);
+                if (x != null) return x;
+            } catch (InputMismatchException n) {
                 System.out.println("You must enter an integer.");
                 user_input.nextLine();
             }
         }
+    }
+
+    // EFFECTS: verifies input entered in handleOptions() method.
+    private Integer verifyInput(int addOrView) {
+        if (addOrView == 1) {
+            return 1;
+        } else if (addOrView == 2) {
+            return 2;
+        } else if (addOrView == 3) {
+            return 3;
+        } else {
+            System.out.println("Enter a valid choice.");
+        }
+        return null;
     }
 
     // EFFECTS: prints out basic details of all tasks.
@@ -54,7 +60,6 @@ public class TasksScreen implements InputScreen {
     public String chooseTaskType(Scanner user_input) {
         System.out.println("What task would you like to add?\n1. Task\n2. Event");
         String choice = user_input.nextLine();
-
         while (!(choice.matches("^[0-9]*$")) || !(choice.equals("1") || choice.equals("2"))) {
             System.out.println("You didn't choose a valid option, try again!");
             choice = user_input.nextLine();
@@ -82,15 +87,13 @@ public class TasksScreen implements InputScreen {
     // MODIFIES: this
     // EFFECTS: Allows user to add a Task and then stores the created Task. Task is not added if
     //          user input is invalid.
-    public void addToListObject(Scanner user_input)
-    {
+    public void addToListObject(Scanner user_input) {
         addingItemDetails();
         String taskType = chooseTaskType(user_input);
-
         if (taskType.equals("TASK")) {
-            logt.addTask(user_input, taskType);
+            logt.addItem(user_input);
         } else if (taskType.equals("EVENT")) {
-            loet.addTask(user_input, taskType);
+            loet.addItem(user_input);
         } else {
             System.out.println("Something went wrong, your item was not created.");
         }
@@ -102,8 +105,7 @@ public class TasksScreen implements InputScreen {
         try {
             loadEventTaskIntoListObject();
             loadGeneralTaskIntoListObject();
-        }
-        catch (FileNotFoundException fnfex) {
+        } catch (FileNotFoundException fnfex) {
             return 1;
         } catch (IOException ioex) {
             return 2;
@@ -111,21 +113,20 @@ public class TasksScreen implements InputScreen {
         return 0;
     }
 
-    public void loadGeneralTaskIntoListObject() throws FileNotFoundException, IOException {
+    // EFFECTS: calls methods to load a general task into a list object.
+    public void loadGeneralTaskIntoListObject() throws IOException {
         String filename = "listofgeneraltasks.csv";
-
         String currentTask;
-            FileReader fileReader = new FileReader(filename);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            while ((currentTask = bufferedReader.readLine()) != null) {
-                logt.loadSingleItem(currentTask);
-            }
-
+        FileReader fileReader = new FileReader(filename);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        while ((currentTask = bufferedReader.readLine()) != null) {
+            logt.loadSingleItem(currentTask);
+        }
     }
 
-    public void loadEventTaskIntoListObject() throws FileNotFoundException, IOException {
+    // EFFECTS: calls methods to load an event task into a list object.
+    public void loadEventTaskIntoListObject() throws IOException {
         String filename = "listofeventtasks.csv";
-
         String currentTask;
         FileReader fileReader = new FileReader(filename);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -135,6 +136,7 @@ public class TasksScreen implements InputScreen {
 
     }
 
+    // EFFECTS: calls methods to remove a task.
     public void removeItem(Scanner user_input) {
         loet.printItems();
         logt.printItems();
@@ -142,18 +144,21 @@ public class TasksScreen implements InputScreen {
         String taskType = chooseTaskTypeForRemoval(user_input);
         if (taskType.equals("TASK")) {
             logt.removeItem(user_input);
-        } if (taskType.equals("EVENT")) {
+        }
+        if (taskType.equals("EVENT")) {
             loet.removeItem(user_input);
         }
 
     }
 
+    // EFFECTS: prints out all tasks.
     public void printStoredItems() {
         System.out.println("**TASKS**\n");
         loet.printItems();
         logt.printItems();
     }
 
+    // EFFECTS: saves the tasks to files.
     public void saveList() {
         logt.saveCollection();
         loet.saveCollection();

@@ -15,6 +15,7 @@ public class CollectionOfUniClasses implements CollectionOfItems {
     private HashMap<ArrayList<String>, UniClass> classMap;
     private CollectionOfTextbooks collectionOfTextbooks;
 
+    // EFFECTS: instantiates the fields of the class.
     public CollectionOfUniClasses() {
         classMap = new HashMap<>();
         collectionOfTextbooks = new CollectionOfTextbooks();
@@ -22,12 +23,14 @@ public class CollectionOfUniClasses implements CollectionOfItems {
 
     // USER INPUT METHODS FOR DETAILS OF A UNICLASS (BEGIN)
 
+    // EFFECTS: gets name of class from the user and returns it.
     public String userClassName(Scanner user_input) {
         System.out.print("Class Name: ");
         String name = user_input.nextLine();
         return name;
     }
 
+    // EFFECTS: gets class type from the user and throws an exception if the type is invalid.
     public String userClassType(Scanner user_input) throws BadClassTypeException {
         System.out.print("Class Type: ");
         String classType = user_input.nextLine().toUpperCase();
@@ -46,6 +49,7 @@ public class CollectionOfUniClasses implements CollectionOfItems {
         }
     }
 
+    // EFFECTS: gets class type from the user and returns it. Keeps asking for input until valid class type is entered.
     public String userClassTypeForSearching(Scanner user_input) {
         System.out.print("Class Type: ");
         String classType;
@@ -67,18 +71,21 @@ public class CollectionOfUniClasses implements CollectionOfItems {
         } while (true);
     }
 
+    // EFFECTS: gets professor from the user and returns it.
     public String userProf(Scanner user_input) {
         System.out.print("Professor: ");
         String prof = user_input.nextLine();
         return prof;
     }
 
+    // EFFECTS: gets location from the user and returns it.
     public String userLocation(Scanner user_input) {
         System.out.print("Location: ");
         String location = user_input.nextLine();
         return location;
     }
 
+    // EFFECTS: gets startTime from the user and throws an exception if the time is invalid, returns the startTime.
     public String userStartTime(Scanner user_input) throws BadTimeException {
         System.out.print("Start Time: ");
         String startTime = user_input.nextLine();
@@ -90,6 +97,7 @@ public class CollectionOfUniClasses implements CollectionOfItems {
         }
     }
 
+    // EFFECTS: gets endTime from the user and throws an exception if the time is invalid, returns the endTime.
     public String userEndTime(Scanner user_input) throws BadTimeException {
         System.out.print("End Time: ");
         String endTime = user_input.nextLine();
@@ -101,6 +109,7 @@ public class CollectionOfUniClasses implements CollectionOfItems {
         }
     }
 
+    // EFFECTS: gets the days from the user and returns it as an ArrayList.
     public ArrayList<Integer> userDays(Scanner user_input) {
         ArrayList<Integer> days = new ArrayList<>();
         System.out.println("Days (type 0 when done):");
@@ -125,6 +134,7 @@ public class CollectionOfUniClasses implements CollectionOfItems {
 
     // USER INPUT METHODS FOR DETAILS OF A UNICLASS (END)
 
+    // EFFECTS: asks the user if they want to add a textbook, asking for input until a valid option is entered.
     public boolean wantToAddTextbook(Scanner user_input) {
         String choice;
         do {
@@ -140,12 +150,23 @@ public class CollectionOfUniClasses implements CollectionOfItems {
         } while (true);
     }
 
+    // EFFECTS: makes a class with or without a textbook.
+    public void makeClass(Scanner user_input, String classType, String name, String prof, String location, String startTime, String endTime, ArrayList<Integer> days) {
+        if (wantToAddTextbook(user_input)) {
+            Textbook textbook = new Textbook();
+            textbook.setDetails(user_input);
+            createUniClass(classType, name, prof, location, startTime, endTime, days, textbook);
+        } else {
+            Textbook textbook = new Textbook();
+            createUniClass(classType, name, prof, location, startTime, endTime, days, textbook);
+        }
+    }
+
     // ADDING METHODS (START)
 
     // MODIFIES: this
     // EFFECTS: allows user to create a new UniClass and then saves the created UniClass.
-    public void addUniClass(Scanner user_input) {
-
+    public void addItem(Scanner user_input) {
         try {
             String classType = userClassType(user_input);
             String name = userClassName(user_input);
@@ -158,15 +179,7 @@ public class CollectionOfUniClasses implements CollectionOfItems {
                 System.out.println("No days entered. Your class was not created.");
                 return;
             }
-            if (wantToAddTextbook(user_input)) {
-                Textbook textbook = new Textbook();
-                textbook.setDetails(user_input);
-                createUniClass(classType, name, prof, location, startTime, endTime, days, textbook);
-            } else {
-                Textbook textbook = new Textbook();
-                createUniClass(classType, name, prof, location, startTime, endTime, days, textbook);
-            }
-
+            makeClass(user_input, classType, name, prof, location, startTime, endTime, days);
         } catch (BadClassTypeException bctex) {
             System.out.println(bctex.getMessage());
         } catch (BadTimeException btex) {
@@ -174,13 +187,15 @@ public class CollectionOfUniClasses implements CollectionOfItems {
         }
     }
 
+
+    // MODIFIES: this
+    // EFFECTS: Creates a new UniClass from the parameters, adds a textbook to collectionOfTextbooks, and adds the class
+    //          to the classMap.
     public void createUniClass(String classType, String name, String prof, String location, String startTime, String endTime,
                                ArrayList<Integer> days, Textbook textbook) {
         UniClass newClass = new UniClass(classType, name, prof, location, Integer.parseInt(startTime), Integer.parseInt(endTime), days,
                 textbook);
-        if (!textbook.equals(new Textbook())) {
-            collectionOfTextbooks.addTextbook(newClass);
-        }
+        if (!textbook.equals(new Textbook())) { collectionOfTextbooks.addTextbook(newClass); }
         ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, name));
         classMap.put(key, newClass);
         saveUniClass(newClass);
@@ -224,24 +239,22 @@ public class CollectionOfUniClasses implements CollectionOfItems {
         String textbookTitle = tempClassDetails.get(6);
         String textbookAuthor = tempClassDetails.get(7);
         int textbookPages = Integer.parseInt(tempClassDetails.get(8));
-
         ArrayList<Integer> days = new ArrayList<>();
         for (int i = 9; i < tempClassDetails.size(); i++) {
             String day = tempClassDetails.get(i);
             days.add(Integer.parseInt(day));
         }
+        addTextbookAndClassToCollection(classType, className, prof, room, start, end, textbookTitle, textbookAuthor, textbookPages, days);
+    }
 
+    // MODIFIES: this
+    // EFFECTS: creates a Textbook and UniClass from the parameters, adds Textbook to collectionOfTextbooks and adds UniClass to classMap.
+    private void addTextbookAndClassToCollection(String classType, String className, String prof, String room, String start, String end, String textbookTitle, String textbookAuthor, int textbookPages, ArrayList<Integer> days) {
         Textbook tempTextbook;
-        if (textbookTitle.equals("null") && textbookAuthor.equals("null")) {
-            tempTextbook = new Textbook();
-        } else {
-            tempTextbook = new Textbook(textbookTitle, textbookAuthor, textbookPages);
-        }
-        UniClass tempUniClass = new UniClass(classType, className, prof, room, Integer.parseInt(start), Integer.parseInt(end), days,
-                tempTextbook);
-        if (!tempTextbook.equals(new Textbook())) {
-            collectionOfTextbooks.addTextbook(tempUniClass);
-        }
+        if (textbookTitle.equals("null") && textbookAuthor.equals("null")) { tempTextbook = new Textbook(); }
+        else { tempTextbook = new Textbook(textbookTitle, textbookAuthor, textbookPages); }
+        UniClass tempUniClass = new UniClass(classType, className, prof, room, Integer.parseInt(start), Integer.parseInt(end), days, tempTextbook);
+        if (!tempTextbook.equals(new Textbook())) { collectionOfTextbooks.addTextbook(tempUniClass); }
         ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, className));
         classMap.put(key, tempUniClass);
     }
@@ -260,21 +273,35 @@ public class CollectionOfUniClasses implements CollectionOfItems {
         }
     }
 
+    // EFFECTS: prints the stored Textbooks.
     public void printTextbooks() {
         collectionOfTextbooks.printTextbooks();
     }
 
+    // EFFECTS: gets key from the user.
+    private ArrayList<String> userKey(Scanner user_input) {
+        String classType = userClassTypeForSearching(user_input);
+        String name = userClassName(user_input);
+        return new ArrayList<>(Arrays.asList(classType, name));
+    }
+
+    // MODIFIES: this
+    // EFFECTS: removes a class from the classMap, removes textbook from collectionOfTextbooks
     public void removeItem(Scanner user_input) {
         if (classMap.isEmpty()) {
             return;
         }
         printItems();
         System.out.println("To remove a class, provide the name and class type.");
-        String classType = userClassTypeForSearching(user_input);
-        String name = userClassName(user_input);
+        ArrayList<String> key = userKey(user_input);
+        checkAndRemoveClass(key);
+    }
 
-        ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, name));
+    // MODIFIES: this
+    // EFFECTS: removes a class from the classMap, removes textbook from collectionOfTextbooks
+    private void checkAndRemoveClass(ArrayList<String> key) {
         if (classMap.containsKey(key)) {
+            collectionOfTextbooks.removeTextbook(classMap.get(key));
             classMap.remove(key);
             System.out.println("The class was removed successfully");
             return;
@@ -283,15 +310,22 @@ public class CollectionOfUniClasses implements CollectionOfItems {
         }
     }
 
+    // MODIFIES: this.
+    // EFFECTS: removes Textbook from collectionOfTextbooks.
     public void removeTextbook(Scanner user_input) {
         if (classMap.isEmpty()) {
             return;
         }
         printItems();
         System.out.println("To remove a textbook from a class, provide the name and class type of the class.");
-        String classType = userClassTypeForSearching(user_input);
-        String name = userClassName(user_input);
-        ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, name));
+        ArrayList<String> key = userKey(user_input);
+        checkAndRemoveTextbook(key);
+
+    }
+
+    // MODIFIES: this.
+    // EFFECTS: removes Textbook from collectionOfTextbooks.
+    private void checkAndRemoveTextbook(ArrayList<String> key) {
         if (classMap.containsKey(key)) {
             UniClass uc = classMap.get(key);
             if (uc.getTextbook().equals(new Textbook())) {
@@ -306,9 +340,10 @@ public class CollectionOfUniClasses implements CollectionOfItems {
         } else {
             System.out.println("The class you searched for does not exist.");
         }
-
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds textbook to UniClass in ClassMap and adds textbook to collectionOfTextbooks
     public void addTextbook(Scanner user_input) {
         if (classMap.isEmpty()) {
             return;
@@ -316,9 +351,13 @@ public class CollectionOfUniClasses implements CollectionOfItems {
         printItems();
         System.out.println("To add a textbook to a class, provide the name and class type of the class.");
         System.out.println("If the class already has a textbook, it will be replaced with the new textbook.");
-        String classType = userClassTypeForSearching(user_input);
-        String name = userClassName(user_input);
-        ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, name));
+        ArrayList<String> key = userKey(user_input);
+        checkAndAddTextbook(user_input, key);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds textbook to UniClass in ClassMap and adds textbook to collectionOfTextbooks
+    private void checkAndAddTextbook(Scanner user_input, ArrayList<String> key) {
         if (classMap.containsKey(key)) {
             UniClass uc = classMap.get(key);
             Textbook tempTextbook = new Textbook();
@@ -351,6 +390,7 @@ public class CollectionOfUniClasses implements CollectionOfItems {
         }
     }
 
+    // EFFECTS: gets collectionOfTextbooks
     public CollectionOfTextbooks getCollectionOfTextbooks() {
         return collectionOfTextbooks;
     }
