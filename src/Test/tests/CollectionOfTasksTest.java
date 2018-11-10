@@ -5,8 +5,8 @@ import exceptions.date.BadMonthException;
 import exceptions.date.BadYearException;
 import exceptions.date.InvalidDateException;
 import exceptions.input.InvalidImportanceException;
-import model.CollectionOfEventTasks;
-import model.CollectionOfGeneralTasks;
+import model.collections.CollectionOfEventTasks;
+import model.collections.CollectionOfGeneralTasks;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,8 +60,8 @@ public class CollectionOfTasksTest {
         Scanner user_input1 = new Scanner("20");
         Scanner user_input2 = new Scanner("20");
         try {
-            generalTasks.userDay(user_input1);
-            eventTasks.userDay(user_input2);
+            generalTasks.getInputHandler().userDay(user_input1);
+            eventTasks.getInputHandler().userDay(user_input2);
         } catch (BadDayException e) {
             fail("Exception caught.");
         }
@@ -71,7 +71,7 @@ public class CollectionOfTasksTest {
     void testUserDayInvalid() {
         Scanner user_input = new Scanner("32");
         try {
-            generalTasks.userDay(user_input);
+            generalTasks.getInputHandler().userDay(user_input);
             fail("Exception not caught.");
         } catch (BadDayException e) {
 
@@ -83,8 +83,8 @@ public class CollectionOfTasksTest {
         Scanner user_input1 = new Scanner("11");
         Scanner user_input2 = new Scanner("11");
         try {
-            generalTasks.userMonth(user_input1);
-            eventTasks.userMonth(user_input2);
+            generalTasks.getInputHandler().userMonth(user_input1);
+            eventTasks.getInputHandler().userMonth(user_input2);
         } catch (BadMonthException e) {
             fail("Exception caught.");
         }
@@ -94,7 +94,7 @@ public class CollectionOfTasksTest {
     void testUserMonthInvalid() {
         Scanner user_input = new Scanner("13");
         try {
-            generalTasks.userMonth(user_input);
+            generalTasks.getInputHandler().userMonth(user_input);
             fail("Exception not caught.");
         } catch (BadMonthException e) {
 
@@ -106,8 +106,8 @@ public class CollectionOfTasksTest {
         Scanner user_input1 = new Scanner("20");
         Scanner user_input2 = new Scanner("20");
         try {
-            generalTasks.userYear(user_input1);
-            eventTasks.userYear(user_input2);
+            generalTasks.getInputHandler().userYear(user_input1);
+            eventTasks.getInputHandler().userYear(user_input2);
         } catch (BadYearException e) {
             fail("Exception caught.");
         }
@@ -117,7 +117,7 @@ public class CollectionOfTasksTest {
     void testUserYearInvalid() {
         Scanner user_input = new Scanner("100");
         try {
-            generalTasks.userYear(user_input);
+            generalTasks.getInputHandler().userYear(user_input);
             fail("Exception not caught.");
         } catch (BadYearException e) {
 
@@ -130,8 +130,8 @@ public class CollectionOfTasksTest {
         String month = "11";
         String year = "18";
         try {
-            generalTasks.validateDate(day, month, year);
-            eventTasks.validateDate(day, month, year);
+            generalTasks.getInputHandler().validateDate(day, month, year);
+            eventTasks.getInputHandler().validateDate(day, month, year);
         } catch (InvalidDateException e) {
             fail("Exception caught.");
         }
@@ -143,7 +143,7 @@ public class CollectionOfTasksTest {
         String month = "2";
         String year = "18";
         try {
-            generalTasks.validateDate(day, month, year);
+            generalTasks.getInputHandler().validateDate(day, month, year);
             fail("Exception not caught.");
         } catch (InvalidDateException e) {
 
@@ -155,8 +155,8 @@ public class CollectionOfTasksTest {
         Scanner user_input1 = new Scanner("LOW");
         Scanner user_input2 = new Scanner("LOW");
         try {
-            generalTasks.getImportanceLevel(user_input1);
-            eventTasks.getImportanceLevel(user_input2);
+            generalTasks.getInputHandler().getImportanceLevel(user_input1);
+            eventTasks.getInputHandler().getImportanceLevel(user_input2);
         } catch (InvalidImportanceException e) {
             fail("Exception caught.");
         }
@@ -166,7 +166,7 @@ public class CollectionOfTasksTest {
     void testGetImportanceLevelInvalid() {
         Scanner user_input = new Scanner("HYPER");
         try {
-            generalTasks.getImportanceLevel(user_input);
+            generalTasks.getInputHandler().getImportanceLevel(user_input);
             fail("Exception not caught.");
         } catch (InvalidImportanceException e) {
 

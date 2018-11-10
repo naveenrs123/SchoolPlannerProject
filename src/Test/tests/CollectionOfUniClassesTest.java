@@ -3,7 +3,7 @@ package tests;
 import exceptions.input.BadClassTypeException;
 import exceptions.input.BadTimeException;
 import inputs.Textbook;
-import model.CollectionOfUniClasses;
+import model.collections.CollectionOfUniClasses;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ public class CollectionOfUniClassesTest {
     void testUserClassTypeValid() {
         Scanner user_input = new Scanner("LECTURE");
         try {
-            louc.userClassType(user_input);
+            louc.getInputHandler().userClassType(user_input);
         } catch (BadClassTypeException e) {
             fail("Exception caught.");
         }
@@ -54,7 +54,7 @@ public class CollectionOfUniClassesTest {
     void testUserClassTypeInvalid() {
         Scanner user_input = new Scanner("OUTDOOR EXPLORATION");
         try {
-            louc.userClassType(user_input);
+            louc.getInputHandler().userClassType(user_input);
             fail("Exception not caught.");
         } catch (BadClassTypeException e) {
 
@@ -65,7 +65,7 @@ public class CollectionOfUniClassesTest {
     void testUserStartTimeValid() {
         Scanner user_input = new Scanner("1200");
         try {
-            louc.userStartTime(user_input);
+            louc.getInputHandler().userStartTime(user_input);
         } catch (BadTimeException e) {
             fail("Exception caught.");
         }
@@ -75,7 +75,7 @@ public class CollectionOfUniClassesTest {
     void testUserStartTimeInvalid() {
         Scanner user_input = new Scanner("2400");
         try {
-            louc.userStartTime(user_input);
+            louc.getInputHandler().userStartTime(user_input);
             fail("Exception not caught.");
         } catch (BadTimeException e) {
 
@@ -86,7 +86,7 @@ public class CollectionOfUniClassesTest {
     void testUserEndTimeValid() {
         Scanner user_input = new Scanner("0000");
         try {
-            louc.userEndTime(user_input);
+            louc.getInputHandler().userEndTime(user_input);
         } catch (BadTimeException e) {
             fail("Exception caught.");
         }
@@ -96,7 +96,7 @@ public class CollectionOfUniClassesTest {
     void testUserEndTimeInvalid() {
         Scanner user_input = new Scanner("2400");
         try {
-            louc.userStartTime(user_input);
+            louc.getInputHandler().userStartTime(user_input);
             fail("Exception not caught.");
         } catch (BadTimeException e) {
 

@@ -1,8 +1,8 @@
 package ui;
 
 import model.InputScreen;
-import model.CollectionOfGeneralTasks;
-import model.CollectionOfEventTasks;
+import model.collections.CollectionOfGeneralTasks;
+import model.collections.CollectionOfEventTasks;
 
 import java.io.*;
 import java.util.*;

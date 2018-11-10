@@ -1,4 +1,4 @@
-package model;
+package model.collections;
 
 import inputs.Textbook;
 import inputs.UniClass;

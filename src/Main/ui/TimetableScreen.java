@@ -1,7 +1,7 @@
 package ui;
 
 import model.InputScreen;
-import model.CollectionOfUniClasses;
+import model.collections.CollectionOfUniClasses;
 
 import java.io.*;
 import java.util.InputMismatchException;

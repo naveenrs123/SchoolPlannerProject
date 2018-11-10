@@ -1,4 +1,4 @@
-package model;
+package model.collections;
 
 import java.util.Scanner;
 

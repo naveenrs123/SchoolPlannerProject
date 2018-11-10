@@ -2,7 +2,7 @@ package tests;
 
 import inputs.Textbook;
 import inputs.UniClass;
-import model.CollectionOfTextbooks;
+import model.collections.CollectionOfTextbooks;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

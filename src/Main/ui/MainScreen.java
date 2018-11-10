@@ -1,6 +1,6 @@
 package ui;
 
-import model.CollectionOfTextbooks;
+import model.collections.CollectionOfTextbooks;
 
 public class MainScreen {
 

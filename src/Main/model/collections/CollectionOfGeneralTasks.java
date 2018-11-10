@@ -1,8 +1,9 @@
-package model;
+package model.collections;
 
 import exceptions.date.BadDateInputException;
 import exceptions.input.InvalidImportanceException;
 import inputs.GeneralTask;
+import model.inputHandling.TasksInputHandler;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -11,12 +12,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class CollectionOfGeneralTasks extends CollectionOfTasks {
+public class CollectionOfGeneralTasks implements CollectionOfItems {
 
     private ArrayList<GeneralTask> generalTaskList;
+    private TasksInputHandler inputHandler;
 
     public CollectionOfGeneralTasks() {
         generalTaskList = new ArrayList<>();
+        inputHandler = new TasksInputHandler();
     }
 
     // REQUIRES: taskType == "TASK"
@@ -25,13 +28,13 @@ public class CollectionOfGeneralTasks extends CollectionOfTasks {
     public void addItem(Scanner user_input) {
         String taskType = "TASK";
         System.out.println("General tasks need no extra details.");
-        String description = userDescription(user_input);
+        String description = inputHandler.userDescription(user_input);
         try {
-            String day = userDay(user_input);
-            String month = userMonth(user_input);
-            String year = userYear(user_input);
-            validateDate(day, month, year);
-            String importanceLevel = getImportanceLevel(user_input);
+            String day = inputHandler.userDay(user_input);
+            String month = inputHandler.userMonth(user_input);
+            String year = inputHandler.userYear(user_input);
+            inputHandler.validateDate(day, month, year);
+            String importanceLevel = inputHandler.getImportanceLevel(user_input);
             createTask(taskType, description, day, month, year, importanceLevel);
         } catch (BadDateInputException bdiex) {
             System.out.println(bdiex.getMessage()); System.out.println("Your task was not created.");
@@ -46,7 +49,6 @@ public class CollectionOfGeneralTasks extends CollectionOfTasks {
     // MODIFIES: this
     // EFFECTS: creates a new GeneralTask, adds it to a list, and saves it to a file.
     public void createTask(String taskType, String description, String day, String month, String year, String importanceLevel) {
-
         GeneralTask newGTask = new GeneralTask(taskType, description, Integer.parseInt(day), Integer.parseInt(month), Integer.parseInt(year),
                 importanceLevel);
         generalTaskList.add(newGTask);
@@ -93,12 +95,12 @@ public class CollectionOfGeneralTasks extends CollectionOfTasks {
             System.out.println("You have no general tasks to remove.");
             return;
         }
-        String description = userDescription(user_input);
+        String description = inputHandler.userDescription(user_input);
         String day; String month; String year;
         try {
-            day = userDay(user_input);
-            month = userMonth(user_input);
-            year = userYear(user_input);
+            day = inputHandler.userDay(user_input);
+            month = inputHandler.userMonth(user_input);
+            year = inputHandler.userYear(user_input);
             checkAndRemove(description, day, month, year);
         } catch (BadDateInputException bdiex) {
             System.out.println(bdiex.getMessage());
@@ -159,6 +161,10 @@ public class CollectionOfGeneralTasks extends CollectionOfTasks {
     // EFFECTS: gets the generalTaskList
     public ArrayList<GeneralTask> getTaskList() {
         return generalTaskList;
+    }
+
+    public TasksInputHandler getInputHandler() {
+        return inputHandler;
     }
 }
 

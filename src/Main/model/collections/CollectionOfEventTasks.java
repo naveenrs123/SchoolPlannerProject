@@ -1,8 +1,9 @@
-package model;
+package model.collections;
 
 import exceptions.date.BadDateInputException;
 import exceptions.input.InvalidImportanceException;
 import inputs.EventTask;
+import model.inputHandling.TasksInputHandler;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -11,19 +12,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class CollectionOfEventTasks extends CollectionOfTasks {
+public class CollectionOfEventTasks implements CollectionOfItems {
 
     private ArrayList<EventTask> eventTaskList;
+    private TasksInputHandler inputHandler;
 
     public CollectionOfEventTasks() {
         eventTaskList = new ArrayList<>();
-    }
-
-    // EFFECTS: gets comments from the user.
-    public String getComments(Scanner user_input) {
-        System.out.print("Comments: ");
-        String comments = user_input.nextLine();
-        return comments;
+        inputHandler = new TasksInputHandler();
     }
 
     // REQUIRES: taskType == "EVENT"
@@ -32,17 +28,21 @@ public class CollectionOfEventTasks extends CollectionOfTasks {
     public void addItem(Scanner user_input) {
         String taskType = "EVENT";
         System.out.println("Event Tasks require a few extra details:\n-> A start date\n-> An end date\n-> Optional Comments");
-        String description = userDescription(user_input);
+        String description = inputHandler.userDescription(user_input);
         try {
             System.out.println("START DAY");
-            String startDay = userDay(user_input); String startMonth = userMonth(user_input); String startYear = userYear(user_input);
-            validateDate(startDay, startMonth, startYear);
+            String startDay = inputHandler.userDay(user_input);
+            String startMonth = inputHandler.userMonth(user_input);
+            String startYear = inputHandler.userYear(user_input);
+            inputHandler.validateDate(startDay, startMonth, startYear);
             System.out.println("END DAY:");
-            String endDay = userDay(user_input); String endMonth = userMonth(user_input); String endYear = userYear(user_input);
-            validateDate(endDay, endMonth, endYear);
-            String importanceLevel = getImportanceLevel(user_input);
+            String endDay = inputHandler.userDay(user_input);
+            String endMonth = inputHandler.userMonth(user_input);
+            String endYear = inputHandler.userYear(user_input);
+            inputHandler.validateDate(endDay, endMonth, endYear);
+            String importanceLevel = inputHandler.getImportanceLevel(user_input);
             System.out.println("If you have no comments, type NONE.");
-            String comments = getComments(user_input);
+            String comments = inputHandler.getComments(user_input);
             createTask(taskType, description, startDay, startMonth, startYear, endDay, endMonth, endYear, importanceLevel, comments);
         } catch (BadDateInputException bdiex) {
             System.out.println(bdiex.getMessage());
@@ -122,17 +122,17 @@ public class CollectionOfEventTasks extends CollectionOfTasks {
             System.out.println("You have no general tasks to remove.");
             return;
         }
-        String description = userDescription(user_input);
+        String description = inputHandler.userDescription(user_input);
         String startDay; String startMonth; String startYear; String endDay; String endMonth; String endYear;
         try {
             System.out.println("START DATE:");
-            startDay = userDay(user_input);
-            startMonth = userMonth(user_input);
-            startYear = userYear(user_input);
+            startDay = inputHandler.userDay(user_input);
+            startMonth = inputHandler.userMonth(user_input);
+            startYear = inputHandler.userYear(user_input);
             System.out.println("END DATE:");
-            endDay = userDay(user_input);
-            endMonth = userMonth(user_input);
-            endYear = userYear(user_input);
+            endDay = inputHandler.userDay(user_input);
+            endMonth = inputHandler.userMonth(user_input);
+            endYear = inputHandler.userYear(user_input);
             checkAndRemove(description, startDay, startMonth, startYear, endDay, endMonth, endYear);
         } catch (BadDateInputException bdiex) {
             System.out.println(bdiex.getMessage());
@@ -181,5 +181,9 @@ public class CollectionOfEventTasks extends CollectionOfTasks {
     // EFFECTS: gets the eventTaskList
     public ArrayList<EventTask> getTaskList() {
         return eventTaskList;
+    }
+
+    public TasksInputHandler getInputHandler() {
+        return inputHandler;
     }
 }
