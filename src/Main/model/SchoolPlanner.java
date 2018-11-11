@@ -3,6 +3,11 @@ package model;
 import exceptions.choices.BadNavInputException;
 import ui.*;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Scanner;
 
 public class SchoolPlanner {
@@ -23,6 +28,26 @@ public class SchoolPlanner {
         screenTasks = new TasksScreen();
         screenSettings = new SettingsScreen();
         System.out.println("Welcome to your School Planner, " + userName);
+    }
+
+    public static void getDataFromWeb() throws MalformedURLException, IOException {
+        BufferedReader br = null;
+        try {
+            String theURL = "https://www.ugrad.cs.ubc.ca/~cs210/2018w1/welcomemsg.html"; //this can point to any URL
+            URL url = new URL(theURL);
+            br = new BufferedReader(new InputStreamReader(url.openStream()));
+            String line;
+            StringBuilder sb = new StringBuilder();
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+            }
+            System.out.println(sb);
+        } finally {
+            if (br != null) {
+                br.close();
+            }
+        }
     }
 
     // EFFECTS: gets input from user about returning to the menu, and returns a boolean.
@@ -122,7 +147,6 @@ public class SchoolPlanner {
     private void addTask(Scanner user_input, boolean managingTasks) {
         while (managingTasks) {
             screenTasks.addToListObject(user_input);
-            screenTasks.printStoredItems();
             managingTasks = backToMenu(user_input);
         }
     }
@@ -131,7 +155,6 @@ public class SchoolPlanner {
     private void removeTask(Scanner user_input, boolean managingTasks) {
         while (managingTasks) {
             screenTasks.removeItem(user_input);
-            screenTasks.printStoredItems();
             managingTasks = backToMenu(user_input);
         }
     }
@@ -140,7 +163,6 @@ public class SchoolPlanner {
     private void addTextbook(Scanner user_input, boolean managingClasses) {
         while (managingClasses) {
             screenTimetable.addTextbook(user_input);
-            screenTimetable.printStoredItems();
             managingClasses = backToMenu(user_input);
         }
     }
@@ -149,7 +171,6 @@ public class SchoolPlanner {
     private void removeTextbook(Scanner user_input, boolean managingClasses) {
         while (managingClasses) {
             screenTimetable.removeTextbook(user_input);
-            screenTimetable.printStoredItems();
             managingClasses = backToMenu(user_input);
         }
     }
@@ -157,7 +178,6 @@ public class SchoolPlanner {
     private void addClass(Scanner user_input, boolean managingClasses) {
         while (managingClasses) {
             screenTimetable.addToListObject(user_input);
-            screenTimetable.printStoredItems();
             managingClasses = backToMenu(user_input);
         }
     }
@@ -165,7 +185,6 @@ public class SchoolPlanner {
     private void removeClass(Scanner user_input, boolean managingClasses) {
         while (managingClasses) {
             screenTimetable.removeItem(user_input);
-            screenTimetable.printStoredItems();
             managingClasses = backToMenu(user_input);
         }
     }
@@ -197,6 +216,13 @@ public class SchoolPlanner {
     }
 
     public static void main(String[] args) {
+        try {
+            getDataFromWeb();
+        } catch (MalformedURLException muex) {
+            System.out.println("The URL does not exist.");
+        } catch (IOException ioex) {
+            System.out.println("Error getting data from URL.");
+        }
         SchoolPlanner sp = new SchoolPlanner("Naveen");
         sp.run();
     }

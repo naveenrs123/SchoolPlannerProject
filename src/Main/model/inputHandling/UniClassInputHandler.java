@@ -97,10 +97,14 @@ public class UniClassInputHandler extends CollectionInputHandler {
         System.out.print("Start Time: ");
         String startTime = user_input.nextLine();
         // midnight is 0000
-        if (Integer.parseInt(startTime) < 0 || Integer.parseInt(startTime) > 2359) {
+        try {
+            if (Integer.parseInt(startTime) < 0 || Integer.parseInt(startTime) > 2359) {
+                throw new BadTimeException("Invalid start time. Your class was not created.");
+            } else {
+                return startTime;
+            }
+        } catch (NumberFormatException nfex) {
             throw new BadTimeException("Invalid start time. Your class was not created.");
-        } else {
-            return startTime;
         }
     }
 
@@ -109,10 +113,14 @@ public class UniClassInputHandler extends CollectionInputHandler {
         System.out.print("End Time: ");
         String endTime = user_input.nextLine();
         // midnight is 0000
-        if (Integer.parseInt(endTime) < 0 || Integer.parseInt(endTime) > 2359) {
+        try {
+            if (Integer.parseInt(endTime) < 0 || Integer.parseInt(endTime) > 2359) {
+                throw new BadTimeException("Invalid end time. Your class was not created.");
+            } else {
+                return endTime;
+            }
+        } catch (NumberFormatException nfex) {
             throw new BadTimeException("Invalid end time. Your class was not created.");
-        } else {
-            return endTime;
         }
     }
 

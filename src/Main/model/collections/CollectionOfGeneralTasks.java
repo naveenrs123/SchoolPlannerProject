@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class CollectionOfGeneralTasks implements CollectionOfItems {
+public class CollectionOfGeneralTasks extends Subject implements CollectionOfItems {
 
     private ArrayList<GeneralTask> generalTaskList;
     private TasksInputHandler inputHandler;
@@ -20,6 +20,7 @@ public class CollectionOfGeneralTasks implements CollectionOfItems {
     public CollectionOfGeneralTasks() {
         generalTaskList = new ArrayList<>();
         inputHandler = new TasksInputHandler();
+
     }
 
     // REQUIRES: taskType == "TASK"
@@ -53,7 +54,6 @@ public class CollectionOfGeneralTasks implements CollectionOfItems {
                 importanceLevel);
         generalTaskList.add(newGTask);
         saveTask(newGTask);
-        System.out.println("A new task has been created.");
     }
 
     // EFFECTS: saves newTask to a file.
@@ -126,14 +126,13 @@ public class CollectionOfGeneralTasks implements CollectionOfItems {
     // EFFECTS: gets all stored tasks.
     public void printItems() {
 
+        notifyObservers();
+        System.out.println();
         if (generalTaskList.size() > 0) {
             for (GeneralTask task : generalTaskList) {
                 task.printItem();
                 System.out.println();
             }
-        } else {
-            System.out.println("You have no general tasks.");
-            System.out.println();
         }
     }
 

@@ -3,6 +3,9 @@ package ui;
 import model.InputScreen;
 import model.collections.CollectionOfGeneralTasks;
 import model.collections.CollectionOfEventTasks;
+import model.observers.EventTasksObserver;
+import model.observers.GeneralTasksObserver;
+import model.observers.Observer;
 
 import java.io.*;
 import java.util.*;
@@ -14,7 +17,10 @@ public class TasksScreen implements InputScreen {
 
     // Creates a new TasksScreen object.
     public TasksScreen() {
-
+        Observer loetObserver = new EventTasksObserver(loet);
+        Observer logtObserver = new GeneralTasksObserver(logt);
+        loet.addObserver(loetObserver);
+        logt.addObserver(logtObserver);
     }
 
     // EFFECTS: gets input from the user to decide whether they want to add tasks or view tasks.

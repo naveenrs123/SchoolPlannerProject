@@ -2,6 +2,8 @@ package ui;
 
 import model.InputScreen;
 import model.collections.CollectionOfUniClasses;
+import model.observers.Observer;
+import model.observers.UniClassesObserver;
 
 import java.io.*;
 import java.util.InputMismatchException;
@@ -13,6 +15,8 @@ public class TimetableScreen implements InputScreen {
 
     // EFFECTS: creates a new TimetableScreen object.
     public TimetableScreen() {
+        Observer loucObserver = new UniClassesObserver(louc);
+        louc.addObserver(loucObserver);
 
     }
 
