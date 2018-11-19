@@ -1,26 +1,221 @@
 package ui;
 
+import inputs.EventTask;
+import inputs.GeneralTask;
+import javafx.scene.control.DatePicker;
 import model.InputScreen;
 import model.collections.CollectionOfGeneralTasks;
 import model.collections.CollectionOfEventTasks;
-import model.observers.EventTasksObserver;
-import model.observers.GeneralTasksObserver;
-import model.observers.Observer;
+import org.jdatepicker.impl.DateComponentFormatter;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.DateFormatter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.*;
 
-public class TasksScreen implements InputScreen {
+public class TasksScreen extends JPanel implements InputScreen {
 
     private CollectionOfGeneralTasks logt = new CollectionOfGeneralTasks();
     private CollectionOfEventTasks loet = new CollectionOfEventTasks();
+    private int loadState = 0;
+    private JPanel buttonPanel;
+    private JTextArea tasksTextArea;
+    private JTextArea eventsTextArea;
+    private JButton addTask;
+    private JButton removeTask;
 
     // Creates a new TasksScreen object.
     public TasksScreen() {
-        Observer loetObserver = new EventTasksObserver(loet);
-        Observer logtObserver = new GeneralTasksObserver(logt);
-        loet.addObserver(loetObserver);
-        logt.addObserver(logtObserver);
+        loadItemsIntoListObject();
+
+        BoxLayout flowMain = new BoxLayout(this, BoxLayout.PAGE_AXIS);
+        setLayout(flowMain);
+
+        buttonPanel = new JPanel();
+        buttonPanel.setSize(620, 100);
+        BoxLayout flowBody = new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS);
+        buttonPanel.setLayout(flowBody);
+
+        JLabel title = new JLabel();
+        title.setPreferredSize(new Dimension(300, 40));
+        title.setText("Tasks and Events");
+        title.setFont(new Font("Serif", Font.PLAIN, 20));
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        tasksTextArea = new JTextArea();
+        tasksTextArea.setMargin(new Insets(10, 10, 10, 10));
+        tasksTextArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+        tasksTextArea.setLineWrap(true);
+        tasksTextArea.setEditable(false);
+        JScrollPane tasksScroll = new JScrollPane(tasksTextArea);
+        tasksScroll.setPreferredSize(new Dimension(310, 100));
+        tasksScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        eventsTextArea = new JTextArea();
+        eventsTextArea.setMargin(new Insets(10, 10, 10, 10));
+        eventsTextArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+        eventsTextArea.setLineWrap(true);
+        eventsTextArea.setEditable(false);
+        JScrollPane eventsScroll = new JScrollPane(eventsTextArea);
+        eventsScroll.setPreferredSize(new Dimension(310, 100));
+        eventsScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        tasksTextArea.append("** TASKS **\n\n");
+        for (GeneralTask g : logt.getTaskList()) {
+            tasksTextArea.append(g.toString());
+        }
+
+        eventsTextArea.append(" ** EVENTS **\n\n");
+        for (EventTask e : loet.getTaskList()) {
+            eventsTextArea.append(e.toString());
+        }
+
+        addTask = new JButton("Add Task");
+        addTask.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addTaskDialog();
+            }
+        });
+        addTask.setAlignmentX(Component.CENTER_ALIGNMENT);
+        removeTask = new JButton("Remove Task");
+        removeTask.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        buttonPanel.add(addTask);
+        buttonPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+        buttonPanel.add(removeTask);
+
+        add(title);
+        add(tasksScroll);
+        add(Box.createRigidArea(new Dimension(0, 10)));
+        add(buttonPanel);
+        add(Box.createRigidArea(new Dimension(0, 10)));
+        add(eventsScroll);
+    }
+
+    public void addTaskDialog() {
+        JFrame owner = new JFrame();
+
+        JDialog addTaskScreen = new JDialog(owner, "Add Task");
+        JPanel addTaskPanel = new JPanel();
+        BoxLayout layout = new BoxLayout(addTaskPanel, BoxLayout.PAGE_AXIS);
+        addTaskPanel.setLayout(layout);
+
+        JLabel title = new JLabel("Add a Task");
+        title.setFont(new Font("Serif", Font.PLAIN, 20));
+        title.setAlignmentX(CENTER_ALIGNMENT);
+        title.setBorder(new EmptyBorder(20, 10, 10, 10));
+
+        JPanel taskTypePanel = new JPanel();
+        taskTypePanel.setMaximumSize(new Dimension(190, 50));
+        taskTypePanel.setAlignmentY(CENTER_ALIGNMENT);
+        taskTypePanel.setLayout(new FlowLayout());
+        JLabel taskTypeLabel = new JLabel("Task Type:");
+        String types[] = {"TASK", "EVENT"};
+        JComboBox taskTypeBox = new JComboBox(types);
+        taskTypePanel.add(taskTypeLabel);
+        taskTypePanel.add(taskTypeBox);
+
+        JPanel descriptionPanel = new JPanel();
+        descriptionPanel.setMaximumSize(new Dimension(300, 130));
+        descriptionPanel.setLayout(new FlowLayout());
+        descriptionPanel.setAlignmentY(CENTER_ALIGNMENT);
+        JLabel descriptionLabel = new JLabel("Description:");
+        descriptionLabel.setPreferredSize(new Dimension(80, 100));
+        JTextArea descriptionText = new JTextArea();
+        descriptionText.setPreferredSize(new Dimension(150, 100));
+        descriptionText.setLineWrap(true);
+        descriptionText.setEditable(true);
+        JScrollPane descriptionScroll = new JScrollPane(descriptionText);
+        descriptionScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        descriptionPanel.add(descriptionLabel);
+        descriptionPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+        descriptionPanel.add(descriptionScroll);
+
+        Properties p = new Properties();
+        p.put("text.today", "Today");
+        p.put("text.month", "Month");
+        p.put("text.year", "Year");
+
+        JPanel startDatePanel = new JPanel();
+        startDatePanel.setLayout(new FlowLayout());
+        startDatePanel.setMaximumSize(new Dimension(300, 50));
+        startDatePanel.setAlignmentY(CENTER_ALIGNMENT);
+        JLabel startDateLabel = new JLabel("Start Date:");
+        UtilDateModel modelStart = new UtilDateModel();
+        JDatePanelImpl datePanelStart = new JDatePanelImpl(modelStart, p);
+        JDatePickerImpl datePickerStart = new JDatePickerImpl(datePanelStart, new DateComponentFormatter());
+        startDatePanel.add(startDateLabel);
+        startDateLabel.add(Box.createRigidArea(new Dimension(5, 0)));
+        startDatePanel.add(datePickerStart);
+
+        // USING JDatePicker freely available on: https://jdatepicker.org/
+
+        JPanel endDatePanel = new JPanel();
+        endDatePanel.setMaximumSize(new Dimension(300, 50));
+        endDatePanel.setLayout(new FlowLayout());
+        endDatePanel.setAlignmentY(CENTER_ALIGNMENT);
+        JLabel endDateLabel = new JLabel("End Date:");
+        UtilDateModel modelEnd = new UtilDateModel();
+        JDatePanelImpl datePanelEnd = new JDatePanelImpl(modelEnd, p);
+        JDatePickerImpl datePickerEnd = new JDatePickerImpl(datePanelEnd, new DateComponentFormatter());
+        endDatePanel.add(endDateLabel);
+        endDatePanel.add(Box.createRigidArea(new Dimension(1, 0)));
+        endDatePanel.add(datePickerEnd);
+
+        JPanel importancePanel = new JPanel();
+        importancePanel.setMaximumSize(new Dimension(230, 50));
+        importancePanel.setAlignmentY(CENTER_ALIGNMENT);
+        importancePanel.setLayout(new FlowLayout());
+        JLabel importanceLabel = new JLabel("Importance:");
+        String importances[] = {"LOW", "MEDIUM", "HIGH", "EXTREME"};
+        JComboBox importanceBox = new JComboBox(importances);
+        importancePanel.add(importanceLabel);
+        importancePanel.add(importanceBox);
+
+        JPanel commentsPanel = new JPanel();
+        commentsPanel.setMaximumSize(new Dimension(300, 130));
+        commentsPanel.setLayout(new FlowLayout());
+        commentsPanel.setAlignmentY(CENTER_ALIGNMENT);
+        JLabel commentsLabel = new JLabel("Comments:");
+        commentsLabel.setPreferredSize(new Dimension(80, 100));
+        JTextArea commentsText = new JTextArea();
+        commentsText.setPreferredSize(new Dimension(150, 100));
+        commentsText.setLineWrap(true);
+        commentsText.setEditable(true);
+        commentsText.append("NONE");
+        JScrollPane commentsScroll = new JScrollPane(commentsText);
+        commentsScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        commentsPanel.add(commentsLabel);
+        commentsPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+        commentsPanel.add(commentsScroll);
+
+        JButton submit = new JButton("Submit");
+        submit.setAlignmentX(CENTER_ALIGNMENT);
+
+        addTaskPanel.add(title);
+        addTaskPanel.add(taskTypePanel);
+        addTaskPanel.add(descriptionPanel);
+        addTaskPanel.add(startDatePanel);
+        addTaskPanel.add(endDatePanel);
+        addTaskPanel.add(importancePanel);
+        addTaskPanel.add(commentsPanel);
+        addTaskPanel.add(submit);
+
+        addTaskScreen.add(addTaskPanel);
+        addTaskScreen.setSize(new Dimension(300, 800));
+        addTaskScreen.setVisible(true);
+
+
+
+
     }
 
     // EFFECTS: gets input from the user to decide whether they want to add tasks or view tasks.
@@ -107,16 +302,21 @@ public class TasksScreen implements InputScreen {
 
     // MODIFIES: this
     // EFFECTS: loads all tasks stored in a file into the generalTaskList.
-    public int loadItemsIntoListObject() {
+    public void loadItemsIntoListObject() {
         try {
             loadEventTaskIntoListObject();
             loadGeneralTaskIntoListObject();
         } catch (FileNotFoundException fnfex) {
-            return 1;
+            loadState = 1;
         } catch (IOException ioex) {
-            return 2;
+            loadState = 2;
         }
-        return 0;
+        loadState = 0;
+    }
+
+    @Override
+    public int getloadState() {
+        return loadState;
     }
 
     // EFFECTS: calls methods to load a general task into a list object.

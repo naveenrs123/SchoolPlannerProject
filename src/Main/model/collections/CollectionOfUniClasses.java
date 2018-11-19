@@ -11,7 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class CollectionOfUniClasses extends Subject implements CollectionOfItems {
+public class CollectionOfUniClasses implements CollectionOfItems {
 
     private HashMap<ArrayList<String>, UniClass> classMap;
     private CollectionOfTextbooks collectionOfTextbooks;
@@ -73,7 +73,6 @@ public class CollectionOfUniClasses extends Subject implements CollectionOfItems
         ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, name));
         classMap.put(key, newClass);
         saveUniClass(newClass);
-        notifyObservers();
     }
 
     // EFFECTS: saves uc to a file.
@@ -143,7 +142,11 @@ public class CollectionOfUniClasses extends Subject implements CollectionOfItems
     // EFFECTS: outputs stored UniClasses
     public void printItems() {
         System.out.println("**CLASSES**\n");
-        notifyObservers();
+        if (classMap.size() == 1) {
+            System.out.println("There is " + classMap.size() + " class stored.");
+        } else {
+            System.out.println("There are " + classMap.size() + " classes stored.");
+        }
         System.out.println();
         if (classMap.size() > 0) {
             for (UniClass uniClass : classMap.values()) {

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class CollectionOfEventTasks extends Subject implements CollectionOfItems {
+public class CollectionOfEventTasks implements CollectionOfItems {
 
     private ArrayList<EventTask> eventTaskList;
     private TasksInputHandler inputHandler;
@@ -61,7 +61,6 @@ public class CollectionOfEventTasks extends Subject implements CollectionOfItems
                 importanceLevel, comments);
         eventTaskList.add(newETask);
         saveTask(newETask);
-        notifyObservers();
     }
 
     // EFFECTS: saves newTask to a file.
@@ -102,8 +101,11 @@ public class CollectionOfEventTasks extends Subject implements CollectionOfItems
 
     // EFFECTS: gets all stored tasks.
     public void printItems() {
-
-        notifyObservers();
+        if (eventTaskList.size() == 1) {
+            System.out.println("There is " + eventTaskList.size() + " event stored.");
+        } else {
+            System.out.println("There are " + eventTaskList.size() + " events stored.");
+        }
         System.out.println();
         if (eventTaskList.size() > 0) {
             for (EventTask task : eventTaskList) {

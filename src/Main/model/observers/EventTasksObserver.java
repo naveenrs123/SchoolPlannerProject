@@ -13,6 +13,7 @@ public class EventTasksObserver implements Observer {
 
     @Override
     public void update() {
+        // no subject.getState() function implemented because existing getters can get the state for me.
         numTasks = collectionOfEventTasks.getTaskList().size();
         if (numTasks == 1) {
             System.out.println("There is " + numTasks + " event stored.");

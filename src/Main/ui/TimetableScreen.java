@@ -1,23 +1,115 @@
 package ui;
 
+import inputs.Textbook;
+import inputs.UniClass;
 import model.InputScreen;
+import model.collections.CollectionOfTextbooks;
 import model.collections.CollectionOfUniClasses;
 import model.observers.Observer;
 import model.observers.UniClassesObserver;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class TimetableScreen implements InputScreen {
+public class TimetableScreen extends JPanel implements InputScreen {
 
     private CollectionOfUniClasses louc = new CollectionOfUniClasses();
+    private int loadState = 0;
+    private JPanel top;
+    private JPanel bottom;
+    private JTextArea classesTextArea;
+    private JTextArea textbooksTextArea;
+    private JButton addClass;
+    private JButton removeClass;
+    private JButton addTextbook;
+    private JButton removeTextbook;
 
     // EFFECTS: creates a new TimetableScreen object.
     public TimetableScreen() {
-        Observer loucObserver = new UniClassesObserver(louc);
-        louc.addObserver(loucObserver);
+        loadItemsIntoListObject();
 
+        BoxLayout flowMain = new BoxLayout(this, BoxLayout.PAGE_AXIS);
+        setLayout(flowMain);
+
+        top = new JPanel();
+        top.setSize(620, 300);
+
+        BoxLayout flowTop = new BoxLayout(top, BoxLayout.PAGE_AXIS);
+        top.setLayout(flowTop);
+
+        bottom = new JPanel();
+        bottom.setSize(620, 300);
+
+        BoxLayout flowBottom = new BoxLayout(bottom, BoxLayout.LINE_AXIS);
+        bottom.setLayout(flowBottom);
+
+        JLabel title = new JLabel();
+        title.setPreferredSize(new Dimension(300, 40));
+        title.setText("Timetable and Textbooks");
+        title.setFont(new Font("Serif", Font.PLAIN, 20));
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        classesTextArea = new JTextArea();
+        classesTextArea.setMargin(new Insets(10, 10, 10, 10));
+        classesTextArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+        classesTextArea.setLineWrap(true);
+        classesTextArea.setEditable(false);
+        JScrollPane classesScroll = new JScrollPane(classesTextArea);
+        classesScroll.setPreferredSize(new Dimension(590, 100));
+        classesScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        textbooksTextArea = new JTextArea();
+        textbooksTextArea.setMargin(new Insets(10, 10, 10, 10));
+        textbooksTextArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+        textbooksTextArea.setLineWrap(true);
+        textbooksTextArea.setEditable(false);
+        JScrollPane textbooksScroll = new JScrollPane(textbooksTextArea);
+        textbooksScroll.setPreferredSize(new Dimension(590, 100));
+        textbooksScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        classesTextArea.append("** CLASSES **\n\n");
+        for (UniClass c : louc.getClassMap().values()) {
+            classesTextArea.append(c.toString());
+        }
+
+        ArrayList<Textbook> textbooks = getListOfUniClasses().getCollectionOfTextbooks().getTextbooksList();
+
+        textbooksTextArea.append(" ** TEXTBOOKS **\n\n");
+        for (Textbook t : textbooks) {
+            textbooksTextArea.append(t.toStringFull());
+        }
+
+        top.add(title);
+        top.add(classesScroll);
+        top.add(Box.createRigidArea(new Dimension(0, 10)));
+        top.add(textbooksScroll);
+        top.add(Box.createRigidArea(new Dimension(0, 10)));
+        add(top);
+
+        addClass = new JButton("Add Class");
+        removeClass = new JButton("Remove Class");
+        addTextbook = new JButton("Add Textbook");
+        removeTextbook = new JButton("Remove Textbook");
+
+        bottom.add(addClass);
+        bottom.add(Box.createRigidArea(new Dimension(10, 0)));
+        bottom.add(removeClass);
+        bottom.add(Box.createRigidArea(new Dimension(10, 0)));
+        bottom.add(addTextbook);
+        bottom.add(Box.createRigidArea(new Dimension(10, 0)));
+        bottom.add(removeTextbook);
+
+        add(bottom);
+
+    }
+
+    @Override
+    public int getloadState() {
+        return loadState;
     }
 
     // EFFECTS: gets input from the user to decide whether they want to add classes or view classes.
@@ -78,7 +170,7 @@ public class TimetableScreen implements InputScreen {
 
     // MODIFIES: this
     // EFFECTS: loads all classes from a file into the classList.
-    public int loadItemsIntoListObject() {
+    public void loadItemsIntoListObject() {
         String filename = "listofclasses.csv";
         String currentClass;
         try {
@@ -88,11 +180,11 @@ public class TimetableScreen implements InputScreen {
                 louc.loadSingleItem(currentClass);
             }
         } catch (FileNotFoundException fnfex) {
-            return 1;
+            loadState = 1;
         } catch (IOException ioex) {
-            return 2;
+            loadState = 2;
         }
-        return 0;
+        loadState = 0;
     }
 
     public void removeItem(Scanner user_input) {

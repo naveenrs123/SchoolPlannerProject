@@ -18,7 +18,7 @@ public class GeneralTask extends Task {
     public void printItem() {
         System.out.println("Task Type: " + taskType);
         System.out.println("Description: " + description);
-        System.out.println("date Due: " + date.get(Calendar.DATE) + "/" + (date.get(Calendar.MONTH) + 1) + "/" + date.get(Calendar.YEAR));
+        System.out.println("Date Due: " + date.get(Calendar.DATE) + "/" + (date.get(Calendar.MONTH) + 1) + "/" + date.get(Calendar.YEAR));
         switch (importance) {
             case LOW:
                 System.out.println("Importance: LOW");
@@ -44,5 +44,30 @@ public class GeneralTask extends Task {
     // EFFECTS: gets the year.
     public int getYear() { return date.get(Calendar.YEAR); }
 
+    @Override
+    public String toString() {
+        String returnVal = "";
 
+        returnVal += "Task Type: " + taskType + "\nDescription: " + description +
+                "\nDate Due: " + date.get(Calendar.DATE) + "/" + (date.get(Calendar.MONTH) + 1) + "/" + date.get(Calendar.YEAR);
+
+        switch (importance) {
+            case LOW:
+                returnVal += "\nImportance: LOW\n";
+                break;
+            case MEDIUM:
+                returnVal += "\nImportance: MEDIUM\n";
+                break;
+            case HIGH:
+                returnVal += "\nImportance: HIGH\n";
+                break;
+            case EXTREME:
+                returnVal += "\nImportance: EXTREME\n";
+                break;
+        }
+
+        returnVal += "\n";
+
+        return returnVal;
+    }
 }

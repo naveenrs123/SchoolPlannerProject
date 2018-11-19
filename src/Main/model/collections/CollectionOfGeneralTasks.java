@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class CollectionOfGeneralTasks extends Subject implements CollectionOfItems {
+public class CollectionOfGeneralTasks implements CollectionOfItems {
 
     private ArrayList<GeneralTask> generalTaskList;
     private TasksInputHandler inputHandler;
@@ -125,8 +125,11 @@ public class CollectionOfGeneralTasks extends Subject implements CollectionOfIte
 
     // EFFECTS: gets all stored tasks.
     public void printItems() {
-
-        notifyObservers();
+        if (generalTaskList.size() == 1) {
+            System.out.println("There is " + generalTaskList.size() + " task stored.");
+        } else {
+            System.out.println("There are " + generalTaskList.size() + " tasks stored.");
+        }
         System.out.println();
         if (generalTaskList.size() > 0) {
             for (GeneralTask task : generalTaskList) {

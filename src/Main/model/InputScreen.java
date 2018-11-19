@@ -11,5 +11,7 @@ public interface InputScreen {
 
     void addToListObject(Scanner user_input);
 
-    int loadItemsIntoListObject();
+    void loadItemsIntoListObject();
+
+    int getloadState();
 }

@@ -110,4 +110,13 @@ public class Textbook implements StoredObject {
     public int hashCode() {
         return Objects.hash(title, author, pages);
     }
+
+    @Override
+    public String toString() {
+        return "Textbook: " + title + " by " + author + ", " + pages + " pages long.\n";
+    }
+
+    public String toStringFull() {
+        return "Textbook: " + title + " by " + author + ", " + pages + " pages long.\n" + "Used in: " + associatedClass.getName() + "\n";
+    }
 }

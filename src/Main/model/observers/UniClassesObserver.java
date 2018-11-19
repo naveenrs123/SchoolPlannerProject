@@ -13,6 +13,7 @@ public class UniClassesObserver implements Observer {
 
     @Override
     public void update() {
+        // no subject.getState() function implemented because existing getters can get the state for me.
         numClasses = collectionOfUniClasses.getClassMap().size();
         if (numClasses == 1) {
             System.out.println("There is " + numClasses + " class stored.");

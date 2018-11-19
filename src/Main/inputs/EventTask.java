@@ -62,4 +62,32 @@ public class EventTask extends Task {
         }
         System.out.println("Comments: " + comments);
     }
+
+    @Override
+    public String toString() {
+        String returnVal = "";
+
+        returnVal += "Task Type: " + taskType + "\nDescription: " + description + "\nStart Date: " + startDate.get(Calendar.DATE) +
+                "/" + (startDate.get(Calendar.MONTH) + 1) + "/" + startDate.get(Calendar.YEAR) + "\nEnd Date: " +
+                endDate.get(Calendar.DATE) + "/" + (endDate.get(Calendar.MONTH) + 1) + "/" + endDate.get(Calendar.YEAR);
+
+        switch (importance) {
+            case LOW:
+                returnVal += "\nImportance: LOW";
+                break;
+            case MEDIUM:
+                returnVal += "\nImportance: MEDIUM";
+                break;
+            case HIGH:
+                returnVal += "\nImportance: HIGH";
+                break;
+            case EXTREME:
+                returnVal += "\nImportance: EXTREME";
+                break;
+        }
+
+        returnVal += "\nComments: " + comments + "\n\n";
+
+        return returnVal;
+    }
 }

@@ -1,6 +1,8 @@
 package ui;
 
-public class SettingsScreen {
+import javax.swing.*;
+
+public class SettingsScreen extends JPanel {
 
     // EFFECTS: creates a new SettingsScreen object.
     public SettingsScreen() {

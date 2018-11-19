@@ -110,4 +110,32 @@ public class UniClass implements StoredObject {
     public int hashCode() {
         return Objects.hash(name);
     }
+
+    @Override
+    public String toString() {
+
+        String returnVal = "";
+
+        returnVal += classType + ": " + name + " at " + location + " taught by " + prof + ".\n" +
+                String.format("%04d", startTime) + " to " + String.format("%04d", endTime) + " on ";
+
+        if (days.size() == 1) {
+            returnVal += daysOfWeek.get(days.get(0) - 1) + "\n";
+        } else {
+            int i;
+            for (i = 0; i < days.size() - 1; i++) {
+                returnVal += daysOfWeek.get(days.get(i) - 1) + ", ";
+            }
+            returnVal += "and " + daysOfWeek.get(days.get(i) - 1) + ".\n";
+        }
+
+        if (textbook.getTitle() != null && textbook.getAuthor() != null) {
+            returnVal += textbook.toString();
+        } else {
+            returnVal += "No textbook." + "\n";
+        }
+        return returnVal;
+    }
 }
+
+

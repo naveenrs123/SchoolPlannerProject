@@ -3,6 +3,7 @@ package model;
 import exceptions.choices.BadNavInputException;
 import ui.*;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,7 +17,8 @@ public class SchoolPlanner {
     private MainScreen screenMain;
     private TimetableScreen screenTimetable;
     private TasksScreen screenTasks;
-    private SettingsScreen screenSettings;
+    private JFrame frame = new JFrame("School Planner");
+
 
     // MODIFIES: this
     // EFFECTS: Creates a new SchoolPlanner object. Sets its fields and creates the screens of the school
@@ -26,7 +28,6 @@ public class SchoolPlanner {
         screenMain = new MainScreen();
         screenTimetable = new TimetableScreen();
         screenTasks = new TasksScreen();
-        screenSettings = new SettingsScreen();
         System.out.println("Welcome to your School Planner, " + userName);
     }
 
@@ -70,7 +71,7 @@ public class SchoolPlanner {
     // EFFECTS: prints information for navigationInput
     public void navInputDetails() {
         System.out.println("\nWhere would you like to go?");
-        System.out.println("1: Tasks\n2: Timetable\n3: Settings\n4: Quit");
+        System.out.println("1: Tasks\n2: Timetable\n3: Quit");
         System.out.print("Enter your choice here: ");
     }
 
@@ -104,8 +105,6 @@ public class SchoolPlanner {
             return 2;
         } else if (inputChoice.equals("3")) {
             return 3;
-        } else if (inputChoice.equals("4")) {
-            return 4;
         } else {
             throw new BadNavInputException();
         }
@@ -203,8 +202,6 @@ public class SchoolPlanner {
             } else if (choice == 2) {
                 handleTimetableScreen(user_input);
             } else if (choice == 3) {
-                screenSettings.welcomeMessage();
-            } else if (choice == 4) {
                 System.out.println("Goodbye " + userName + ", come back soon!");
                 screenTimetable.saveList();
                 screenTasks.saveList();
@@ -224,6 +221,25 @@ public class SchoolPlanner {
             System.out.println("Error getting data from URL.");
         }
         SchoolPlanner sp = new SchoolPlanner("Naveen");
+
+        JTabbedPane tabs = new JTabbedPane();
+
+        sp.frame.setSize(620, 600);
+
+        sp.screenTimetable.setSize(620, 600);
+        sp.screenMain.setSize(620, 600);
+        sp.screenTasks.setSize(620, 600);
+
+        tabs.addTab("Home", sp.screenMain);
+        tabs.addTab("Timetable", sp.screenTimetable);
+        tabs.addTab("Tasks", sp.screenTasks);
+
+        sp.frame.add(tabs);
+
+        sp.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        sp.frame.setVisible(true);
+
         sp.run();
     }
 
