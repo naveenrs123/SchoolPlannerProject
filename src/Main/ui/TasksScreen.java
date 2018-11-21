@@ -85,7 +85,14 @@ public class TasksScreen extends JPanel implements InputScreen {
             }
         });
         addTask.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         removeTask = new JButton("Remove Task");
+        removeTask.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeTaskDialog();
+            }
+        });
         removeTask.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         buttonPanel.add(addTask);
@@ -112,6 +119,16 @@ public class TasksScreen extends JPanel implements InputScreen {
         title.setFont(new Font("Serif", Font.PLAIN, 20));
         title.setAlignmentX(CENTER_ALIGNMENT);
         title.setBorder(new EmptyBorder(20, 10, 10, 10));
+
+        JTextArea detailText = new JTextArea();
+        detailText.setMaximumSize(new Dimension(250, 140));
+        detailText.setLineWrap(true);
+        detailText.setEditable(false);
+        detailText.setOpaque(false);
+        detailText.setFont(new Font("Serif", Font.PLAIN, 16));
+        detailText.append("All tasks must have a task type, a \ndescription, a date, and a rank of \nimportance.\n");
+        detailText.append("Events also need a start date, an end \ndate, and optional comments (default \nis NONE).\n");
+        detailText.append("For normal tasks, do not change the \nend date and optional comments.");
 
         JPanel taskTypePanel = new JPanel();
         taskTypePanel.setMaximumSize(new Dimension(190, 50));
@@ -199,8 +216,15 @@ public class TasksScreen extends JPanel implements InputScreen {
 
         JButton submit = new JButton("Submit");
         submit.setAlignmentX(CENTER_ALIGNMENT);
+        submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                owner.dispose();
+            }
+        });
 
         addTaskPanel.add(title);
+        addTaskPanel.add(detailText);
         addTaskPanel.add(taskTypePanel);
         addTaskPanel.add(descriptionPanel);
         addTaskPanel.add(startDatePanel);
@@ -210,12 +234,109 @@ public class TasksScreen extends JPanel implements InputScreen {
         addTaskPanel.add(submit);
 
         addTaskScreen.add(addTaskPanel);
-        addTaskScreen.setSize(new Dimension(300, 800));
+        addTaskScreen.setSize(new Dimension(300, 720));
         addTaskScreen.setVisible(true);
+    }
 
+    public void removeTaskDialog() {
+        JFrame owner = new JFrame();
 
+        JDialog removeTaskScreen = new JDialog(owner, "Remove Task");
+        JPanel removeTaskPanel = new JPanel();
+        BoxLayout layout = new BoxLayout(removeTaskPanel, BoxLayout.PAGE_AXIS);
+        removeTaskPanel.setLayout(layout);
 
+        JLabel title = new JLabel("Remove a Task");
+        title.setFont(new Font("Serif", Font.PLAIN, 20));
+        title.setAlignmentX(CENTER_ALIGNMENT);
+        title.setBorder(new EmptyBorder(20, 10, 10, 10));
 
+        JTextArea detailText = new JTextArea();
+        detailText.setMaximumSize(new Dimension(250, 80));
+        detailText.setLineWrap(true);
+        detailText.setEditable(false);
+        detailText.setOpaque(false);
+        detailText.setFont(new Font("Serif", Font.PLAIN, 16));
+        detailText.append("To remove a Task, provide the task \ntype, description, and date (start date).\n\n");
+        detailText.append("To remove an Event, also provide the \nend date.");
+
+        JPanel taskTypePanel = new JPanel();
+        taskTypePanel.setMaximumSize(new Dimension(190, 50));
+        taskTypePanel.setAlignmentY(CENTER_ALIGNMENT);
+        taskTypePanel.setLayout(new FlowLayout());
+        JLabel taskTypeLabel = new JLabel("Task Type:");
+        String types[] = {"TASK", "EVENT"};
+        JComboBox taskTypeBox = new JComboBox(types);
+        taskTypePanel.add(taskTypeLabel);
+        taskTypePanel.add(taskTypeBox);
+
+        JPanel descriptionPanel = new JPanel();
+        descriptionPanel.setMaximumSize(new Dimension(300, 130));
+        descriptionPanel.setLayout(new FlowLayout());
+        descriptionPanel.setAlignmentY(CENTER_ALIGNMENT);
+        JLabel descriptionLabel = new JLabel("Description:");
+        descriptionLabel.setPreferredSize(new Dimension(80, 100));
+        JTextArea descriptionText = new JTextArea();
+        descriptionText.setPreferredSize(new Dimension(150, 100));
+        descriptionText.setLineWrap(true);
+        descriptionText.setEditable(true);
+        JScrollPane descriptionScroll = new JScrollPane(descriptionText);
+        descriptionScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        descriptionPanel.add(descriptionLabel);
+        descriptionPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+        descriptionPanel.add(descriptionScroll);
+
+        Properties p = new Properties();
+        p.put("text.today", "Today");
+        p.put("text.month", "Month");
+        p.put("text.year", "Year");
+
+        JPanel startDatePanel = new JPanel();
+        startDatePanel.setLayout(new FlowLayout());
+        startDatePanel.setMaximumSize(new Dimension(300, 50));
+        startDatePanel.setAlignmentY(CENTER_ALIGNMENT);
+        JLabel startDateLabel = new JLabel("Start Date:");
+        UtilDateModel modelStart = new UtilDateModel();
+        JDatePanelImpl datePanelStart = new JDatePanelImpl(modelStart, p);
+        JDatePickerImpl datePickerStart = new JDatePickerImpl(datePanelStart, new DateComponentFormatter());
+        startDatePanel.add(startDateLabel);
+        startDateLabel.add(Box.createRigidArea(new Dimension(5, 0)));
+        startDatePanel.add(datePickerStart);
+
+        // USING JDatePicker freely available on: https://jdatepicker.org/
+
+        JPanel endDatePanel = new JPanel();
+        endDatePanel.setMaximumSize(new Dimension(300, 50));
+        endDatePanel.setLayout(new FlowLayout());
+        endDatePanel.setAlignmentY(CENTER_ALIGNMENT);
+        JLabel endDateLabel = new JLabel("End Date:");
+        UtilDateModel modelEnd = new UtilDateModel();
+        JDatePanelImpl datePanelEnd = new JDatePanelImpl(modelEnd, p);
+        JDatePickerImpl datePickerEnd = new JDatePickerImpl(datePanelEnd, new DateComponentFormatter());
+        endDatePanel.add(endDateLabel);
+        endDatePanel.add(Box.createRigidArea(new Dimension(1, 0)));
+        endDatePanel.add(datePickerEnd);
+
+        JButton submit = new JButton("Submit");
+        submit.setAlignmentX(CENTER_ALIGNMENT);
+        submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                owner.dispose();
+            }
+        });
+
+        removeTaskPanel.add(title);
+        removeTaskPanel.add(detailText);
+        removeTaskPanel.add(taskTypePanel);
+        removeTaskPanel.add(descriptionPanel);
+        removeTaskPanel.add(startDatePanel);
+        removeTaskPanel.add(endDatePanel);
+        removeTaskPanel.add(submit);
+
+        removeTaskScreen.add(removeTaskPanel);
+        removeTaskScreen.setSize(new Dimension(300, 480));
+        removeTaskScreen.setVisible(true);
     }
 
     // EFFECTS: gets input from the user to decide whether they want to add tasks or view tasks.
