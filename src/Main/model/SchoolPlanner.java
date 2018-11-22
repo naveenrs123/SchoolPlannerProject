@@ -1,9 +1,12 @@
 package model;
 
 import exceptions.choices.BadNavInputException;
+import model.observerPattern.Observer;
 import ui.*;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,7 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-public class SchoolPlanner {
+public class SchoolPlanner implements Observer {
 
     private String userName;
     private MainScreen screenMain;
@@ -28,7 +31,11 @@ public class SchoolPlanner {
         screenMain = new MainScreen();
         screenTimetable = new TimetableScreen();
         screenTasks = new TasksScreen();
-        System.out.println("Welcome to your School Planner, " + userName);
+
+        screenTimetable.getListOfUniClasses().addObserver(this);
+        screenTasks.getLoet().addObserver(this);
+        screenTasks.getLogt().addObserver(this);
+
     }
 
     public static void getDataFromWeb() throws MalformedURLException, IOException {
@@ -188,6 +195,13 @@ public class SchoolPlanner {
         }
     }
 
+    @Override
+    public void update() {
+        screenMain.myClasses(screenTimetable);
+        screenMain.myTasks(screenTasks);
+        screenMain.myTextbooks(screenTimetable);
+    }
+
     // MODIFIES: this
     // EFFECTS: runs the program once a new SchoolPlanner is created.
     private void run() {
@@ -225,7 +239,6 @@ public class SchoolPlanner {
         JTabbedPane tabs = new JTabbedPane();
 
         sp.frame.setSize(620, 600);
-
         sp.screenTimetable.setSize(620, 600);
         sp.screenMain.setSize(620, 600);
         sp.screenTasks.setSize(620, 600);
@@ -233,14 +246,20 @@ public class SchoolPlanner {
         tabs.addTab("Home", sp.screenMain);
         tabs.addTab("Timetable", sp.screenTimetable);
         tabs.addTab("Tasks", sp.screenTasks);
-
         sp.frame.add(tabs);
 
+        sp.frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                sp.screenTimetable.saveList();
+                sp.screenTasks.saveList();
+            }
+        });
+
         sp.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         sp.frame.setVisible(true);
-
         sp.run();
     }
+
 
 }

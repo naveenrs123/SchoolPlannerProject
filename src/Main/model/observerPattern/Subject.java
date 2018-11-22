@@ -1,6 +1,6 @@
-package model.collections;
+package model.observerPattern;
 
-import model.observers.Observer;
+import model.observerPattern.Observer;
 
 import java.util.ArrayList;
 

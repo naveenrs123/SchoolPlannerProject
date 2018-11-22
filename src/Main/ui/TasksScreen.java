@@ -2,10 +2,10 @@ package ui;
 
 import inputs.EventTask;
 import inputs.GeneralTask;
-import javafx.scene.control.DatePicker;
 import model.InputScreen;
 import model.collections.CollectionOfGeneralTasks;
 import model.collections.CollectionOfEventTasks;
+import model.observerPattern.Observer;
 import org.jdatepicker.impl.DateComponentFormatter;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -13,14 +13,13 @@ import org.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.DateFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.*;
 
-public class TasksScreen extends JPanel implements InputScreen {
+public class TasksScreen extends JPanel implements InputScreen, Observer {
 
     private CollectionOfGeneralTasks logt = new CollectionOfGeneralTasks();
     private CollectionOfEventTasks loet = new CollectionOfEventTasks();
@@ -33,6 +32,8 @@ public class TasksScreen extends JPanel implements InputScreen {
 
     // Creates a new TasksScreen object.
     public TasksScreen() {
+        loet.addObserver(this);
+        logt.addObserver(this);
         loadItemsIntoListObject();
 
         BoxLayout flowMain = new BoxLayout(this, BoxLayout.PAGE_AXIS);
@@ -219,6 +220,50 @@ public class TasksScreen extends JPanel implements InputScreen {
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String taskType = (String) taskTypeBox.getSelectedItem();
+                String description;
+                String startDay;
+                String startMonth;
+                String startYear;
+                String endDay;
+                String endMonth;
+                String endYear;
+                String importance;
+                String comments;
+                ArrayList<String> item;
+
+                if (taskType == "TASK") {
+                    description = descriptionText.getText();
+                    startDay = Integer.toString(datePickerStart.getModel().getDay());
+                    startMonth = Integer.toString(datePickerStart.getModel().getMonth());
+                    startYear = Integer.toString(datePickerStart.getModel().getYear());
+                    startYear = startYear.substring(2);
+                    importance = (String) importanceBox.getSelectedItem();
+                    item = new ArrayList<>(Arrays.asList(taskType, description, startDay, startMonth, startYear, importance));
+                    if (!description.equals("")) {
+                        addToListObject(item);
+                    }
+                }
+                else {
+                    description = descriptionText.getText();
+                    startDay = Integer.toString(datePickerStart.getModel().getDay());
+                    startMonth = Integer.toString(datePickerStart.getModel().getMonth());
+                    startYear = Integer.toString(datePickerStart.getModel().getYear());
+                    startYear = startYear.substring(2);
+                    endDay = Integer.toString(datePickerEnd.getModel().getDay());
+                    endMonth = Integer.toString(datePickerEnd.getModel().getMonth());
+                    endYear = Integer.toString(datePickerEnd.getModel().getYear());
+                    endYear = endYear.substring(2);
+                    importance = (String) importanceBox.getSelectedItem();
+                    comments = commentsText.getText();
+                    item = new ArrayList<>(Arrays.asList(taskType, description, startDay, startMonth, startYear, endDay, endMonth,
+                            endYear, importance, comments));
+                    if (!description.equals("")) {
+                        addToListObject(item);
+                    }
+                }
+
+
                 owner.dispose();
             }
         });
@@ -322,6 +367,39 @@ public class TasksScreen extends JPanel implements InputScreen {
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String taskType = (String) taskTypeBox.getSelectedItem();
+                String description;
+                String startDay;
+                String startMonth;
+                String startYear;
+                String endDay;
+                String endMonth;
+                String endYear;
+                ArrayList<String> item;
+
+                if (taskType == "TASK") {
+                    description = descriptionText.getText();
+                    startDay = Integer.toString(datePickerStart.getModel().getDay());
+                    startMonth = Integer.toString(datePickerStart.getModel().getMonth());
+                    startYear = Integer.toString(datePickerStart.getModel().getYear());
+                    startYear = startYear.substring(2);
+                    item = new ArrayList<>(Arrays.asList(taskType, description, startDay, startMonth, startYear));
+                }
+                else {
+                    description = descriptionText.getText();
+                    startDay = Integer.toString(datePickerStart.getModel().getDay());
+                    startMonth = Integer.toString(datePickerStart.getModel().getMonth());
+                    startYear = Integer.toString(datePickerStart.getModel().getYear());
+                    startYear = startYear.substring(2);
+                    endDay = Integer.toString(datePickerEnd.getModel().getDay());
+                    endMonth = Integer.toString(datePickerEnd.getModel().getMonth());
+                    endYear = Integer.toString(datePickerEnd.getModel().getYear());
+                    endYear = endYear.substring(2);
+                    item = new ArrayList<>(Arrays.asList(taskType, description, startDay, startMonth, startYear, endDay, endMonth,
+                            endYear));
+                }
+
+                removeItem(item);
                 owner.dispose();
             }
         });
@@ -421,6 +499,19 @@ public class TasksScreen extends JPanel implements InputScreen {
         }
     }
 
+    public void addToListObject(ArrayList<String> item) {
+        String taskType = item.get(0);
+        if (taskType.equals("TASK")) {
+            if (item.size() == 6) {
+                logt.addItem(item);
+            }
+        } else {
+            if (item.size() == 10) {
+                loet.addItem(item);
+            }
+        }
+    }
+
     // MODIFIES: this
     // EFFECTS: loads all tasks stored in a file into the generalTaskList.
     public void loadItemsIntoListObject() {
@@ -478,6 +569,24 @@ public class TasksScreen extends JPanel implements InputScreen {
 
     }
 
+    // EFFECTS: calls methods to remove a task.
+    public void removeItem(ArrayList<String> item) {
+        String taskType = item.get(0);
+        if (taskType.equals("TASK")) {
+            if (item.size() == 5) {
+                logt.removeItem(item);
+            }
+
+        }
+        if (taskType.equals("EVENT")) {
+            if (item.size() == 8) {
+                loet.removeItem(item);
+            }
+
+        }
+
+    }
+
     // EFFECTS: prints out all tasks.
     public void printStoredItems() {
         System.out.println("**TASKS**\n");
@@ -498,4 +607,20 @@ public class TasksScreen extends JPanel implements InputScreen {
     public CollectionOfGeneralTasks getLogt() {
         return logt;
     }
+
+    @Override
+    public void update() {
+        tasksTextArea.setText("");
+        tasksTextArea.append("** TASKS **\n\n");
+        for (GeneralTask g : logt.getTaskList()) {
+            tasksTextArea.append(g.toString());
+        }
+
+        eventsTextArea.setText("");
+        eventsTextArea.append(" ** EVENTS **\n\n");
+        for (EventTask e : loet.getTaskList()) {
+            eventsTextArea.append(e.toString());
+        }
+    }
+
 }

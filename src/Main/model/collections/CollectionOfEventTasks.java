@@ -4,6 +4,7 @@ import exceptions.date.BadDateInputException;
 import exceptions.input.InvalidImportanceException;
 import inputs.EventTask;
 import model.inputHandling.TasksInputHandler;
+import model.observerPattern.Subject;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class CollectionOfEventTasks implements CollectionOfItems {
+public class CollectionOfEventTasks extends Subject implements CollectionOfItems {
 
     private ArrayList<EventTask> eventTaskList;
     private TasksInputHandler inputHandler;
@@ -51,6 +52,21 @@ public class CollectionOfEventTasks implements CollectionOfItems {
         }
     }
 
+    public void addItem(ArrayList<String> item) {
+        String taskType = item.get(0);
+        String description = item.get(1);
+        String startDay = item.get(2);
+        String startMonth = item.get(3);
+        String startYear = item.get(4);
+        String endDay = item.get(5);
+        String endMonth = item.get(6);
+        String endYear = item.get(7);
+        String importanceLevel = item.get(8);
+        String comments = item.get(9);
+
+        createTask(taskType, description, startDay, startMonth, startYear, endDay, endMonth, endYear, importanceLevel, comments);
+    }
+
     // REQUIRES: valid taskType, startDay, startMonth, startYear, endDay, endMonth, endYear, and importanceLevel
     // MODIFIES: this
     // EFFECTS: creates a new EventTask, adds it to a list, and saves it to a file.
@@ -61,6 +77,7 @@ public class CollectionOfEventTasks implements CollectionOfItems {
                 importanceLevel, comments);
         eventTaskList.add(newETask);
         saveTask(newETask);
+        notifyObservers();
     }
 
     // EFFECTS: saves newTask to a file.
@@ -119,7 +136,7 @@ public class CollectionOfEventTasks implements CollectionOfItems {
     // EFFECTS: removes an EventTask from the list.
     public void removeItem(Scanner user_input) {
         if (eventTaskList.isEmpty()) {
-            System.out.println("You have no general tasks to remove.");
+            System.out.println("You have no event tasks to remove.");
             return;
         }
         String description = inputHandler.userDescription(user_input);
@@ -142,6 +159,23 @@ public class CollectionOfEventTasks implements CollectionOfItems {
 
     // MODIFIES: this
     // EFFECTS: removes an EventTask from the list.
+    public void removeItem(ArrayList<String> item) {
+        if (eventTaskList.isEmpty()) {
+            return;
+        }
+        String description = item.get(1);
+        String startDay; String startMonth; String startYear; String endDay; String endMonth; String endYear;
+        startDay = item.get(2);
+        startMonth = item.get(3);
+        startYear = item.get(4);
+        endDay = item.get(5);
+        endMonth = item.get(6);
+        endYear = item.get(7);
+        checkAndRemove(description, startDay, startMonth, startYear, endDay, endMonth, endYear);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: removes an EventTask from the list.
     private void checkAndRemove(String description, String startDay, String startMonth, String startYear, String endDay, String endMonth, String endYear) {
         for (EventTask task : eventTaskList) {
             if (description.equals(task.getDescription()) && Integer.parseInt(startDay) == task.getStartDay()
@@ -149,10 +183,10 @@ public class CollectionOfEventTasks implements CollectionOfItems {
                     && Integer.parseInt(endDay) == task.getEndDay() && Integer.parseInt(endMonth) == task.getEndMonth() &&
                     Integer.parseInt(endYear) == task.getEndYear()) {
                 eventTaskList.remove(task);
-                System.out.println("The task was removed successfully.");
+                notifyObservers();
                 break;
             } else {
-                System.out.println("The task you tried to remove was not found.");
+
             }
         }
     }

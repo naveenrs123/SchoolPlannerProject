@@ -5,13 +5,15 @@ import exceptions.input.BadTimeException;
 import inputs.Textbook;
 import inputs.UniClass;
 import model.inputHandling.UniClassInputHandler;
+import model.observerPattern.Subject;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.*;
 
-public class CollectionOfUniClasses implements CollectionOfItems {
+public class CollectionOfUniClasses extends Subject implements CollectionOfItems {
 
     private HashMap<ArrayList<String>, UniClass> classMap;
     private CollectionOfTextbooks collectionOfTextbooks;
@@ -49,14 +51,61 @@ public class CollectionOfUniClasses implements CollectionOfItems {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: allows user to create a new UniClass and then saves the created UniClass.
+    public void addItem(ArrayList<String> item) {
+        String classType = item.get(0);
+        String name = item.get(1);
+        String prof = item.get(2);
+        String location = item.get(3);
+        String startTime = item.get(4);
+        String endTime = item.get(5);
+        String textbookName = item.get(6);
+        String textbookAuthor = item.get(7);
+        String textbookPages = item.get(8);
+
+        HashMap<String, Integer> daysKey = new HashMap();
+        daysKey.put("Monday", 1);
+        daysKey.put("Tuesday", 2);
+        daysKey.put("Wednesday", 3);
+        daysKey.put("Thursday", 4);
+        daysKey.put("Friday", 5);
+        daysKey.put("Saturday", 6);
+        daysKey.put("Sunday", 7);
+
+        ArrayList days = new ArrayList();
+        if (item.size() > 9) {
+            for (int i = 9; i < item.size(); i++) {
+                int day = daysKey.get(item.get(i));
+                days.add(day);
+            }
+
+            makeClass(classType, name, prof, location, startTime, endTime, textbookName, textbookAuthor, textbookPages, days);
+        }
+    }
+
     // EFFECTS: makes a class with or without a textbook.
-    public void makeClass(Scanner user_input, String classType, String name, String prof, String location, String startTime, String endTime, ArrayList<Integer> days) {
+    public void makeClass(Scanner user_input, String classType, String name, String prof, String location, String startTime,
+                          String endTime, ArrayList<Integer> days) {
         if (inputHandler.wantToAddTextbook(user_input)) {
             Textbook textbook = new Textbook();
             textbook.setDetails(user_input);
             createUniClass(classType, name, prof, location, startTime, endTime, days, textbook);
         } else {
             Textbook textbook = new Textbook();
+            createUniClass(classType, name, prof, location, startTime, endTime, days, textbook);
+        }
+    }
+
+    // EFFECTS: makes a class with or without a textbook.
+    public void makeClass(String classType, String name, String prof, String location, String startTime, String endTime,
+                          String title, String author, String pages, ArrayList<Integer> days) {
+        if (title.equals("") | author.equals("") | pages.equals("")) {
+            Textbook textbook = new Textbook();
+            createUniClass(classType, name, prof, location, startTime, endTime, days, textbook);
+        } else {
+            Textbook textbook = new Textbook();
+            textbook.setDetails(title, author, Integer.parseInt(pages));
             createUniClass(classType, name, prof, location, startTime, endTime, days, textbook);
         }
     }
@@ -69,10 +118,14 @@ public class CollectionOfUniClasses implements CollectionOfItems {
                                ArrayList<Integer> days, Textbook textbook) {
         UniClass newClass = new UniClass(classType, name, prof, location, Integer.parseInt(startTime), Integer.parseInt(endTime), days,
                 textbook);
-        if (!textbook.equals(new Textbook())) { collectionOfTextbooks.addTextbook(newClass); }
+        if (!textbook.equals(new Textbook())) {
+            collectionOfTextbooks.addTextbook(newClass);
+        }
         ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, name));
         classMap.put(key, newClass);
+        notifyObservers();
         saveUniClass(newClass);
+
     }
 
     // EFFECTS: saves uc to a file.
@@ -175,11 +228,24 @@ public class CollectionOfUniClasses implements CollectionOfItems {
 
     // MODIFIES: this
     // EFFECTS: removes a class from the classMap, removes textbook from collectionOfTextbooks
+    public void removeItem(String classType, String className) {
+        if (classMap.isEmpty()) {
+            return;
+        }
+        printItems();
+        System.out.println("To remove a class, provide the name and class type.");
+        ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, className));
+        checkAndRemoveClass(key);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: removes a class from the classMap, removes textbook from collectionOfTextbooks
     private void checkAndRemoveClass(ArrayList<String> key) {
         if (classMap.containsKey(key)) {
             collectionOfTextbooks.removeTextbook(classMap.get(key));
             classMap.remove(key);
             System.out.println("The class was removed successfully");
+            notifyObservers();
             return;
         } else {
             System.out.println("The class you tried to remove was not found.");
@@ -201,6 +267,16 @@ public class CollectionOfUniClasses implements CollectionOfItems {
 
     // MODIFIES: this.
     // EFFECTS: removes Textbook from collectionOfTextbooks.
+    public void removeTextbook(String classType, String className) {
+        if (classMap.isEmpty()) {
+            return;
+        }
+        ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, className));
+        checkAndRemoveTextbook(key);
+    }
+
+    // MODIFIES: this.
+    // EFFECTS: removes Textbook from collectionOfTextbooks.
     private void checkAndRemoveTextbook(ArrayList<String> key) {
         if (classMap.containsKey(key)) {
             UniClass uc = classMap.get(key);
@@ -211,6 +287,7 @@ public class CollectionOfUniClasses implements CollectionOfItems {
                 collectionOfTextbooks.removeTextbook(uc);
                 uc.removeTextbook(uc.getTextbook());
                 System.out.println("The textbook was removed successfully");
+                notifyObservers();
                 return;
             }
         } else {
@@ -233,6 +310,22 @@ public class CollectionOfUniClasses implements CollectionOfItems {
 
     // MODIFIES: this
     // EFFECTS: adds textbook to UniClass in ClassMap and adds textbook to collectionOfTextbooks
+    public void addTextbook(ArrayList<String> item) {
+        if (classMap.isEmpty()) {
+            return;
+        }
+        printItems();
+        String classType = item.get(0);
+        String className = item.get(1);
+        String title = item.get(2);
+        String author = item.get(3);
+        int pages = Integer.parseInt(item.get(4));
+        ArrayList<String> key = new ArrayList<>(Arrays.asList(classType, className));
+        checkAndAddTextbook(title, author, pages, key);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds textbook to UniClass in ClassMap and adds textbook to collectionOfTextbooks
     private void checkAndAddTextbook(Scanner user_input, ArrayList<String> key) {
         if (classMap.containsKey(key)) {
             UniClass uc = classMap.get(key);
@@ -244,6 +337,22 @@ public class CollectionOfUniClasses implements CollectionOfItems {
             return;
         } else {
             System.out.println("The class you were searching for does not exist.");
+        }
+    }
+
+
+    // MODIFIES: this
+    // EFFECTS: adds textbook to UniClass in ClassMap and adds textbook to collectionOfTextbooks
+    private void checkAndAddTextbook(String title, String author, int pages, ArrayList<String> key) {
+        if (classMap.containsKey(key)) {
+            UniClass uc = classMap.get(key);
+            Textbook tempTextbook = new Textbook();
+            tempTextbook.setDetails(title, author, pages);
+            uc.addTextbook(tempTextbook);
+            collectionOfTextbooks.addTextbook(uc);
+            notifyObservers();
+            return;
+        } else {
         }
     }
 

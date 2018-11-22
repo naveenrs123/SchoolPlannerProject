@@ -132,7 +132,7 @@ public class UniClass implements StoredObject {
         if (textbook.getTitle() != null && textbook.getAuthor() != null) {
             returnVal += textbook.toString();
         } else {
-            returnVal += "No textbook." + "\n";
+            returnVal += "No textbook." + "\n\n";
         }
         return returnVal;
     }

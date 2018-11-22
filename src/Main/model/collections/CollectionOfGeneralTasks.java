@@ -4,6 +4,7 @@ import exceptions.date.BadDateInputException;
 import exceptions.input.InvalidImportanceException;
 import inputs.GeneralTask;
 import model.inputHandling.TasksInputHandler;
+import model.observerPattern.Subject;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class CollectionOfGeneralTasks implements CollectionOfItems {
+public class CollectionOfGeneralTasks extends Subject implements CollectionOfItems {
 
     private ArrayList<GeneralTask> generalTaskList;
     private TasksInputHandler inputHandler;
@@ -46,6 +47,18 @@ public class CollectionOfGeneralTasks implements CollectionOfItems {
         }
     }
 
+    public void addItem(ArrayList<String> item) {
+        String taskType = item.get(0);
+        System.out.println("General tasks need no extra details.");
+        String description = item.get(1);
+        String day = item.get(2);
+        String month = item.get(3);
+        String year = item.get(4);
+        String importanceLevel = item.get(5);
+        createTask(taskType, description, day, month, year, importanceLevel);
+
+    }
+
     // REQUIRES: valid taskType, day, month, year and importanceLevel
     // MODIFIES: this
     // EFFECTS: creates a new GeneralTask, adds it to a list, and saves it to a file.
@@ -54,6 +67,7 @@ public class CollectionOfGeneralTasks implements CollectionOfItems {
                 importanceLevel);
         generalTaskList.add(newGTask);
         saveTask(newGTask);
+        notifyObservers();
     }
 
     // EFFECTS: saves newTask to a file.
@@ -110,15 +124,29 @@ public class CollectionOfGeneralTasks implements CollectionOfItems {
 
     // MODIFIES: this
     // EFFECTS: removes a GeneralTask from the list.
+    public void removeItem(ArrayList<String> item) {
+        if (generalTaskList.isEmpty()) {
+            return;
+        }
+        String description = item.get(1);
+        String day; String month; String year;
+        day = item.get(2);
+        month = item.get(3);
+        year = item.get(4);
+        checkAndRemove(description, day, month, year);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: removes a GeneralTask from the list.
     private void checkAndRemove(String description, String day, String month, String year) {
         for (GeneralTask task : generalTaskList) {
             if (description.equals(task.getDescription()) && Integer.parseInt(day) == task.getDay()
                     && Integer.parseInt(month) == task.getMonth() && Integer.parseInt(year) == task.getYear()) {
                 generalTaskList.remove(task);
-                System.out.println("The task was removed successfully.");
+                notifyObservers();
                 break;
             } else {
-                System.out.println("The task you tried to remove was not found.");
+
             }
         }
     }

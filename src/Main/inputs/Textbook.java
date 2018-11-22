@@ -77,6 +77,12 @@ public class Textbook implements StoredObject {
         pages = userPages(user_input);
     }
 
+    public void setDetails(String title, String author, int pages) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+    }
+
     public void printItem() {
         System.out.println("Textbook: " + title + " by " + author + ", " + pages + " pages long.");
     }
@@ -113,10 +119,10 @@ public class Textbook implements StoredObject {
 
     @Override
     public String toString() {
-        return "Textbook: " + title + " by " + author + ", " + pages + " pages long.\n";
+        return "Textbook: " + title + " by " + author + ", " + pages + " pages long.\n\n";
     }
 
     public String toStringFull() {
-        return "Textbook: " + title + " by " + author + ", " + pages + " pages long.\n" + "Used in: " + associatedClass.getName() + "\n";
+        return "Textbook: " + title + " by " + author + ", " + pages + " pages long.\n" + "Used in: " + associatedClass.getName() + "\n\n";
     }
 }

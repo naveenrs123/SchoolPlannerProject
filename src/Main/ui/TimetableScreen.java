@@ -3,25 +3,18 @@ package ui;
 import inputs.Textbook;
 import inputs.UniClass;
 import model.InputScreen;
-import model.collections.CollectionOfTextbooks;
 import model.collections.CollectionOfUniClasses;
-import model.observers.Observer;
-import model.observers.UniClassesObserver;
+import model.observerPattern.Observer;
 
-import javax.sql.rowset.JdbcRowSet;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowListener;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 
-public class TimetableScreen extends JPanel implements InputScreen {
+public class TimetableScreen extends JPanel implements InputScreen, Observer {
 
     private CollectionOfUniClasses louc = new CollectionOfUniClasses();
     private int loadState = 0;
@@ -37,6 +30,7 @@ public class TimetableScreen extends JPanel implements InputScreen {
     // EFFECTS: creates a new TimetableScreen object.
     public TimetableScreen() {
         loadItemsIntoListObject();
+        louc.addObserver(this);
 
         BoxLayout flowMain = new BoxLayout(this, BoxLayout.PAGE_AXIS);
         setLayout(flowMain);
@@ -245,12 +239,6 @@ public class TimetableScreen extends JPanel implements InputScreen {
         JButton submit = new JButton("Submit");
         addTextbook.setAlignmentX(CENTER_ALIGNMENT);
         submit.setAlignmentX(CENTER_ALIGNMENT);
-        submit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                owner.dispose();
-            }
-        });
 
 
         buttonPanel.add(addTextbook);
@@ -278,6 +266,37 @@ public class TimetableScreen extends JPanel implements InputScreen {
                     addClassScreen.setSize(new Dimension(300, 740));
                     textbookText.setVisible(true);
                 }
+            }
+        });
+
+        submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String classType = (String) classTypeBox.getSelectedItem();
+                String className = classNameText.getText();
+                String professor = professorText.getText();
+                String location = locationText.getText();
+                String startTime = startTimeText.getText();
+                String endTime = endTimeText.getText();
+
+                ArrayList<String> days = (ArrayList) daysList.getSelectedValuesList();
+                if (textbookDetails.size() == 0) {
+                    Collections.addAll(textbookDetails, "", "", "");
+                }
+
+                ArrayList<String> item = new ArrayList<>(Arrays.asList(classType, className, professor, location, startTime, endTime));
+                for (String textbookDetail : textbookDetails) {
+                    item.add(textbookDetail);
+                }
+                for (String day : days) {
+                    item.add(day);
+                }
+
+                if (!(className.equals("") || professor.equals("") || location.equals("") || startTime.equals("") || endTime.equals(""))) {
+                    addToListObject(item);
+                }
+
+                owner.dispose();
             }
         });
 
@@ -428,6 +447,13 @@ public class TimetableScreen extends JPanel implements InputScreen {
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String classType = (String) classTypeBox.getSelectedItem();
+                String className = classNameText.getText();
+
+                if (!className.equals("")) {
+                    removeItem(classType, className);
+                }
+
                 owner.dispose();
             }
         });
@@ -522,6 +548,16 @@ public class TimetableScreen extends JPanel implements InputScreen {
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String classType = (String) classTypeBox.getSelectedItem();
+                String className = classNameText.getText();
+                String title = textbookNameText.getText();
+                String author = authorText.getText();
+                String pages = pagesText.getText();
+
+                ArrayList<String> item = new ArrayList<>(Arrays.asList(classType, className, title, author, pages));
+
+                addTextbook(item);
+
                 owner.dispose();
             }
         });
@@ -589,6 +625,13 @@ public class TimetableScreen extends JPanel implements InputScreen {
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String classType = (String) classTypeBox.getSelectedItem();
+                String className = classNameText.getText();
+
+                if (!className.equals("")) {
+                    removeTextbook(classType, className);
+                }
+
                 owner.dispose();
             }
         });
@@ -667,6 +710,12 @@ public class TimetableScreen extends JPanel implements InputScreen {
     }
 
     // MODIFIES: this
+    // EFFECTS: allows user to create a new UniClass and then saves the created UniClass.
+    public void addToListObject(ArrayList<String> item) {
+        louc.addItem(item);
+    }
+
+    // MODIFIES: this
     // EFFECTS: loads all classes from a file into the classList.
     public void loadItemsIntoListObject() {
         String filename = "listofclasses.csv";
@@ -689,8 +738,16 @@ public class TimetableScreen extends JPanel implements InputScreen {
         louc.removeItem(user_input);
     }
 
+    public void removeItem(String classType, String className) {
+        louc.removeItem(classType, className);
+    }
+
     public void removeTextbook(Scanner user_input) {
         louc.removeTextbook(user_input);
+    }
+
+    public void removeTextbook(String classType, String className) {
+        louc.removeTextbook(classType, className);
     }
 
     public void saveList() {
@@ -709,8 +766,28 @@ public class TimetableScreen extends JPanel implements InputScreen {
         louc.addTextbook(user_input);
     }
 
+    public void addTextbook(ArrayList<String> item) {
+        louc.addTextbook(item);
+    }
+
     public CollectionOfUniClasses getListOfUniClasses() {
         return louc;
     }
 
+    @Override
+    public void update() {
+        classesTextArea.setText("");
+        classesTextArea.append("** CLASSES **\n\n");
+        for (UniClass c : louc.getClassMap().values()) {
+            classesTextArea.append(c.toString());
+        }
+
+        ArrayList<Textbook> textbooks = getListOfUniClasses().getCollectionOfTextbooks().getTextbooksList();
+
+        textbooksTextArea.setText("");
+        textbooksTextArea.append(" ** TEXTBOOKS **\n\n");
+        for (Textbook t : textbooks) {
+            textbooksTextArea.append(t.toStringFull());
+        }
+    }
 }
