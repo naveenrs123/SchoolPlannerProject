@@ -1,10 +1,5 @@
 package tests;
 
-import exceptions.date.BadDayException;
-import exceptions.date.BadMonthException;
-import exceptions.date.BadYearException;
-import exceptions.date.InvalidDateException;
-import exceptions.input.InvalidImportanceException;
 import model.collections.CollectionOfEventTasks;
 import model.collections.CollectionOfGeneralTasks;
 import org.junit.jupiter.api.AfterEach;
@@ -17,7 +12,7 @@ import java.util.Scanner;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CollectionOfTasksTest {
-
+    /*
     private CollectionOfGeneralTasks generalTasks;
     private CollectionOfEventTasks eventTasks;
     private String filename1 = "listofgeneraltasks.csv";
@@ -477,6 +472,8 @@ public class CollectionOfTasksTest {
         eventTasks.removeItem(user_input6b);
         assertEquals(0, eventTasks.getTaskList().size());
     }
+
+    */
 
 
 }

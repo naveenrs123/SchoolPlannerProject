@@ -1,18 +1,11 @@
 package model;
 
-import exceptions.choices.BadNavInputException;
 import model.observerPattern.Observer;
 import ui.*;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Scanner;
 
 public class SchoolPlanner implements Observer {
 
@@ -31,13 +24,13 @@ public class SchoolPlanner implements Observer {
         screenMain = new MainScreen();
         screenTimetable = new TimetableScreen();
         screenTasks = new TasksScreen();
-
         screenTimetable.getListOfUniClasses().addObserver(this);
         screenTasks.getLoet().addObserver(this);
         screenTasks.getLogt().addObserver(this);
 
     }
 
+    /*
     public static void getDataFromWeb() throws MalformedURLException, IOException {
         BufferedReader br = null;
         try {
@@ -57,143 +50,7 @@ public class SchoolPlanner implements Observer {
             }
         }
     }
-
-    // EFFECTS: gets input from user about returning to the menu, and returns a boolean.
-    public boolean backToMenu(Scanner user_input) {
-        String backToMenu;
-        do {
-            System.out.println("Do you want to go back to the main menu? (Y/N)");
-            backToMenu = user_input.nextLine();
-            if (backToMenu.toUpperCase().equals("Y")) {
-            } else if (backToMenu.toUpperCase().equals("N")) {
-                return true;
-            } else {
-                System.out.println("You didn't enter a valid option.");
-            }
-        }
-        while (!(backToMenu.toUpperCase().equals("Y") || backToMenu.toUpperCase().equals("N")));
-        return false;
-    }
-
-    // EFFECTS: prints information for navigationInput
-    public void navInputDetails() {
-        System.out.println("\nWhere would you like to go?");
-        System.out.println("1: Tasks\n2: Timetable\n3: Quit");
-        System.out.print("Enter your choice here: ");
-    }
-
-    // EFFECTS: gets input from the user about which screen they want to visit. If incorrect choice is provided,
-    //          asks user to input a valid choice. Returns a number corresponding to their choice.
-    public int navigationInput(Scanner user_input) {
-        while (true) {
-            navInputDetails();
-            String inputChoice = user_input.next();
-            // input must be a single integer: 1, 2, 3 or 4
-            while (!(inputChoice.matches("^[0-9]*$") && inputChoice.length() == 1)) {
-                System.out.println("Your input is invalid, please enter a valid option.");
-                navInputDetails();
-                inputChoice = user_input.next();
-            }
-            user_input.nextLine();
-            try {
-                int choice = verifyNavInput(inputChoice);
-                return choice;
-            } catch (BadNavInputException icex) {
-                System.out.println("Invalid choice entered, please enter a valid option.");
-            }
-        }
-    }
-
-    // EFFECTS: checks user input from navigationInput and throws BadNavInputException if input is not valid. (HELPER)
-    public int verifyNavInput(String inputChoice) throws BadNavInputException {
-        if (inputChoice.equals("1")) {
-            return 1;
-        } else if (inputChoice.equals("2")) {
-            return 2;
-        } else if (inputChoice.equals("3")) {
-            return 3;
-        } else {
-            throw new BadNavInputException();
-        }
-    }
-
-    // EFFECTS: handles choices for adding or viewing tasks (HELPER).
-    public void handleTasksScreen(Scanner user_input) {
-        boolean managingTasks = true;
-        int handleOptions = screenTasks.handleOptions(user_input);
-        if (handleOptions == 1) {
-            screenTasks.printStoredItems();
-        } else if (handleOptions == 2) {
-            addTask(user_input, managingTasks);
-        } else if (handleOptions == 3) {
-            removeTask(user_input, managingTasks);
-        }
-    }
-
-    // EFFECTS: handles choices for adding or viewing classes (HELPER).
-    public void handleTimetableScreen(Scanner user_input) {
-        boolean managingClasses = true;
-        int handleOptions = screenTimetable.handleOptions(user_input);
-        if (handleOptions == 1) {
-            screenTimetable.printStoredItems();
-        } else if (handleOptions == 2) {
-            addClass(user_input, managingClasses);
-        } else if (handleOptions == 3) {
-            removeClass(user_input, managingClasses);
-        } else if (handleOptions == 4) {
-            removeTextbook(user_input, managingClasses);
-        } else if (handleOptions == 5) {
-            addTextbook(user_input, managingClasses);
-        } else if (handleOptions == 6) {
-            screenTimetable.printTextbooks();
-        }
-    }
-
-    // EFFECTS: calls methods responsible for removing a task.
-    private void addTask(Scanner user_input, boolean managingTasks) {
-        while (managingTasks) {
-            screenTasks.addToListObject(user_input);
-            managingTasks = backToMenu(user_input);
-        }
-    }
-
-    // EFFECTS: calls methods responsible for removing a task.
-    private void removeTask(Scanner user_input, boolean managingTasks) {
-        while (managingTasks) {
-            screenTasks.removeItem(user_input);
-            managingTasks = backToMenu(user_input);
-        }
-    }
-
-    // EFFECTS: calls methods responsible for adding a textbook
-    private void addTextbook(Scanner user_input, boolean managingClasses) {
-        while (managingClasses) {
-            screenTimetable.addTextbook(user_input);
-            managingClasses = backToMenu(user_input);
-        }
-    }
-
-    // EFFECTS: calls methods responsible for removing a textbook
-    private void removeTextbook(Scanner user_input, boolean managingClasses) {
-        while (managingClasses) {
-            screenTimetable.removeTextbook(user_input);
-            managingClasses = backToMenu(user_input);
-        }
-    }
-    // EFFECTS: calls methods responsible for adding a UniClass
-    private void addClass(Scanner user_input, boolean managingClasses) {
-        while (managingClasses) {
-            screenTimetable.addToListObject(user_input);
-            managingClasses = backToMenu(user_input);
-        }
-    }
-    // EFFECTS: calls methods responsible for removing a UniClass
-    private void removeClass(Scanner user_input, boolean managingClasses) {
-        while (managingClasses) {
-            screenTimetable.removeItem(user_input);
-            managingClasses = backToMenu(user_input);
-        }
-    }
+    */
 
     @Override
     public void update() {
@@ -205,59 +62,36 @@ public class SchoolPlanner implements Observer {
     // MODIFIES: this
     // EFFECTS: runs the program once a new SchoolPlanner is created.
     private void run() {
-        Scanner user_input = new Scanner(System.in);
-        screenMain.myClasses(screenTimetable);
-        screenMain.myTasks(screenTasks);
-        screenMain.myTextbooks(screenTimetable);
-        while (true) {
-            int choice = navigationInput(user_input);
-            if (choice == 1) {
-                handleTasksScreen(user_input);
-            } else if (choice == 2) {
-                handleTimetableScreen(user_input);
-            } else if (choice == 3) {
-                System.out.println("Goodbye " + userName + ", come back soon!");
-                screenTimetable.saveList();
-                screenTasks.saveList();
-                System.exit(0);
-            } else {
-                System.out.println("You did not enter a valid option.");
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        try {
-            getDataFromWeb();
-        } catch (MalformedURLException muex) {
-            System.out.println("The URL does not exist.");
-        } catch (IOException ioex) {
-            System.out.println("Error getting data from URL.");
-        }
-        SchoolPlanner sp = new SchoolPlanner("Naveen");
-
         JTabbedPane tabs = new JTabbedPane();
 
-        sp.frame.setSize(620, 600);
-        sp.screenTimetable.setSize(620, 600);
-        sp.screenMain.setSize(620, 600);
-        sp.screenTasks.setSize(620, 600);
+        frame.setSize(620, 600);
+        screenTimetable.setSize(620, 600);
+        screenMain.setSize(620, 600);
+        screenTasks.setSize(620, 600);
 
-        tabs.addTab("Home", sp.screenMain);
-        tabs.addTab("Timetable", sp.screenTimetable);
-        tabs.addTab("Tasks", sp.screenTasks);
-        sp.frame.add(tabs);
+        tabs.addTab("Home", screenMain);
+        tabs.addTab("Timetable", screenTimetable);
+        tabs.addTab("Tasks", screenTasks);
+        frame.add(tabs);
 
-        sp.frame.addWindowListener(new WindowAdapter() {
+        frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                sp.screenTimetable.saveList();
-                sp.screenTasks.saveList();
+                screenTimetable.saveList();
+                screenTasks.saveList();
             }
         });
 
-        sp.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        sp.frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+
+        screenMain.myClasses(screenTimetable);
+        screenMain.myTasks(screenTasks);
+        screenMain.myTextbooks(screenTimetable);
+    }
+
+    public static void main(String[] args) {
+        SchoolPlanner sp = new SchoolPlanner("Naveen");
         sp.run();
     }
 

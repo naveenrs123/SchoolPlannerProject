@@ -13,7 +13,7 @@ public class EventTask extends Task {
     public int getStartDay() { return startDate.get(Calendar.DAY_OF_MONTH); }
 
     // EFFECTS: gets the month.
-    public int getStartMonth() { return startDate.get(Calendar.MONTH) + 1; }
+    public int getStartMonth() { return startDate.get(Calendar.MONTH); }
 
     // EFFECTS: gets the year.
     public int getStartYear() { return startDate.get(Calendar.YEAR); }
@@ -22,7 +22,7 @@ public class EventTask extends Task {
     public int getEndDay() { return endDate.get(Calendar.DAY_OF_MONTH); }
 
     // EFFECTS: gets the month.
-    public int getEndMonth() { return endDate.get(Calendar.MONTH) + 1; }
+    public int getEndMonth() { return endDate.get(Calendar.MONTH); }
 
     // EFFECTS: gets the year.
     public int getEndYear() { return endDate.get(Calendar.YEAR); }
@@ -31,21 +31,21 @@ public class EventTask extends Task {
 
     // MODIFIES: this
     // EFFECTS: creates a new EventTask and sets its fields.
-    public EventTask(String type, String desc, int startDay, int startMmonth, int startYear, int endDay, int endMonth, int endYear, String importance, String comm) {
+    public EventTask(String type, String desc, int startDay, int startMonth, int startYear, int endDay, int endMonth, int endYear, String importance, String comm) {
         super(type, desc, importance);
 
-        // month is stored from 0 (Jan) to 11 (Dec), which is why 1 was subtracted from the month.
-        startDate = new GregorianCalendar(startYear, startMmonth - 1, startDay);
-        endDate = new GregorianCalendar(endYear, endMonth - 1, endDay);
+        // month is stored from 0 (Jan) to 11 (Dec)
+        startDate = new GregorianCalendar(startYear, startMonth, startDay);
+        endDate = new GregorianCalendar(endYear, endMonth, endDay);
         comments = comm;
     }
 
     // EFFECTS: prints EventTask
     public void printItem() {
-        System.out.println("Task Type: " + taskType);
-        System.out.println("Description: " + description);
-        System.out.println("Start date: " + startDate.get(Calendar.DATE) + "/" + (startDate.get(Calendar.MONTH) + 1) + "/" + startDate.get(Calendar.YEAR));
-        System.out.println("End date: " + endDate.get(Calendar.DATE) + "/" + (endDate.get(Calendar.MONTH) + 1) + "/" + endDate.get(Calendar.YEAR));
+        System.out.println("Task Type: " + getType());
+        System.out.println("Description: " + getDescription());
+        System.out.println("Start date: " + getStartDay() + "/" + (getStartMonth() + 1) + "/" + getStartYear());
+        System.out.println("End date: " + getEndYear() + "/" + (getEndMonth() + 1) + "/" + getEndYear());
         switch (importance) {
             case LOW:
                 System.out.println("Importance: LOW");
@@ -67,9 +67,9 @@ public class EventTask extends Task {
     public String toString() {
         String returnVal = "";
 
-        returnVal += "Task Type: " + taskType + "\nDescription: " + description + "\nStart Date: " + startDate.get(Calendar.DATE) +
-                "/" + (startDate.get(Calendar.MONTH) + 1) + "/" + startDate.get(Calendar.YEAR) + "\nEnd Date: " +
-                endDate.get(Calendar.DATE) + "/" + (endDate.get(Calendar.MONTH) + 1) + "/" + endDate.get(Calendar.YEAR);
+        returnVal += "Task Type: " + getType() + "\nDescription: " + getDescription() + "\nStart Date: " + getStartDay() +
+                "/" + (getStartMonth() + 1) + "/" + getStartYear() + "\nEnd Date: " +
+                getEndDay() + "/" + (getEndMonth() + 1) + "/" + getEndYear();
 
         switch (importance) {
             case LOW:
@@ -86,7 +86,7 @@ public class EventTask extends Task {
                 break;
         }
 
-        returnVal += "\nComments: " + comments + "\n\n";
+        returnVal += "\nComments: " + getComments() + "\n\n";
 
         return returnVal;
     }

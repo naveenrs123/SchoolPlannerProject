@@ -10,15 +10,15 @@ public class GeneralTask extends Task {
     // EFFECTS: Creates a new GeneralTask object and sets all its fields.
     public GeneralTask(String type, String desc, int day, int month, int year, String importance) {
        super(type, desc, importance);
-        // month is stored from 0 (Jan) to 11 (Dec), which is why 1 was subtracted from the month.
-        date = new GregorianCalendar(year, month - 1, day);
+        // month is stored from 0 (Jan) to 11 (Dec)
+        date = new GregorianCalendar(year, month, day);
     }
 
     // EFFECTS: prints the details of a GeneralTask to the console.
     public void printItem() {
-        System.out.println("Task Type: " + taskType);
-        System.out.println("Description: " + description);
-        System.out.println("Date Due: " + date.get(Calendar.DATE) + "/" + (date.get(Calendar.MONTH) + 1) + "/" + date.get(Calendar.YEAR));
+        System.out.println("Task Type: " + getType());
+        System.out.println("Description: " + getDescription());
+        System.out.println("Date Due: " + getDay() + "/" + (getMonth() + 1) + "/" + getYear());
         switch (importance) {
             case LOW:
                 System.out.println("Importance: LOW");
@@ -39,7 +39,7 @@ public class GeneralTask extends Task {
     public int getDay() { return date.get(Calendar.DAY_OF_MONTH); }
 
     // EFFECTS: gets the month.
-    public int getMonth() { return date.get(Calendar.MONTH) + 1; }
+    public int getMonth() { return date.get(Calendar.MONTH); }
 
     // EFFECTS: gets the year.
     public int getYear() { return date.get(Calendar.YEAR); }
@@ -49,7 +49,7 @@ public class GeneralTask extends Task {
         String returnVal = "";
 
         returnVal += "Task Type: " + taskType + "\nDescription: " + description +
-                "\nDate Due: " + date.get(Calendar.DATE) + "/" + (date.get(Calendar.MONTH) + 1) + "/" + date.get(Calendar.YEAR);
+                "\nDate Due: " + getDay() + "/" + (getMonth() + 1) + "/" + getYear();
 
         switch (importance) {
             case LOW:

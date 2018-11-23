@@ -69,19 +69,15 @@ public class MainScreen extends JPanel {
     public void myClasses(TimetableScreen screenTimetable) {
         int isClassesLoaded = screenTimetable.getloadState();
         if (isClassesLoaded == 0) {
-            System.out.println();
-            screenTimetable.printStoredItems();
             classesTextArea.setText("");
             classesTextArea.append("** CLASSES **\n\n");
             for (UniClass c : screenTimetable.getListOfUniClasses().getClassMap().values()) {
                 classesTextArea.append(c.toString());
             }
         } else if (isClassesLoaded == 1) {
-            System.out.println("You have no classes.");
             classesTextArea.setText("You have no classes.");
         } else if (isClassesLoaded == 2) {
             classesTextArea.setText("Unable to load classes. Oops!");
-            System.out.println("Unable to load classes. Oops!");
         }
     }
 
@@ -89,7 +85,6 @@ public class MainScreen extends JPanel {
     public void myTasks(TasksScreen screenTasks) {
         int isTasksLoaded = screenTasks.getloadState();
         if (isTasksLoaded == 0) {
-            screenTasks.printStoredItems();
             tasksTextArea.setText("");
             tasksTextArea.append("** EVENTS **\n\n");
             for (EventTask e : screenTasks.getLoet().getTaskList()) {
@@ -102,10 +97,8 @@ public class MainScreen extends JPanel {
             }
 
         } else if (isTasksLoaded == 1) {
-            System.out.println("You have no tasks.");
             tasksTextArea.setText("You have no tasks.");
         } else if (isTasksLoaded == 2) {
-            System.out.println("Unable to load tasks. Oops!");
             tasksTextArea.setText("Unable to load tasks. Oops!");
         }
     }
@@ -113,8 +106,6 @@ public class MainScreen extends JPanel {
     // EFFECTS: outputs details about user's tasks.
     public void myTextbooks(TimetableScreen screenTimetable) {
         CollectionOfTextbooks textbooks = screenTimetable.getListOfUniClasses().getCollectionOfTextbooks();
-        textbooks.printTextbooks();
-
         textbooksTextArea.setText("");
         textbooksTextArea.append(" ** TEXTBOOKS **\n\n");
         for (Textbook t : textbooks.getTextbooksList()) {

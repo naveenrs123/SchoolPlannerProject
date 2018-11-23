@@ -1,9 +1,8 @@
 package model.collections;
 
-import exceptions.date.BadDateInputException;
-import exceptions.input.InvalidImportanceException;
+import exceptions.EmptyCollectionException;
+import exceptions.ItemNotFoundException;
 import inputs.EventTask;
-import model.inputHandling.TasksInputHandler;
 import model.observerPattern.Subject;
 
 import java.io.BufferedWriter;
@@ -11,48 +10,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class CollectionOfEventTasks extends Subject implements CollectionOfItems {
 
     private ArrayList<EventTask> eventTaskList;
-    private TasksInputHandler inputHandler;
 
     public CollectionOfEventTasks() {
         eventTaskList = new ArrayList<>();
-        inputHandler = new TasksInputHandler();
     }
 
-    // REQUIRES: taskType == "EVENT"
-    // MODIFIES: this
-    // EFFECTS: gets input from the user used to create a GeneralTask
-    public void addItem(Scanner user_input) {
-        String taskType = "EVENT";
-        System.out.println("Event Tasks require a few extra details:\n-> A start date\n-> An end date\n-> Optional Comments");
-        String description = inputHandler.userDescription(user_input);
-        try {
-            System.out.println("START DAY");
-            String startDay = inputHandler.userDay(user_input);
-            String startMonth = inputHandler.userMonth(user_input);
-            String startYear = inputHandler.userYear(user_input);
-            inputHandler.validateDate(startDay, startMonth, startYear);
-            System.out.println("END DAY:");
-            String endDay = inputHandler.userDay(user_input);
-            String endMonth = inputHandler.userMonth(user_input);
-            String endYear = inputHandler.userYear(user_input);
-            inputHandler.validateDate(endDay, endMonth, endYear);
-            String importanceLevel = inputHandler.getImportanceLevel(user_input);
-            System.out.println("If you have no comments, type NONE.");
-            String comments = inputHandler.getComments(user_input);
-            createTask(taskType, description, startDay, startMonth, startYear, endDay, endMonth, endYear, importanceLevel, comments);
-        } catch (BadDateInputException bdiex) {
-            System.out.println(bdiex.getMessage());
-        } catch (InvalidImportanceException iiex) {
-            System.out.println(iiex.getMessage());
-        }
-    }
-
-    public void addItem(ArrayList<String> item) {
+    public void addItem(ArrayList<String> item) throws IOException {
         String taskType = item.get(0);
         String description = item.get(1);
         String startDay = item.get(2);
@@ -71,7 +38,7 @@ public class CollectionOfEventTasks extends Subject implements CollectionOfItems
     // MODIFIES: this
     // EFFECTS: creates a new EventTask, adds it to a list, and saves it to a file.
     public void createTask(String taskType, String description, String startDay, String startMonth, String startYear,
-                           String endDay, String endMonth, String endYear, String importanceLevel, String comments) {
+                           String endDay, String endMonth, String endYear, String importanceLevel, String comments) throws IOException {
         EventTask newETask = new EventTask(taskType, description, Integer.parseInt(startDay), Integer.parseInt(startMonth),
                 Integer.parseInt(startYear), Integer.parseInt(endDay), Integer.parseInt(endMonth), Integer.parseInt(endYear),
                 importanceLevel, comments);
@@ -81,7 +48,7 @@ public class CollectionOfEventTasks extends Subject implements CollectionOfItems
     }
 
     // EFFECTS: saves newTask to a file.
-    public void saveTask(EventTask newETask) {
+    public void saveTask(EventTask newETask) throws IOException {
         String filename = "listofeventtasks.csv";
         try {
             FileWriter fileWriter = new FileWriter(filename, true);
@@ -93,7 +60,7 @@ public class CollectionOfEventTasks extends Subject implements CollectionOfItems
             bufferedWriter.newLine();
             bufferedWriter.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException();
         }
     }
 
@@ -116,52 +83,11 @@ public class CollectionOfEventTasks extends Subject implements CollectionOfItems
         eventTaskList.add(tempETask);
     }
 
-    // EFFECTS: gets all stored tasks.
-    public void printItems() {
-        if (eventTaskList.size() == 1) {
-            System.out.println("There is " + eventTaskList.size() + " event stored.");
-        } else {
-            System.out.println("There are " + eventTaskList.size() + " events stored.");
-        }
-        System.out.println();
-        if (eventTaskList.size() > 0) {
-            for (EventTask task : eventTaskList) {
-                task.printItem();
-                System.out.println();
-            }
-        }
-    }
-
     // MODIFIES: this
     // EFFECTS: removes an EventTask from the list.
-    public void removeItem(Scanner user_input) {
+    public void removeItem(ArrayList<String> item) throws ItemNotFoundException, EmptyCollectionException {
         if (eventTaskList.isEmpty()) {
-            System.out.println("You have no event tasks to remove.");
-            return;
-        }
-        String description = inputHandler.userDescription(user_input);
-        String startDay; String startMonth; String startYear; String endDay; String endMonth; String endYear;
-        try {
-            System.out.println("START DATE:");
-            startDay = inputHandler.userDay(user_input);
-            startMonth = inputHandler.userMonth(user_input);
-            startYear = inputHandler.userYear(user_input);
-            System.out.println("END DATE:");
-            endDay = inputHandler.userDay(user_input);
-            endMonth = inputHandler.userMonth(user_input);
-            endYear = inputHandler.userYear(user_input);
-            checkAndRemove(description, startDay, startMonth, startYear, endDay, endMonth, endYear);
-        } catch (BadDateInputException bdiex) {
-            System.out.println(bdiex.getMessage());
-            System.out.println("Try removing the task again.");
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: removes an EventTask from the list.
-    public void removeItem(ArrayList<String> item) {
-        if (eventTaskList.isEmpty()) {
-            return;
+            throw new EmptyCollectionException();
         }
         String description = item.get(1);
         String startDay; String startMonth; String startYear; String endDay; String endMonth; String endYear;
@@ -176,7 +102,7 @@ public class CollectionOfEventTasks extends Subject implements CollectionOfItems
 
     // MODIFIES: this
     // EFFECTS: removes an EventTask from the list.
-    private void checkAndRemove(String description, String startDay, String startMonth, String startYear, String endDay, String endMonth, String endYear) {
+    private void checkAndRemove(String description, String startDay, String startMonth, String startYear, String endDay, String endMonth, String endYear) throws ItemNotFoundException {
         for (EventTask task : eventTaskList) {
             if (description.equals(task.getDescription()) && Integer.parseInt(startDay) == task.getStartDay()
                     && Integer.parseInt(startMonth) == task.getStartMonth() && Integer.parseInt(startYear) == task.getStartYear()
@@ -184,11 +110,10 @@ public class CollectionOfEventTasks extends Subject implements CollectionOfItems
                     Integer.parseInt(endYear) == task.getEndYear()) {
                 eventTaskList.remove(task);
                 notifyObservers();
-                break;
-            } else {
-
+                return;
             }
         }
+        throw new ItemNotFoundException();
     }
 
     // loads a single item.
@@ -215,9 +140,5 @@ public class CollectionOfEventTasks extends Subject implements CollectionOfItems
     // EFFECTS: gets the eventTaskList
     public ArrayList<EventTask> getTaskList() {
         return eventTaskList;
-    }
-
-    public TasksInputHandler getInputHandler() {
-        return inputHandler;
     }
 }

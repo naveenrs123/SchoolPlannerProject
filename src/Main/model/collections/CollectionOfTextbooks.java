@@ -20,23 +20,11 @@ public class CollectionOfTextbooks {
         textbooksList.add(uniClass.getTextbook());
     }
 
-    // EFFECTS: prints out the textbooks.
-    public void printTextbooks() {
-        System.out.println("**TEXTBOOKS**\n");
-        if (textbooksList.size() != 0) {
-            for (Textbook t : textbooksList) {
-                t.printItem();
-                System.out.println("Used in: " + t.getAssociatedClass().getName());
-                System.out.println();
-            }
-        } else {
-            System.out.println("You have no textbooks attached to classes.");
-        }
-    }
-
     // EFFECTS: removes a textbook from the list.
     public void removeTextbook(UniClass uniClass) {
-        textbooksList.remove(uniClass.getTextbook());
+        if (!uniClass.getTextbook().equals(new Textbook())) {
+            textbooksList.remove(uniClass.getTextbook());
+        }
     }
 
     // EFFECTS: gets the textbook list.

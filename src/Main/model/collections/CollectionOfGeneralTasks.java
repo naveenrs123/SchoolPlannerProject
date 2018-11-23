@@ -1,9 +1,8 @@
 package model.collections;
 
-import exceptions.date.BadDateInputException;
-import exceptions.input.InvalidImportanceException;
+import exceptions.EmptyCollectionException;
+import exceptions.ItemNotFoundException;
 import inputs.GeneralTask;
-import model.inputHandling.TasksInputHandler;
 import model.observerPattern.Subject;
 
 import java.io.BufferedWriter;
@@ -11,45 +10,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class CollectionOfGeneralTasks extends Subject implements CollectionOfItems {
 
     private ArrayList<GeneralTask> generalTaskList;
-    private TasksInputHandler inputHandler;
 
     public CollectionOfGeneralTasks() {
         generalTaskList = new ArrayList<>();
-        inputHandler = new TasksInputHandler();
-
     }
 
-    // REQUIRES: taskType == "TASK"
-    // MODIFIES: this
-    // EFFECTS: gets input from the user used to create a GeneralTask
-    public void addItem(Scanner user_input) {
-        String taskType = "TASK";
-        System.out.println("General tasks need no extra details.");
-        String description = inputHandler.userDescription(user_input);
-        try {
-            String day = inputHandler.userDay(user_input);
-            String month = inputHandler.userMonth(user_input);
-            String year = inputHandler.userYear(user_input);
-            inputHandler.validateDate(day, month, year);
-            String importanceLevel = inputHandler.getImportanceLevel(user_input);
-            createTask(taskType, description, day, month, year, importanceLevel);
-        } catch (BadDateInputException bdiex) {
-            System.out.println(bdiex.getMessage()); System.out.println("Your task was not created.");
-        } catch (InvalidImportanceException iiex) {
-            System.out.println(iiex.getMessage()); System.out.println("Your task was not created.");
-        } finally {
-            System.out.println("Adding Process finished.");
-        }
-    }
-
-    public void addItem(ArrayList<String> item) {
+    public void addItem(ArrayList<String> item) throws IOException {
         String taskType = item.get(0);
-        System.out.println("General tasks need no extra details.");
         String description = item.get(1);
         String day = item.get(2);
         String month = item.get(3);
@@ -62,7 +33,7 @@ public class CollectionOfGeneralTasks extends Subject implements CollectionOfIte
     // REQUIRES: valid taskType, day, month, year and importanceLevel
     // MODIFIES: this
     // EFFECTS: creates a new GeneralTask, adds it to a list, and saves it to a file.
-    public void createTask(String taskType, String description, String day, String month, String year, String importanceLevel) {
+    public void createTask(String taskType, String description, String day, String month, String year, String importanceLevel) throws IOException {
         GeneralTask newGTask = new GeneralTask(taskType, description, Integer.parseInt(day), Integer.parseInt(month), Integer.parseInt(year),
                 importanceLevel);
         generalTaskList.add(newGTask);
@@ -71,8 +42,7 @@ public class CollectionOfGeneralTasks extends Subject implements CollectionOfIte
     }
 
     // EFFECTS: saves newTask to a file.
-    public void saveTask(GeneralTask newGTask) {
-
+    public void saveTask(GeneralTask newGTask) throws IOException {
         String filename = "listofgeneraltasks.csv";
         try {
             FileWriter fileWriter = new FileWriter(filename, true);
@@ -83,7 +53,7 @@ public class CollectionOfGeneralTasks extends Subject implements CollectionOfIte
             bufferedWriter.newLine();
             bufferedWriter.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException();
         }
     }
 
@@ -104,29 +74,9 @@ public class CollectionOfGeneralTasks extends Subject implements CollectionOfIte
 
     // MODIFIES: this
     // EFFECTS: removes a GeneralTask from the list.
-    public void removeItem(Scanner user_input) {
+    public void removeItem(ArrayList<String> item) throws ItemNotFoundException, EmptyCollectionException {
         if (generalTaskList.isEmpty()) {
-            System.out.println("You have no general tasks to remove.");
-            return;
-        }
-        String description = inputHandler.userDescription(user_input);
-        String day; String month; String year;
-        try {
-            day = inputHandler.userDay(user_input);
-            month = inputHandler.userMonth(user_input);
-            year = inputHandler.userYear(user_input);
-            checkAndRemove(description, day, month, year);
-        } catch (BadDateInputException bdiex) {
-            System.out.println(bdiex.getMessage());
-            System.out.println("Try removing the task again.");
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: removes a GeneralTask from the list.
-    public void removeItem(ArrayList<String> item) {
-        if (generalTaskList.isEmpty()) {
-            return;
+            throw new EmptyCollectionException();
         }
         String description = item.get(1);
         String day; String month; String year;
@@ -138,33 +88,16 @@ public class CollectionOfGeneralTasks extends Subject implements CollectionOfIte
 
     // MODIFIES: this
     // EFFECTS: removes a GeneralTask from the list.
-    private void checkAndRemove(String description, String day, String month, String year) {
+    private void checkAndRemove(String description, String day, String month, String year) throws ItemNotFoundException {
         for (GeneralTask task : generalTaskList) {
             if (description.equals(task.getDescription()) && Integer.parseInt(day) == task.getDay()
                     && Integer.parseInt(month) == task.getMonth() && Integer.parseInt(year) == task.getYear()) {
                 generalTaskList.remove(task);
                 notifyObservers();
-                break;
-            } else {
-
+                return;
             }
         }
-    }
-
-    // EFFECTS: gets all stored tasks.
-    public void printItems() {
-        if (generalTaskList.size() == 1) {
-            System.out.println("There is " + generalTaskList.size() + " task stored.");
-        } else {
-            System.out.println("There are " + generalTaskList.size() + " tasks stored.");
-        }
-        System.out.println();
-        if (generalTaskList.size() > 0) {
-            for (GeneralTask task : generalTaskList) {
-                task.printItem();
-                System.out.println();
-            }
-        }
+        throw new ItemNotFoundException();
     }
 
     // loads a single item.
@@ -191,10 +124,6 @@ public class CollectionOfGeneralTasks extends Subject implements CollectionOfIte
     // EFFECTS: gets the generalTaskList
     public ArrayList<GeneralTask> getTaskList() {
         return generalTaskList;
-    }
-
-    public TasksInputHandler getInputHandler() {
-        return inputHandler;
     }
 }
 

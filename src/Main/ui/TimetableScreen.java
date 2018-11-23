@@ -1,8 +1,11 @@
 package ui;
 
+import exceptions.BadTimeException;
+import exceptions.EmptyCollectionException;
+import exceptions.ItemNotFoundException;
+import exceptions.NoTextbookException;
 import inputs.Textbook;
 import inputs.UniClass;
-import model.InputScreen;
 import model.collections.CollectionOfUniClasses;
 import model.observerPattern.Observer;
 
@@ -13,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 
 public class TimetableScreen extends JPanel implements InputScreen, Observer {
 
@@ -253,12 +257,19 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         textbookText.setEditable(false);
         textbookText.setVisible(false);
 
+        JTextArea errorMessage = new JTextArea();
+        errorMessage.setVisible(false);
+        errorMessage.setOpaque(false);
+        errorMessage.setLineWrap(true);
+        errorMessage.setAlignmentX(CENTER_ALIGNMENT);
+        errorMessage.setMaximumSize(new Dimension(250, 60));
+        errorMessage.setBorder(new EmptyBorder(0, 0, 10, 0));
+
         ArrayList<String> textbookDetails = new ArrayList<>();
-        JDialog addTextbookScreen = new JDialog();
         addTextbook.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                textbookInfoDialog(addTextbookScreen, textbookDetails);
+                textbookInfoDialog(textbookDetails);
                 if (textbookDetails.size() != 0) {
                     textbookText.setText("Title: " + textbookDetails.get(0) + "\n" +
                             "Author: " + textbookDetails.get(1) + "\n" +
@@ -273,30 +284,53 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String classType = (String) classTypeBox.getSelectedItem();
-                String className = classNameText.getText();
-                String professor = professorText.getText();
-                String location = locationText.getText();
-                String startTime = startTimeText.getText();
-                String endTime = endTimeText.getText();
+                classType = classType.trim();
+                String className = classNameText.getText().trim();
+                String professor = professorText.getText().trim();
+                String location = locationText.getText().trim();
+                String startTime = startTimeText.getText().trim();
+                String endTime = endTimeText.getText().trim();
 
-                ArrayList<String> days = (ArrayList) daysList.getSelectedValuesList();
+                List<String> days = daysList.getSelectedValuesList();
                 if (textbookDetails.size() == 0) {
                     Collections.addAll(textbookDetails, "", "", "");
                 }
-
                 ArrayList<String> item = new ArrayList<>(Arrays.asList(classType, className, professor, location, startTime, endTime));
-                for (String textbookDetail : textbookDetails) {
-                    item.add(textbookDetail);
-                }
-                for (String day : days) {
-                    item.add(day);
-                }
+                item.addAll(textbookDetails);
+                item.addAll(days);
 
-                if (!(className.equals("") || professor.equals("") || location.equals("") || startTime.equals("") || endTime.equals(""))) {
-                    addToListObject(item);
+                if (className.equals("")) {
+                    errorMessage.setText("Please enter a class name.");
+                } else if (professor.equals("")) {
+                    errorMessage.setText("Please enter a professor.");
+                } else if (location.equals("")) {
+                    errorMessage.setText("Please enter a location.");
+                } else if (startTime.equals("")) {
+                    errorMessage.setText("Please enter a start time.");
+                } else if (endTime.equals("")) {
+                    errorMessage.setText("Please enter an end time.");
+                } else if (days.size() == 0) {
+                    errorMessage.setText("Please select at least 1 day.");
                 }
-
-                owner.dispose();
+                else {
+                    try {
+                        addToListObject(item);
+                        errorMessage.setText("Class added successfully. You may now close this dialog.");
+                    } catch (NumberFormatException nfex) {
+                        errorMessage.setText("Y");
+                    } catch (BadTimeException e1) {
+                        errorMessage.setText("The start or end time is not a number.");
+                    } catch (IOException e1) {
+                        errorMessage.setText("Error saving class to file.");
+                    }
+                }
+                if (textbookText.isVisible()) {
+                    addClassScreen.setSize(new Dimension(300, 760));
+                } else
+                {
+                    addClassScreen.setSize(new Dimension(300, 650));
+                }
+                errorMessage.setVisible(true);
             }
         });
 
@@ -311,6 +345,7 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         addClassPanel.add(daysPanel);
         addClassPanel.add(textbookText);
         addClassPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        addClassPanel.add(errorMessage);
         addClassPanel.add(buttonPanel);
 
         addClassScreen.add(addClassPanel);
@@ -319,12 +354,10 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
 
     }
 
-    public void textbookInfoDialog(JDialog dialog, ArrayList<String> textbookDetails) {
+    public void textbookInfoDialog(ArrayList<String> textbookDetails) {
         JFrame owner = new JFrame();
-        dialog = new JDialog(owner, "Add Textbook");
+        JDialog dialog = new JDialog(owner, "Add a Textbook");
         dialog.setModal(true);
-        dialog.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
-        dialog.setUndecorated(true);
         JPanel textbookInfoPanel = new JPanel();
         BoxLayout layout = new BoxLayout(textbookInfoPanel, BoxLayout.PAGE_AXIS);
         textbookInfoPanel.setLayout(layout);
@@ -335,13 +368,12 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         title.setBorder(new EmptyBorder(20, 10, 10, 10));
 
         JTextArea detailText = new JTextArea();
-        detailText.setMaximumSize(new Dimension(280, 100));
+        detailText.setMaximumSize(new Dimension(280, 60));
         detailText.setLineWrap(true);
         detailText.setEditable(false);
         detailText.setOpaque(false);
         detailText.setFont(new Font("Serif", Font.PLAIN, 16));
-        detailText.append("To add a textbook, please provide\n a title, author and number of pages.\n\n" +
-        "To exit without adding, leave all\nfields blank and click submit.");
+        detailText.append("To add a textbook, please provide\n a title, author and number of pages.");
         detailText.setAlignmentX(CENTER_ALIGNMENT);
         detailText.setBorder(new EmptyBorder(0, 30, 0, 0));
 
@@ -375,16 +407,39 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         pagesPanel.add(pagesLabel);
         pagesPanel.add(pagesText);
 
+        JTextArea errorMessage = new JTextArea();
+        errorMessage.setVisible(false);
+        errorMessage.setOpaque(false);
+        errorMessage.setLineWrap(true);
+        errorMessage.setAlignmentX(CENTER_ALIGNMENT);
+        errorMessage.setMaximumSize(new Dimension(250, 60));
+        errorMessage.setBorder(new EmptyBorder(0, 0, 10, 0));
 
         JButton submit = new JButton("Submit");
         submit.setAlignmentX(CENTER_ALIGNMENT);
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!textbookNameText.getText().equals("")) { textbookDetails.add(textbookNameText.getText()); }
-                if (!authorText.getText().equals("")) { textbookDetails.add(authorText.getText()); }
-                if (!pagesText.getText().equals("")) { textbookDetails.add(pagesText.getText()); }
-                owner.dispose();
+                String title = textbookNameText.getText().trim();
+                String author = authorText.getText().trim();
+                String pages = pagesText.getText().trim();
+
+                if (textbookDetails.size() == 3) {
+                    textbookDetails.clear();
+                }
+                if (!textbookNameText.getText().equals("")) { textbookDetails.add(title); }
+                if (!authorText.getText().equals("")) { textbookDetails.add(author) ; }
+                if (!pagesText.getText().equals("")) { textbookDetails.add(pages); }
+
+                if (!title.equals("") && !author.equals("") && !pages.equals("")) {
+                    errorMessage.setText("Textbook information acquired. You\nmay now close this dialog.");
+                }
+                else {
+                    errorMessage.setText("Not all fields are filled.");
+                }
+
+                dialog.setSize(new Dimension(300, 320));
+                errorMessage.setVisible(true);
             }
         });
 
@@ -394,10 +449,11 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         textbookInfoPanel.add(authorPanel);
         textbookInfoPanel.add(pagesPanel);
         textbookInfoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        textbookInfoPanel.add(errorMessage);
         textbookInfoPanel.add(submit);
 
         dialog.add(textbookInfoPanel);
-        dialog.setSize(new Dimension(300, 330));
+        dialog.setSize(new Dimension(300, 300));
         dialog.setVisible(true);
     }
 
@@ -442,19 +498,36 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         classNamePanel.add(classNameLabel);
         classNamePanel.add(classNameText);
 
+        JTextArea errorMessage = new JTextArea();
+        errorMessage.setVisible(false);
+        errorMessage.setOpaque(false);
+        errorMessage.setLineWrap(true);
+        errorMessage.setAlignmentX(CENTER_ALIGNMENT);
+        errorMessage.setMaximumSize(new Dimension(250, 60));
+        errorMessage.setBorder(new EmptyBorder(0, 0, 10, 0));
+
         JButton submit = new JButton("Submit");
         submit.setAlignmentX(CENTER_ALIGNMENT);
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String classType = (String) classTypeBox.getSelectedItem();
-                String className = classNameText.getText();
+                String className = classNameText.getText().trim();
 
-                if (!className.equals("")) {
-                    removeItem(classType, className);
+                if (className.equals("")) {
+                    errorMessage.setText("Please enter a class name.");
+                } else {
+                    try {
+                        removeItem(classType, className);
+                        errorMessage.setText("Class removed successfully. You may\nnow close this dialog.");
+                    } catch (EmptyCollectionException e1) {
+                        errorMessage.setText("No classes to remove.");
+                    } catch (ItemNotFoundException e1) {
+                        errorMessage.setText("Class not found.");
+                    }
                 }
-
-                owner.dispose();
+                removeClassScreen.setSize(new Dimension(300, 270));
+                errorMessage.setVisible(true);
             }
         });
 
@@ -463,6 +536,7 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         removeClassPanel.add(classTypePanel);
         removeClassPanel.add(classNamePanel);
         removeClassPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        removeClassPanel.add(errorMessage);
         removeClassPanel.add(submit);
 
         removeClassScreen.add(removeClassPanel);
@@ -543,22 +617,51 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         pagesPanel.add(pagesLabel);
         pagesPanel.add(pagesText);
 
+        JTextArea errorMessage = new JTextArea();
+        errorMessage.setVisible(false);
+        errorMessage.setOpaque(false);
+        errorMessage.setLineWrap(true);
+        errorMessage.setAlignmentX(CENTER_ALIGNMENT);
+        errorMessage.setMaximumSize(new Dimension(250, 60));
+        errorMessage.setBorder(new EmptyBorder(0, 0, 10, 0));
+
         JButton submit = new JButton("Submit");
         submit.setAlignmentX(CENTER_ALIGNMENT);
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String classType = (String) classTypeBox.getSelectedItem();
-                String className = classNameText.getText();
-                String title = textbookNameText.getText();
-                String author = authorText.getText();
-                String pages = pagesText.getText();
+                String className = classNameText.getText().trim();
+                String title = textbookNameText.getText().trim();
+                String author = authorText.getText().trim();
+                String pages = pagesText.getText().trim();
 
                 ArrayList<String> item = new ArrayList<>(Arrays.asList(classType, className, title, author, pages));
 
-                addTextbook(item);
-
-                owner.dispose();
+                if (className.equals("")) {
+                    errorMessage.setText("Please enter a class name.");
+                }
+                else if (title.equals("")) {
+                    errorMessage.setText("Please enter a title.");
+                }
+                else if (author.equals("")) {
+                    errorMessage.setText("Please enter an author.");
+                }
+                else if (pages.equals("")) {
+                    errorMessage.setText("Please enter the number of pages.");
+                }
+                else {
+                    try {
+                        addTextbook(item);
+                        errorMessage.setText("Textbook added successfully. You \nmay now close this dialog.");
+                    } catch (NumberFormatException nfex) {
+                        errorMessage.setText("Pages entered must be a whole number.");
+                    } catch (ItemNotFoundException e1) {
+                        errorMessage.setText("Class not found.");
+                    }
+                }
+                errorMessage.setVisible(true);
+                addTextbookScreen.setSize(new Dimension(300, 460));
             }
         });
 
@@ -570,6 +673,7 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         addTextbookPanel.add(authorPanel);
         addTextbookPanel.add(pagesPanel);
         addTextbookPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        addTextbookPanel.add(errorMessage);
         addTextbookPanel.add(submit);
 
         addTextbookScreen.add(addTextbookPanel);
@@ -620,19 +724,40 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         classNamePanel.add(classNameLabel);
         classNamePanel.add(classNameText);
 
+        JTextArea errorMessage = new JTextArea();
+        errorMessage.setVisible(false);
+        errorMessage.setOpaque(false);
+        errorMessage.setLineWrap(true);
+        errorMessage.setAlignmentX(CENTER_ALIGNMENT);
+        errorMessage.setMaximumSize(new Dimension(250, 60));
+        errorMessage.setBorder(new EmptyBorder(0, 0, 10, 0));
+
         JButton submit = new JButton("Submit");
         submit.setAlignmentX(CENTER_ALIGNMENT);
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String classType = (String) classTypeBox.getSelectedItem();
-                String className = classNameText.getText();
+                String className = classNameText.getText().trim();
 
-                if (!className.equals("")) {
-                    removeTextbook(classType, className);
+                if (className.equals("")) {
+                    errorMessage.setText("Please enter a class name.");
+                } else {
+                    try {
+                        removeTextbook(classType, className);
+                        errorMessage.setText("Textbook successfully removed. You \nmay now close this dialog.");
+                    } catch (EmptyCollectionException e1) {
+                        errorMessage.setText("No classes found.");
+                    } catch (NoTextbookException e1) {
+                        errorMessage.setText("Class does not have a textbook.");
+                    } catch (ItemNotFoundException e1) {
+                        errorMessage.setText("Class with textbook not found.");
+                    }
+
                 }
 
-                owner.dispose();
+                errorMessage.setVisible(true);
+                removeTextbookScreen.setSize(new Dimension(300, 290));
             }
         });
 
@@ -641,6 +766,7 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         removeTextbookPanel.add(classTypePanel);
         removeTextbookPanel.add(classNamePanel);
         removeTextbookPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        removeTextbookPanel.add(errorMessage);
         removeTextbookPanel.add(submit);
 
         removeTextbookScreen.add(removeTextbookPanel);
@@ -653,65 +779,9 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         return loadState;
     }
 
-    // EFFECTS: gets input from the user to decide whether they want to add classes or view classes.
-    public int handleOptions(Scanner user_input) {
-        int handleOptions;
-        while (true) {
-            try {
-                System.out.println("What do you want to do?");
-                System.out.println("1. View Classes\n2. Add Classes\n3. Remove Classes\n4. Remove Textbook from Class\n" +
-                        "5. Add Textbooks\n6. View Textbooks");
-                handleOptions = user_input.nextInt();
-                user_input.nextLine();
-                Integer x = verifyInput(handleOptions);
-                if (x != null) return x;
-            }
-            catch (InputMismatchException n) {
-                System.out.println("You must enter an integer.");
-                user_input.nextLine();
-            }
-        }
-    }
-
-    // EFFECTS: verifies input provided in handleOptions() method.
-    private Integer verifyInput(int handleOptions) {
-        if (handleOptions == 1) {
-            return 1;
-        } else if (handleOptions == 2) {
-            return 2;
-        } else if (handleOptions == 3) {
-            return 3;
-        } else if (handleOptions == 4) {
-            return 4;
-        } else if (handleOptions == 5) {
-            return 5;
-        } else if (handleOptions == 6) {
-            return 6;
-        } else {
-            System.out.println("Enter a valid choice.");
-            return null;
-        }
-    }
-
-    // EFFECTS: prints out details when adding an item.
-    public void addingItemDetails() {
-        System.out.println("All classes must have the following fields:");
-        System.out.println("-> A class Type (LECTURE/LAB/DISCUSSION/TUTORIAL)\n-> A name\n" +
-                "-> A professor\n-> A location\n-> A start time\n-> An end time.\n-> Days of the week");
-        System.out.println("N.B. Start and End Time must be in 24hr format e.g. 1400 = 2 pm.");
-        System.out.println("N.B. Enter the number that corresponds to the day e.g. Monday = 1, Thursday = 4 etc.");
-    }
-
     // MODIFIES: this
     // EFFECTS: allows user to create a new UniClass and then saves the created UniClass.
-    public void addToListObject(Scanner user_input) {
-        addingItemDetails();
-        louc.addItem(user_input);
-    }
-
-    // MODIFIES: this
-    // EFFECTS: allows user to create a new UniClass and then saves the created UniClass.
-    public void addToListObject(ArrayList<String> item) {
+    public void addToListObject(ArrayList<String> item) throws NumberFormatException, BadTimeException, IOException {
         louc.addItem(item);
     }
 
@@ -734,19 +804,12 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         loadState = 0;
     }
 
-    public void removeItem(Scanner user_input) {
-        louc.removeItem(user_input);
-    }
 
-    public void removeItem(String classType, String className) {
+    public void removeItem(String classType, String className) throws EmptyCollectionException, ItemNotFoundException {
         louc.removeItem(classType, className);
     }
 
-    public void removeTextbook(Scanner user_input) {
-        louc.removeTextbook(user_input);
-    }
-
-    public void removeTextbook(String classType, String className) {
+    public void removeTextbook(String classType, String className) throws EmptyCollectionException, NoTextbookException, ItemNotFoundException {
         louc.removeTextbook(classType, className);
     }
 
@@ -754,19 +817,7 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         louc.saveCollection();
     }
 
-    public void printStoredItems() {
-        louc.printItems();
-    }
-
-    public void printTextbooks() {
-        louc.printTextbooks();
-    }
-
-    public void addTextbook(Scanner user_input) {
-        louc.addTextbook(user_input);
-    }
-
-    public void addTextbook(ArrayList<String> item) {
+    public void addTextbook(ArrayList<String> item) throws NumberFormatException, ItemNotFoundException {
         louc.addTextbook(item);
     }
 

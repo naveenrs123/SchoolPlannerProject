@@ -1,4 +1,4 @@
-package exceptions.input;
+package exceptions;
 
 public class BadClassTypeException extends Exception {
 
