@@ -7,6 +7,7 @@ import inputs.UniClass;
 import model.collections.CollectionOfTextbooks;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class MainScreen extends JPanel {
@@ -21,11 +22,20 @@ public class MainScreen extends JPanel {
         BoxLayout flow = new BoxLayout(this, BoxLayout.PAGE_AXIS);
         setLayout(flow);
 
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.LINE_AXIS));
+        titlePanel.setBackground(Color.BLACK);
+        titlePanel.setOpaque(true);
         JLabel title = new JLabel();
-        title.setPreferredSize(new Dimension(300, 60));
-        title.setText("Welcome to Your School Planner");
+        title.setPreferredSize(new Dimension(620, 55));
+        title.setBorder(new EmptyBorder(0, 170, 0, 170));
+        title.setText("Welcome To Your School Planner");
         title.setFont(new Font("Serif", Font.PLAIN, 20));
+        title.setForeground(Color.WHITE);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        title.setAlignmentY(Component.CENTER_ALIGNMENT);
+        titlePanel.setAlignmentX(CENTER_ALIGNMENT);
+        titlePanel.add(title);
 
         classesTextArea = new JTextArea();
         classesTextArea.setMargin(new Insets(10, 10, 10, 10));
@@ -33,7 +43,7 @@ public class MainScreen extends JPanel {
         classesTextArea.setLineWrap(true);
         classesTextArea.setEditable(false);
         JScrollPane classesScroll = new JScrollPane(classesTextArea);
-        classesScroll.setPreferredSize(new Dimension(400, 200));
+        classesScroll.setPreferredSize(new Dimension(400, 170));
         classesScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         tasksTextArea = new JTextArea();
@@ -42,7 +52,7 @@ public class MainScreen extends JPanel {
         tasksTextArea.setLineWrap(true);
         tasksTextArea.setEditable(false);
         JScrollPane tasksScroll = new JScrollPane(tasksTextArea);
-        tasksScroll.setPreferredSize(new Dimension(400, 200));
+        tasksScroll.setPreferredSize(new Dimension(400, 170));
         tasksScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         textbooksTextArea = new JTextArea();
@@ -51,11 +61,12 @@ public class MainScreen extends JPanel {
         textbooksTextArea.setLineWrap(true);
         textbooksTextArea.setEditable(false);
         JScrollPane textbooksScroll = new JScrollPane(textbooksTextArea);
-        textbooksScroll.setPreferredSize(new Dimension(400, 200));
+        textbooksScroll.setPreferredSize(new Dimension(400, 170));
         textbooksScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
 
-        add(title);
+        add(titlePanel);
+        add(Box.createRigidArea(new Dimension(0, 10)));
         add(classesScroll);
         add(Box.createRigidArea(new Dimension(0, 10)));
         add(tasksScroll);
@@ -90,12 +101,10 @@ public class MainScreen extends JPanel {
             for (EventTask e : screenTasks.getLoet().getTaskList()) {
                 tasksTextArea.append(e.toString());
             }
-
             tasksTextArea.append("** TASKS **\n\n");
             for (GeneralTask g : screenTasks.getLogt().getTaskList()) {
                 tasksTextArea.append(g.toString());
             }
-
         } else if (isTasksLoaded == 1) {
             tasksTextArea.setText("You have no tasks.");
         } else if (isTasksLoaded == 2) {

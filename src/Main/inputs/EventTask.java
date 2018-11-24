@@ -40,29 +40,6 @@ public class EventTask extends Task {
         comments = comm;
     }
 
-    // EFFECTS: prints EventTask
-    public void printItem() {
-        System.out.println("Task Type: " + getType());
-        System.out.println("Description: " + getDescription());
-        System.out.println("Start date: " + getStartDay() + "/" + (getStartMonth() + 1) + "/" + getStartYear());
-        System.out.println("End date: " + getEndYear() + "/" + (getEndMonth() + 1) + "/" + getEndYear());
-        switch (importance) {
-            case LOW:
-                System.out.println("Importance: LOW");
-                break;
-            case MEDIUM:
-                System.out.println("Importance: MEDIUM");
-                break;
-            case HIGH:
-                System.out.println("Importance: HIGH");
-                break;
-            case EXTREME:
-                System.out.println("Importance: EXTREME");
-                break;
-        }
-        System.out.println("Comments: " + comments);
-    }
-
     @Override
     public String toString() {
         String returnVal = "";

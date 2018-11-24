@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 // name given to avoid causing conflict and confusion with built-in 'class' keyword.
-public class UniClass implements StoredObject {
+public class UniClass {
     private String name;
     private String classType;
     private String prof;
@@ -120,7 +120,7 @@ public class UniClass implements StoredObject {
                 String.format("%04d", startTime) + " to " + String.format("%04d", endTime) + " on ";
 
         if (days.size() == 1) {
-            returnVal += daysOfWeek.get(days.get(0) - 1) + "\n";
+            returnVal += daysOfWeek.get(days.get(0) - 1) + ".\n";
         } else {
             int i;
             for (i = 0; i < days.size() - 1; i++) {

@@ -45,11 +45,20 @@ public class TasksScreen extends JPanel implements InputScreen, Observer {
         BoxLayout flowBody = new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS);
         buttonPanel.setLayout(flowBody);
 
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.LINE_AXIS));
+        titlePanel.setBackground(Color.BLACK);
+        titlePanel.setOpaque(true);
         JLabel title = new JLabel();
-        title.setPreferredSize(new Dimension(300, 40));
+        title.setPreferredSize(new Dimension(620, 50));
+        title.setBorder(new EmptyBorder(0, 230, 0, 240));
         title.setText("Tasks and Events");
         title.setFont(new Font("Serif", Font.PLAIN, 20));
+        title.setForeground(Color.WHITE);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        title.setAlignmentY(Component.CENTER_ALIGNMENT);
+        titlePanel.setAlignmentX(CENTER_ALIGNMENT);
+        titlePanel.add(title);
 
         tasksTextArea = new JTextArea();
         tasksTextArea.setMargin(new Insets(10, 10, 10, 10));
@@ -101,7 +110,8 @@ public class TasksScreen extends JPanel implements InputScreen, Observer {
         buttonPanel.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonPanel.add(removeTask);
 
-        add(title);
+        add(titlePanel);
+        add(Box.createRigidArea(new Dimension(0, 10)));
         add(tasksScroll);
         add(Box.createRigidArea(new Dimension(0, 10)));
         add(buttonPanel);
@@ -113,6 +123,7 @@ public class TasksScreen extends JPanel implements InputScreen, Observer {
         JFrame owner = new JFrame();
 
         JDialog addTaskScreen = new JDialog(owner, "Add Task");
+        addTaskScreen.setResizable(false);
         JPanel addTaskPanel = new JPanel();
         BoxLayout layout = new BoxLayout(addTaskPanel, BoxLayout.PAGE_AXIS);
         addTaskPanel.setLayout(layout);
@@ -221,7 +232,7 @@ public class TasksScreen extends JPanel implements InputScreen, Observer {
         errorMessage.setOpaque(false);
         errorMessage.setLineWrap(true);
         errorMessage.setAlignmentX(CENTER_ALIGNMENT);
-        errorMessage.setMaximumSize(new Dimension(250, 60));
+        errorMessage.setMaximumSize(new Dimension(250, 50));
         errorMessage.setBorder(new EmptyBorder(0, 0, 10, 0));
 
         JButton submit = new JButton("Submit");
@@ -303,8 +314,8 @@ public class TasksScreen extends JPanel implements InputScreen, Observer {
                         }
                     }
                 }
-
                 errorMessage.setVisible(true);
+                addTaskScreen.setSize(new Dimension(300, 780));
             }
         });
 
@@ -328,6 +339,7 @@ public class TasksScreen extends JPanel implements InputScreen, Observer {
         JFrame owner = new JFrame();
 
         JDialog removeTaskScreen = new JDialog(owner, "Remove Task");
+        removeTaskScreen.setResizable(false);
         JPanel removeTaskPanel = new JPanel();
         BoxLayout layout = new BoxLayout(removeTaskPanel, BoxLayout.PAGE_AXIS);
         removeTaskPanel.setLayout(layout);
@@ -408,7 +420,7 @@ public class TasksScreen extends JPanel implements InputScreen, Observer {
         errorMessage.setOpaque(false);
         errorMessage.setLineWrap(true);
         errorMessage.setAlignmentX(CENTER_ALIGNMENT);
-        errorMessage.setMaximumSize(new Dimension(250, 60));
+        errorMessage.setMaximumSize(new Dimension(250, 50));
         errorMessage.setBorder(new EmptyBorder(0, 0, 10, 0));
 
         JButton submit = new JButton("Submit");
@@ -481,7 +493,7 @@ public class TasksScreen extends JPanel implements InputScreen, Observer {
                         }
                     }
                 }
-                removeTaskScreen.setSize(new Dimension(300, 510));
+                removeTaskScreen.setSize(new Dimension(300, 520));
                 errorMessage.setVisible(true);
             }
         });

@@ -14,27 +14,6 @@ public class GeneralTask extends Task {
         date = new GregorianCalendar(year, month, day);
     }
 
-    // EFFECTS: prints the details of a GeneralTask to the console.
-    public void printItem() {
-        System.out.println("Task Type: " + getType());
-        System.out.println("Description: " + getDescription());
-        System.out.println("Date Due: " + getDay() + "/" + (getMonth() + 1) + "/" + getYear());
-        switch (importance) {
-            case LOW:
-                System.out.println("Importance: LOW");
-                break;
-            case MEDIUM:
-                System.out.println("Importance: MEDIUM");
-                break;
-            case HIGH:
-                System.out.println("Importance: HIGH");
-                break;
-            case EXTREME:
-                System.out.println("Importance: EXTREME");
-                break;
-        }
-    }
-
     // EFFECTS: gets the day.
     public int getDay() { return date.get(Calendar.DAY_OF_MONTH); }
 

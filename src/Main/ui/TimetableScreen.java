@@ -35,27 +35,33 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
     public TimetableScreen() {
         loadItemsIntoListObject();
         louc.addObserver(this);
-
         BoxLayout flowMain = new BoxLayout(this, BoxLayout.PAGE_AXIS);
         setLayout(flowMain);
 
         top = new JPanel();
         top.setSize(620, 300);
-
         BoxLayout flowTop = new BoxLayout(top, BoxLayout.PAGE_AXIS);
         top.setLayout(flowTop);
 
         bottom = new JPanel();
         bottom.setSize(620, 300);
-
         BoxLayout flowBottom = new BoxLayout(bottom, BoxLayout.LINE_AXIS);
         bottom.setLayout(flowBottom);
 
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.LINE_AXIS));
+        titlePanel.setBackground(Color.BLACK);
+        titlePanel.setOpaque(true);
         JLabel title = new JLabel();
-        title.setPreferredSize(new Dimension(300, 40));
+        title.setPreferredSize(new Dimension(620, 50));
+        title.setBorder(new EmptyBorder(0, 200, 0, 210));
         title.setText("Timetable and Textbooks");
         title.setFont(new Font("Serif", Font.PLAIN, 20));
+        title.setForeground(Color.WHITE);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        title.setAlignmentY(Component.CENTER_ALIGNMENT);
+        titlePanel.setAlignmentX(CENTER_ALIGNMENT);
+        titlePanel.add(title);
 
         classesTextArea = new JTextArea();
         classesTextArea.setMargin(new Insets(10, 10, 10, 10));
@@ -87,7 +93,8 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
             textbooksTextArea.append(t.toStringFull());
         }
 
-        top.add(title);
+        top.add(titlePanel);
+        top.add(Box.createRigidArea(new Dimension(0, 10)));
         top.add(classesScroll);
         top.add(Box.createRigidArea(new Dimension(0, 10)));
         top.add(textbooksScroll);
@@ -139,6 +146,7 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         JFrame owner = new JFrame();
 
         JDialog addClassScreen = new JDialog(owner, "Add Class");
+        addClassScreen.setResizable(false);
         JPanel addClassPanel = new JPanel();
         BoxLayout layout = new BoxLayout(addClassPanel, BoxLayout.PAGE_AXIS);
         addClassPanel.setLayout(layout);
@@ -243,7 +251,6 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         JButton submit = new JButton("Submit");
         addTextbook.setAlignmentX(CENTER_ALIGNMENT);
         submit.setAlignmentX(CENTER_ALIGNMENT);
-
 
         buttonPanel.add(addTextbook);
         buttonPanel.add(Box.createRigidArea(new Dimension(30, 0)));
@@ -357,6 +364,7 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
     public void textbookInfoDialog(ArrayList<String> textbookDetails) {
         JFrame owner = new JFrame();
         JDialog dialog = new JDialog(owner, "Add a Textbook");
+        dialog.setResizable(false);
         dialog.setModal(true);
         JPanel textbookInfoPanel = new JPanel();
         BoxLayout layout = new BoxLayout(textbookInfoPanel, BoxLayout.PAGE_AXIS);
@@ -461,6 +469,7 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         JFrame owner = new JFrame();
 
         JDialog removeClassScreen = new JDialog(owner, "Add Class");
+        removeClassScreen.setResizable(false);
         JPanel removeClassPanel = new JPanel();
         BoxLayout layout = new BoxLayout(removeClassPanel, BoxLayout.PAGE_AXIS);
         removeClassPanel.setLayout(layout);
@@ -547,6 +556,7 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
     public void addTextbookDialog() {
         JFrame owner = new JFrame();
         JDialog addTextbookScreen = new JDialog(owner, "Add Textbook");
+        addTextbookScreen.setResizable(false);
         JPanel addTextbookPanel = new JPanel();
         BoxLayout layout = new BoxLayout(addTextbookPanel, BoxLayout.PAGE_AXIS);
         addTextbookPanel.setLayout(layout);
@@ -686,6 +696,7 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
         JFrame owner = new JFrame();
 
         JDialog removeTextbookScreen = new JDialog(owner, "Add Class");
+        removeTextbookScreen.setResizable(false);
         JPanel removeTextbookPanel = new JPanel();
         BoxLayout layout = new BoxLayout(removeTextbookPanel, BoxLayout.PAGE_AXIS);
         removeTextbookPanel.setLayout(layout);
@@ -753,9 +764,7 @@ public class TimetableScreen extends JPanel implements InputScreen, Observer {
                     } catch (ItemNotFoundException e1) {
                         errorMessage.setText("Class with textbook not found.");
                     }
-
                 }
-
                 errorMessage.setVisible(true);
                 removeTextbookScreen.setSize(new Dimension(300, 290));
             }

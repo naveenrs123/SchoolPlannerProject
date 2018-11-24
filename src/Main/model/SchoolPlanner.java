@@ -64,6 +64,8 @@ public class SchoolPlanner implements Observer {
     private void run() {
         JTabbedPane tabs = new JTabbedPane();
 
+        frame.setResizable(false);
+
         frame.setSize(620, 600);
         screenTimetable.setSize(620, 600);
         screenMain.setSize(620, 600);
