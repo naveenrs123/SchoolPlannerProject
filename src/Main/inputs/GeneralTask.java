@@ -25,27 +25,29 @@ public class GeneralTask extends Task {
 
     @Override
     public String toString() {
-        String returnVal = "";
+        StringBuilder stringBuilder = new StringBuilder();
+        String returnVal;
 
-        returnVal += "Task Type: " + taskType + "\nDescription: " + description +
-                "\nDate Due: " + getDay() + "/" + (getMonth() + 1) + "/" + getYear();
+        stringBuilder.append("Task Type: " + taskType + "\nDescription: " + description +
+                "\nDate Due: " + getDay() + "/" + (getMonth() + 1) + "/" + getYear());
 
         switch (importance) {
             case LOW:
-                returnVal += "\nImportance: LOW\n";
+                stringBuilder.append("\nImportance: LOW\n");
                 break;
             case MEDIUM:
-                returnVal += "\nImportance: MEDIUM\n";
+                stringBuilder.append("\nImportance: MEDIUM\n");
                 break;
             case HIGH:
-                returnVal += "\nImportance: HIGH\n";
+                stringBuilder.append("\nImportance: HIGH\n");
                 break;
             case EXTREME:
-                returnVal += "\nImportance: EXTREME\n";
+                stringBuilder.append("\nImportance: EXTREME\n");
                 break;
         }
 
-        returnVal += "\n";
+        stringBuilder.append("\n");
+        returnVal = stringBuilder.toString();
 
         return returnVal;
     }

@@ -53,26 +53,6 @@ public class UniClass {
         }
     }
 
-    // EFFECTS: prints the details of a UniClass to the console.
-    public void printItem() {
-        System.out.println(classType + ": " + name + " at " + location + " taught by " + prof + ".");
-        System.out.print(String.format("%04d", startTime) + " to " + String.format("%04d", endTime) + " on ");
-        if (days.size() == 1) {
-            System.out.println(daysOfWeek.get(days.get(0) - 1));
-        } else {
-            int i;
-            for (i = 0; i < days.size() - 1; i++) {
-                System.out.print(daysOfWeek.get(days.get(i) - 1) + ", ");
-            }
-            System.out.println("and " + daysOfWeek.get(days.get(i) - 1) + ".");
-        }
-        if (textbook.getTitle() != null && textbook.getAuthor() != null) {
-            textbook.printItem();
-        } else {
-            System.out.println("No textbook.");
-        }
-    }
-
     // EFFECTS: gets the name.
     public String getName() { return name; }
 
@@ -103,7 +83,7 @@ public class UniClass {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UniClass uniClass = (UniClass) o;
-        return Objects.equals(name, uniClass.name);
+        return Objects.equals(name, uniClass.name) && Objects.equals(classType, uniClass.classType);
     }
 
     @Override
@@ -113,27 +93,28 @@ public class UniClass {
 
     @Override
     public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        String returnVal;
 
-        String returnVal = "";
-
-        returnVal += classType + ": " + name + " at " + location + " taught by " + prof + ".\n" +
-                String.format("%04d", startTime) + " to " + String.format("%04d", endTime) + " on ";
+        stringBuilder.append(classType + ": " + name + " at " + location + " taught by " + prof + ".\n" +
+                String.format("%04d", startTime) + " to " + String.format("%04d", endTime) + " on ");
 
         if (days.size() == 1) {
-            returnVal += daysOfWeek.get(days.get(0) - 1) + ".\n";
+            stringBuilder.append(daysOfWeek.get(days.get(0) - 1) + ".\n");
         } else {
             int i;
             for (i = 0; i < days.size() - 1; i++) {
-                returnVal += daysOfWeek.get(days.get(i) - 1) + ", ";
+                stringBuilder.append(daysOfWeek.get(days.get(i) - 1) + ", ");
             }
-            returnVal += "and " + daysOfWeek.get(days.get(i) - 1) + ".\n";
+            stringBuilder.append("and " + daysOfWeek.get(days.get(i) - 1) + ".\n");
         }
 
         if (textbook.getTitle() != null && textbook.getAuthor() != null) {
-            returnVal += textbook.toString();
+            stringBuilder.append(textbook.toString());
         } else {
-            returnVal += "No textbook." + "\n\n";
+            stringBuilder.append("No textbook." + "\n\n");
         }
+        returnVal = stringBuilder.toString();
         return returnVal;
     }
 }

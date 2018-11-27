@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
 // Testing of valid/invalid input handled in TimetableScreenTest
 class UniClassTest {
 
@@ -74,3 +75,4 @@ class UniClassTest {
 
 
 }
+*/

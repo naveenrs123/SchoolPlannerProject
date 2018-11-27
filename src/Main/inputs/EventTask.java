@@ -42,29 +42,31 @@ public class EventTask extends Task {
 
     @Override
     public String toString() {
-        String returnVal = "";
+        StringBuilder stringBuilder = new StringBuilder();
+        String returnVal;
 
-        returnVal += "Task Type: " + getType() + "\nDescription: " + getDescription() + "\nStart Date: " + getStartDay() +
+        stringBuilder.append("Task Type: " + getType() + "\nDescription: " + getDescription() + "\nStart Date: " + getStartDay() +
                 "/" + (getStartMonth() + 1) + "/" + getStartYear() + "\nEnd Date: " +
-                getEndDay() + "/" + (getEndMonth() + 1) + "/" + getEndYear();
+                getEndDay() + "/" + (getEndMonth() + 1) + "/" + getEndYear());
 
         switch (importance) {
             case LOW:
-                returnVal += "\nImportance: LOW";
+                stringBuilder.append("\nImportance: LOW\n");
                 break;
             case MEDIUM:
-                returnVal += "\nImportance: MEDIUM";
+                stringBuilder.append("\nImportance: MEDIUM\n");
                 break;
             case HIGH:
-                returnVal += "\nImportance: HIGH";
+                stringBuilder.append("\nImportance: HIGH\n");
                 break;
             case EXTREME:
-                returnVal += "\nImportance: EXTREME";
+                stringBuilder.append("\nImportance: EXTREME\n");
                 break;
         }
 
-        returnVal += "\nComments: " + getComments() + "\n\n";
+        stringBuilder.append("\nComments: " + getComments() + "\n\n");
 
+        returnVal = stringBuilder.toString();
         return returnVal;
     }
 }

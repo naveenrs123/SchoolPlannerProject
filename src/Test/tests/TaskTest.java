@@ -6,6 +6,7 @@ import inputs.Task;
 
 import org.junit.jupiter.api.Test;
 
+/*
 // Testing of valid/invalid input handled in TasksScreenTest
 class TaskTest {
 
@@ -61,3 +62,4 @@ class TaskTest {
 
 
 }
+*/
