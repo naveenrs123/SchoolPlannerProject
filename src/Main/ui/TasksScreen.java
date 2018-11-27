@@ -442,6 +442,7 @@ public class TasksScreen extends JPanel implements InputScreen, Observer {
 
                 if (taskType == "TASK") {
                     description = descriptionText.getText().trim();
+                    startDate = (Date) datePickerStart.getModel().getValue();
                     startDay = Integer.toString(datePickerStart.getModel().getDay());
                     startMonth = Integer.toString(datePickerStart.getModel().getMonth());
                     startYear = Integer.toString(datePickerStart.getModel().getYear());
@@ -449,9 +450,9 @@ public class TasksScreen extends JPanel implements InputScreen, Observer {
                     item = new ArrayList<>(Arrays.asList(taskType, description, startDay, startMonth, startYear));
                     if (description.equals("")) {
                         errorMessage.setText("Please enter a description.");
-                    }
-                    else
-                    {
+                    } else if (startDate == null) {
+                        errorMessage.setText("Please enter a date (start date).");
+                    } else {
                         try {
                             removeItem(item);
                             errorMessage.setText("Task removed successfully. You may\nnow close this dialog.");
@@ -462,27 +463,30 @@ public class TasksScreen extends JPanel implements InputScreen, Observer {
                         }
 
                     }
-                }
-                else {
+                } else {
                     description = descriptionText.getText().trim();
                     startDate = (Date) datePickerStart.getModel().getValue();
                     startDay = Integer.toString(datePickerStart.getModel().getDay());
                     startMonth = Integer.toString(datePickerStart.getModel().getMonth());
                     startYear = Integer.toString(datePickerStart.getModel().getYear());
                     startYear = startYear.substring(2);
-                    endDate = (Date) datePickerStart.getModel().getValue();
+                    endDate = (Date) datePickerEnd.getModel().getValue();
                     endDay = Integer.toString(datePickerEnd.getModel().getDay());
                     endMonth = Integer.toString(datePickerEnd.getModel().getMonth());
                     endYear = Integer.toString(datePickerEnd.getModel().getYear());
                     endYear = endYear.substring(2);
                     item = new ArrayList<>(Arrays.asList(taskType, description, startDay, startMonth, startYear, endDay, endMonth,
                             endYear));
+
                     if (description.equals("")) {
                         errorMessage.setText("Please enter a description.");
+                    } else if (startDate == null) {
+                        errorMessage.setText("Please enter a start date.");
+                    } else if (endDate == null) {
+                        errorMessage.setText("Please enter an end date.");
                     } else if (endDate.compareTo(startDate) < 0) {
                         errorMessage.setText("The end date must not be before the\nstart date.");
-                    }
-                    else {
+                    } else {
                         try {
                             removeItem(item);
                             errorMessage.setText("Event removed successfully. You may\nnow close this dialog.");

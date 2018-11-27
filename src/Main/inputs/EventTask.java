@@ -64,7 +64,7 @@ public class EventTask extends Task {
                 break;
         }
 
-        stringBuilder.append("\nComments: " + getComments() + "\n\n");
+        stringBuilder.append("Comments: " + getComments() + "\n\n");
 
         returnVal = stringBuilder.toString();
         return returnVal;
