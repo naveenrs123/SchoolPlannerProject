@@ -14,3 +14,7 @@ The application allows the user to do the following things: <br/>
 :arrow_forward: View all items that are stored in the application. <br/>
 
 This is a project that may be updated in the future with more functionality but for now, this is as far as I will go.
+
+This project utilises the JDatePicker component developed by some wonderful people. The source code for the JDatePicker functionality can be found here: [Github Repository](https://github.com/JDatePicker/JDatePicker)
+
+Other details can be found here: [JDatePicker Website](https://jdatepicker.org/)
