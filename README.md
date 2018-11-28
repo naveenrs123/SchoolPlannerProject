@@ -4,13 +4,13 @@ I have created a simple SchoolPlanner application using Java that allows the use
 
 The key technologies used in this project are: Java, JUnit (for testing), and Java Swing (for GUI development). There is a lot of work that could be done to further refine this project but the project is functional and does most of the basic tasks. 
 
-The application allows the user to do the following things:
-:arrow_forward: Add classes.
-:arrow_forward: Add tasks and events.
-:arrow_forward: Add textbooks to a class.
-:arrow_forward: Remove tasks and events.
-:arrow_forward: Remove textbooks from a class.
-:arrow_forward: Remove classes.
-:arrow_forward: View all items that are stored in the application.
+The application allows the user to do the following things: <br/>
+:arrow_forward: Add classes. <br/>
+:arrow_forward: Add tasks and events. <br/>
+:arrow_forward: Add textbooks to a class. <br/>
+:arrow_forward: Remove tasks and events. <br/>
+:arrow_forward: Remove textbooks from a class. <br/>
+:arrow_forward: Remove classes. <br/>
+:arrow_forward: View all items that are stored in the application. <br/>
 
 This is a project that may be updated in the future with more functionality but for now, this is as far as I will go.
