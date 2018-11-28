@@ -237,6 +237,7 @@ public class TasksScreen extends JPanel implements InputScreen, Observer {
 
         JButton submit = new JButton("Submit");
         submit.setAlignmentX(CENTER_ALIGNMENT);
+
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
