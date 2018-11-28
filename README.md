@@ -1,11 +1,16 @@
 # Personal Project
-:arrow_forward: Please refer to [edX][1] for description and instructions.
 
-[1]: https://edge.edx.org/courses/course-v1:UBC+CPSC210+2018W1/courseware/a4d49b3ef5fa4fe2bd9496e76d72dc48/e2887456a15a48dbb040ecdac313168f/1?activate_block_id=block-v1%3AUBC%2BCPSC210%2B2018W1%2Btype%40vertical%2Bblock%40ff793bbcd5544e82bb5052f0dffe5d71
+I have created a simple SchoolPlanner application using Java that allows the user to manage classes, tasks and events, and textbooks. This application is tailored to students at the University of British Columbia so it may not work effectively for students in other locations. 
 
-I am creating a Timetable app that I can use to keep track of my classes and homework assignments. 
+The key technologies used in this project are: Java, JUnit (for testing), and Java Swing (for GUI development). There is a lot of work that could be done to further refine this project but the project is functional and does most of the basic tasks. 
 
-Week 1:
--> I have created a basic skeleton for the main screen of the app that will greet the user and inform them of upcoming classes
-   and homework assignments that are due.
--> I have also added classes that represent some of the other screens that the application will have.
+The application allows the user to do the following things:
+:arrow_forward: Add classes.
+:arrow_forward: Add tasks and events.
+:arrow_forward: Add textbooks to a class.
+:arrow_forward: Remove tasks and events.
+:arrow_forward: Remove textbooks from a class.
+:arrow_forward: Remove classes.
+:arrow_forward: View all items that are stored in the application.
+
+This is a project that may be updated in the future with more functionality but for now, this is as far as I will go.
